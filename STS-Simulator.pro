@@ -25,3 +25,5 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
     plotwidget.ui
+
+INCLUDEPATH += /usr/local/qwt-6.1.0-rc3/include

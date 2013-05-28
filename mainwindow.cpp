@@ -2,8 +2,6 @@
 #include "ui_mainwindow.h"
 #include "aboutdialog.h"
 
-#include <qwt_plot.h>
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -14,8 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
     showMaximized();
 
     connect(ui->actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout(bool)));
-
-    QwtPlot *plot = new QwtPlot(QwtText("Demo"), this);
 }
 
 MainWindow::~MainWindow()
