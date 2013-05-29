@@ -27,3 +27,4 @@ FORMS    += mainwindow.ui \
     plotwidget.ui
 
 INCLUDEPATH += /usr/local/qwt-6.1.0-rc3/include
+LIBS +=  -L/usr/local/qwt-6.1.0-rc3/lib -lqwt
