@@ -4,6 +4,7 @@
 #include <QWidget>
 
 #include <qwt_plot.h>
+#include <qwt_plot_zoomer.h>
 
 namespace Ui {
 class PlotWidget;
@@ -19,6 +20,11 @@ public:
     
 private:
     Ui::PlotWidget *ui;
+
+    QwtPlotZoomer *mPlotZoomer;
+
+private:
+    void initZoom();
 };
 
 #endif // PLOTWIDGET_H

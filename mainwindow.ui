@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>354</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -28,7 +28,37 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QMdiArea" name="mdiArea"/>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <widget class="QWidget" name="widget" native="true">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QSplitter" name="splitter_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="PlotWidget" name="widget_3" native="true"/>
+          <widget class="PlotWidget" name="widget_4" native="true"/>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="widget_2" native="true">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QSplitter" name="splitter_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="PlotWidget" name="widget_5" native="true"/>
+          <widget class="PlotWidget" name="widget_6" native="true"/>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -77,6 +107,14 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QWidget</extends>
+   <header>plotwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

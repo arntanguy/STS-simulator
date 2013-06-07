@@ -2,11 +2,16 @@
 #include "ui_plotwidget.h"
 #include <qwt_plot_curve.h>
 
+/*!
+ * \brief PlotWidget::PlotWidget
+ * \param parent
+ */
 PlotWidget::PlotWidget(QWidget *parent) :
     QwtPlot(parent),
     ui(new Ui::PlotWidget)
 {
     ui->setupUi(this);
+
 
     QwtPlotCurve *curve1 = new QwtPlotCurve("Curve 1");
 
@@ -26,10 +31,29 @@ PlotWidget::PlotWidget(QWidget *parent) :
     curve1->setCurveAttribute(QwtPlotCurve::Fitted, true);
     curve1->attach(this);
 
+    initZoom();
+
     replot();
 }
 
 PlotWidget::~PlotWidget()
 {
     delete ui;
+}
+
+/*!
+ * \brief PlotWidget::initZoom Initialize the zoom functionalities
+ */
+void PlotWidget::initZoom()
+{
+    // Create plot zoomer linked to current plot
+    // Attach point is on the canvas, not the plot!
+    mPlotZoomer = new QwtPlotZoomer( this->canvas() );
+    mPlotZoomer->setKeyPattern( QwtEventPattern::KeyRedo, Qt::Key_I, Qt::ShiftModifier );
+    mPlotZoomer->setKeyPattern( QwtEventPattern::KeyUndo, Qt::Key_O, Qt::ShiftModifier );
+    mPlotZoomer->setKeyPattern( QwtEventPattern::KeyHome, Qt::Key_Home );
+
+    const QColor c(Qt::darkBlue);
+    mPlotZoomer->setRubberBandPen(c);
+    mPlotZoomer->setTrackerPen(c);
 }
