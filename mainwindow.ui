@@ -39,8 +39,8 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <widget class="PlotWidget" name="widget_3" native="true"/>
-          <widget class="PlotWidget" name="widget_4" native="true"/>
+          <widget class="PlotWidget" name="plotWidget1" native="true"/>
+          <widget class="PlotWidget" name="plotWidget3" native="true"/>
          </widget>
         </item>
        </layout>
@@ -52,8 +52,8 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <widget class="PlotWidget" name="widget_5" native="true"/>
-          <widget class="PlotWidget" name="widget_6" native="true"/>
+          <widget class="PlotWidget" name="plotWidget2" native="true"/>
+          <widget class="PlotWidget" name="plotWidget4" native="true"/>
          </widget>
         </item>
        </layout>

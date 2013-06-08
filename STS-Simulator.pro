@@ -16,15 +16,21 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     aboutdialog.cpp \
-    plotwidget.cpp
+    plotwidget.cpp \
+    legenditem.cpp \
+    curve.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
-    plotwidget.h
+    plotwidget.h \
+    settings.h \
+    legenditem.h \
+    curve.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
-    plotwidget.ui
+    plotwidget.ui \
+    graphdialog.ui
 
 INCLUDEPATH += /usr/local/qwt-6.1.0-rc3/include
 LIBS +=  -L/usr/local/qwt-6.1.0-rc3/lib -lqwt

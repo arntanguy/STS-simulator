@@ -1,0 +1,9 @@
+P	Type	A	B	C	D
+P1t	Fermi	0.8	-0.88	0.025	0.03
+P2t	Gaussian	-0.06	2	0.3	0
+P1s	Gaussian	0.022	-1.05	0.09	0
+P2s	Fermi	0.2	-1.6	0.05	0
+P3s	Fermi	0.03	-0.77	0.06	0
+P4s	Fermi	7E-4	-0.035	0.02	0
+P5s	Fermi	0.0073	-0.7	0.07	0
+P6s	Fermi	0.063	-1.4	0.1	0
