@@ -13,10 +13,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    mPlotArea1 = new PlotArea;
-    mPlotArea2 = new PlotArea;
-    mPlotArea3 = new PlotArea;
-    mPlotArea4 = new PlotArea;
+    mPlotArea1 = new PlotArea("Plot1");
+    mPlotArea2 = new PlotArea("Plot2");
+    mPlotArea3 = new PlotArea("Plot3");
+    mPlotArea4 = new PlotArea("Plot4");
 
     QVBoxLayout *l1 = new QVBoxLayout;
     l1->addWidget(mPlotArea1);
@@ -37,7 +37,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // Show main window maximized
     showMaximized();
 
+    // Connect Menu Events
     connect(ui->actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout(bool)));
+
 
     /* ui->plotWidget1->applySettings("plotWidget1");
     ui->plotWidget2->applySettings("plotWidget2");

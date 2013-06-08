@@ -20,7 +20,8 @@ PlotWidget::PlotWidget(QWidget *parent) :
     ui(new Ui::PlotWidget),
      mExternalLegend( NULL ),
      mLegendItem( NULL ),
-     mIsDirty( false )
+     mIsDirty( false ),
+     mName( "Plot" )
 {
     ui->setupUi(this);
 

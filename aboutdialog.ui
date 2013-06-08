@@ -13,16 +13,22 @@
   <property name="windowTitle">
    <string>About STS-Simulator</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;About STS-Simulator&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Created by Arnaud TANGUY under supervision of the CRANN Institute Dublin.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Contact: &lt;a href=&quot;mailto:arn.tanguy@gmail.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;arn.tanguy@gmail.com&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>
-   <item>
+   <item row="1" column="0">
     <widget class="QPushButton" name="pushButton">
+     <property name="minimumSize">
+      <size>
+       <width>525</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="text">
       <string>Ok</string>
      </property>

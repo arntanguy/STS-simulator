@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     plotwidget.cpp \
     legenditem.cpp \
     curve.cpp \
-    plotarea.cpp
+    plotarea.cpp \
+    plotcontroldialog.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -27,13 +28,14 @@ HEADERS  += mainwindow.h \
     settings.h \
     legenditem.h \
     curve.h \
-    plotarea.h
+    plotarea.h \
+    plotcontroldialog.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
     plotwidget.ui \
-    graphdialog.ui \
-    plotarea.ui
+    plotarea.ui \
+    plotcontroldialog.ui
 
 INCLUDEPATH += /usr/local/qwt-6.1.0-rc3/include
 LIBS +=  -L/usr/local/qwt-6.1.0-rc3/lib -lqwt

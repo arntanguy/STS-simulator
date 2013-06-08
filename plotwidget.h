@@ -31,6 +31,8 @@ private:
     LegendItem *mLegendItem;
     bool mIsDirty;
 
+    QString mName;
+
 private:
     void initZoom();
     void initOverlay();
