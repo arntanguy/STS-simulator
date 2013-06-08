@@ -22,7 +22,7 @@ class PlotWidget : public QwtPlot
 public:
     explicit PlotWidget(QWidget *parent = 0);
     virtual ~PlotWidget();
-    
+
 private:
     Ui::PlotWidget *ui;
     QwtPlotZoomer *mPlotZoomer;
@@ -40,7 +40,7 @@ private:
 
 
 public Q_SLOTS:
-    void applySettings( const Settings & );
+    void applySettings(const QString &plotName );
 
 public:
     virtual void replot();

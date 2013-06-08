@@ -1,5 +1,6 @@
 #include "plotwidget.h"
 #include "ui_plotwidget.h"
+#include <QSettings>
 #include <qwt_plot_canvas.h>
 #include <qwt_plot_grid.h>
 #include <qwt_plot_layout.h>
@@ -20,25 +21,6 @@ PlotWidget::PlotWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-
-//    QwtPlotCurve *curve1 = new QwtPlotCurve("Curve 1");
-//
-//    QVector< double > xdata;
-//    QVector< double > ydata;
-//
-//
-//    for(int i=0;i<100; i++) {
-//        xdata.append(i);
-//        ydata.append(sin(i));
-//        xdata.append(i+0.5);
-//        ydata.append(sin(i+0.5));
-//    }
-//
-//
-//    curve1->setSamples(xdata, ydata);
-//    curve1->setCurveAttribute(QwtPlotCurve::Fitted, true);
-//    curve1->attach(this);
-//
     setupPlot();
     initZoom();
 
@@ -102,14 +84,24 @@ void PlotWidget::insertCurve()
     curve->attach( this );
 }
 
-void PlotWidget::applySettings( const Settings &settings )
+/**
+ * @brief PlotWidget::applySettings
+ *      Apply graph settings from the saved settings (using QSettings)
+ * @param plotName
+ *      Name of the plot
+ */
+void PlotWidget::applySettings( const QString &plotName)
 {
+    QSettings settings;
+    settings.beginGroup("Plot/"+plotName+"/legend");
+
     mIsDirty = false;
     setAutoReplot( true );
 
-    if ( settings.legend.isEnabled )
+    if ( settings.value("isEnabled", false).toBool() )
     {
-        if ( settings.legend.position > QwtPlot::TopLegend )
+        QwtPlot::LegendPosition legendPosition = static_cast<QwtPlot::LegendPosition>(settings.value("position" , QwtPlot::TopLegend).toInt());
+        if ( legendPosition > QwtPlot::TopLegend )
         {
             if ( legend() )
             {
@@ -142,10 +134,10 @@ void PlotWidget::applySettings( const Settings &settings )
             mExternalLegend = NULL;
 
             if ( legend() == NULL ||
-                plotLayout()->legendPosition() != settings.legend.position )
+                plotLayout()->legendPosition() != legendPosition)
             {
                 insertLegend( new QwtLegend(),
-                    QwtPlot::LegendPosition( settings.legend.position ) );
+                    QwtPlot::LegendPosition( legendPosition ) );
             }
         }
     }
@@ -156,8 +148,10 @@ void PlotWidget::applySettings( const Settings &settings )
         delete mExternalLegend;
         mExternalLegend = NULL;
     }
+    settings.endGroup();
 
-    if ( settings.legendItem.isEnabled )
+    settings.beginGroup("Plot/"+plotName+"/legendItem");
+    if ( settings.value("isEnabled", true).toBool() )
     {
         if ( mLegendItem == NULL )
         {
@@ -165,11 +159,13 @@ void PlotWidget::applySettings( const Settings &settings )
             mLegendItem->attach( this );
         }
 
-        mLegendItem->setMaxColumns( settings.legendItem.numColumns );
-        mLegendItem->setAlignment( Qt::Alignment( settings.legendItem.alignment ) );
+        mLegendItem->setMaxColumns( settings.value("numColumns", 1).toInt() );
+        QVariant v = static_cast<int>(Qt::AlignRight | Qt::AlignTop);
+        mLegendItem->setAlignment( Qt::Alignment( settings.value("alignment", v ).value<int>() ) );
+        QwtPlotLegendItem::BackgroundMode bgMode = static_cast<QwtPlotLegendItem::BackgroundMode>(settings.value("backgroundMode", 0).toInt());
         mLegendItem->setBackgroundMode(
-            QwtPlotLegendItem::BackgroundMode( settings.legendItem.backgroundMode ) );
-        if ( settings.legendItem.backgroundMode ==
+            QwtPlotLegendItem::BackgroundMode( bgMode ) );
+        if ( bgMode ==
             QwtPlotLegendItem::ItemBackground )
         {
             mLegendItem->setBorderRadius( 4 );
@@ -186,7 +182,7 @@ void PlotWidget::applySettings( const Settings &settings )
         }
 
         QFont font = mLegendItem->font();
-        font.setPointSize( settings.legendItem.size );
+        font.setPointSize( settings.value("size", 10).toInt());
         mLegendItem->setFont( font );
     }
     else
@@ -196,15 +192,16 @@ void PlotWidget::applySettings( const Settings &settings )
     }
 
     QwtPlotItemList curveList = itemList( QwtPlotItem::Rtti_PlotCurve );
-    if ( curveList.size() != settings.curve.numCurves )
+    int numCurves = settings.value("numCurves", 4).toInt();
+    if ( curveList.size() != numCurves)
     {
-        while ( curveList.size() > settings.curve.numCurves )
+        while ( curveList.size() > numCurves)
         {
             QwtPlotItem* curve = curveList.takeFirst();
             delete curve;
         }
 
-        for ( int i = curveList.size(); i < settings.curve.numCurves; i++ )
+        for ( int i = curveList.size(); i < numCurves; i++ )
             insertCurve();
     }
 
@@ -212,9 +209,9 @@ void PlotWidget::applySettings( const Settings &settings )
     for ( int i = 0; i < curveList.count(); i++ )
     {
         Curve* curve = static_cast<Curve*>( curveList[i] );
-        curve->setCurveTitle( settings.curve.title );
+        curve->setCurveTitle( settings.value("title", "Curve").toString() );
 
-        int sz = 0.5 * settings.legendItem.size;
+        int sz = 0.5 * settings.value("size", 10).toInt();
         curve->setLegendIconSize( QSize( sz, sz ) );
     }
 
@@ -224,6 +221,7 @@ void PlotWidget::applySettings( const Settings &settings )
         mIsDirty = false;
         replot();
     }
+    settings.endGroup();
 }
 
 void PlotWidget::replot()

@@ -28,16 +28,15 @@ MainWindow::MainWindow(QWidget *parent) :
     settings.legendItem.isEnabled = true;
     settings.legendItem.numColumns = 1;
     settings.legendItem.alignment = Qt::AlignRight | Qt::AlignTop;
-    settings.legendItem.backgroundMode = 0;
     settings.legendItem.size = ui->plotWidget1->canvas()->font().pointSize();
 
     settings.curve.numCurves = 3;
     settings.curve.title = "Curve";
 
-    ui->plotWidget1->applySettings(settings);
-    ui->plotWidget2->applySettings(settings);
-    ui->plotWidget3->applySettings(settings);
-    ui->plotWidget4->applySettings(settings);
+    ui->plotWidget1->applySettings("plotWidget1");
+    ui->plotWidget2->applySettings("plotWidget2");
+    ui->plotWidget3->applySettings("plotWidget3");
+    ui->plotWidget4->applySettings("plotWidget4");
 
 }
 
@@ -46,6 +45,15 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+// ============== PRIVATE FUNCTIONS ================
+void MainWindow::readSettings() {
+//QSettings settings;
+//settings.beginGroup("GlobalPlotOptions/legend");
+//settings.value("isEnabled", false).toBool();
+//move(settings.value("pos", QPoint(200, 200)).toPoint());
+//settings.endGroup();
+}
 
 
 // =============== SLOTS ===================
