@@ -33,6 +33,7 @@ private:
 
 private:
     void initZoom();
+    void initOverlay();
     void setupPlot();
 
     void insertCurve();

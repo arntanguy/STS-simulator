@@ -3,6 +3,7 @@
 #include "aboutdialog.h"
 #include "plotwidget.h"
 #include "settings.h"
+#include "plotarea.h"
 
 #include <QMdiSubWindow>
 
@@ -12,31 +13,36 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    mPlotArea1 = new PlotArea;
+    mPlotArea2 = new PlotArea;
+    mPlotArea3 = new PlotArea;
+    mPlotArea4 = new PlotArea;
+
+    QVBoxLayout *l1 = new QVBoxLayout;
+    l1->addWidget(mPlotArea1);
+    ui->widget1->setLayout(l1);
+
+    QVBoxLayout *l2 = new QVBoxLayout;
+    l2->addWidget(mPlotArea2);
+    ui->widget2->setLayout(l2);
+
+    QVBoxLayout *l3 = new QVBoxLayout;
+    l3->addWidget(mPlotArea3);
+    ui->widget3->setLayout(l3);
+
+    QVBoxLayout *l4 = new QVBoxLayout;
+    l4->addWidget(mPlotArea4);
+    ui->widget4->setLayout(l4);
 
     // Show main window maximized
     showMaximized();
 
     connect(ui->actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout(bool)));
 
-
-    // General graph settings
-    // TODO: provide a control panel to change these settings
-    Settings settings;
-    settings.legend.isEnabled = false;
-    settings.legend.position = QwtPlot::BottomLegend;
-
-    settings.legendItem.isEnabled = true;
-    settings.legendItem.numColumns = 1;
-    settings.legendItem.alignment = Qt::AlignRight | Qt::AlignTop;
-    settings.legendItem.size = ui->plotWidget1->canvas()->font().pointSize();
-
-    settings.curve.numCurves = 3;
-    settings.curve.title = "Curve";
-
-    ui->plotWidget1->applySettings("plotWidget1");
+    /* ui->plotWidget1->applySettings("plotWidget1");
     ui->plotWidget2->applySettings("plotWidget2");
     ui->plotWidget3->applySettings("plotWidget3");
-    ui->plotWidget4->applySettings("plotWidget4");
+    ui->plotWidget4->applySettings("plotWidget4"); */
 
 }
 
@@ -48,11 +54,11 @@ MainWindow::~MainWindow()
 
 // ============== PRIVATE FUNCTIONS ================
 void MainWindow::readSettings() {
-//QSettings settings;
-//settings.beginGroup("GlobalPlotOptions/legend");
-//settings.value("isEnabled", false).toBool();
-//move(settings.value("pos", QPoint(200, 200)).toPoint());
-//settings.endGroup();
+    //QSettings settings;
+    //settings.beginGroup("GlobalPlotOptions/legend");
+    //settings.value("isEnabled", false).toBool();
+    //move(settings.value("pos", QPoint(200, 200)).toPoint());
+    //settings.endGroup();
 }
 
 

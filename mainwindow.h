@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class PlotArea;
+
 namespace Ui {
 class MainWindow;
 }
@@ -23,6 +25,12 @@ public slots:
     
 private:
     Ui::MainWindow *ui;
+
+    PlotArea *mPlotArea1;
+    PlotArea *mPlotArea2;
+    PlotArea *mPlotArea3;
+    PlotArea *mPlotArea4;
+
 };
 
 #endif // MAINWINDOW_H

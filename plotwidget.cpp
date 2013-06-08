@@ -8,6 +8,9 @@
 #include "settings.h"
 #include "legenditem.h"
 
+#include <QPushButton>
+#include <qwt_widget_overlay.h>
+
 /*!
  * \brief PlotWidget::PlotWidget
  * \param parent
@@ -23,6 +26,7 @@ PlotWidget::PlotWidget(QWidget *parent) :
 
     setupPlot();
     initZoom();
+    initOverlay();
 
     replot();
 }
@@ -57,6 +61,10 @@ void PlotWidget::setupPlot() {
     this->setAxisTitle(QwtPlot::xBottom, "V");
     this->setAxisTitle(QwtPlot::yLeft, "P<sub>T</sub>(V)");
 
+}
+
+void PlotWidget::initOverlay()
+{
 }
 
 

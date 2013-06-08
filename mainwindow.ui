@@ -33,14 +33,14 @@
        <enum>Qt::Vertical</enum>
       </property>
       <widget class="QWidget" name="widget" native="true">
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
          <widget class="QSplitter" name="splitter_2">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <widget class="PlotWidget" name="plotWidget1" native="true"/>
-          <widget class="PlotWidget" name="plotWidget3" native="true"/>
+          <widget class="QWidget" name="widget1" native="true"/>
+          <widget class="QWidget" name="widget3" native="true"/>
          </widget>
         </item>
        </layout>
@@ -52,8 +52,8 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <widget class="PlotWidget" name="plotWidget2" native="true"/>
-          <widget class="PlotWidget" name="plotWidget4" native="true"/>
+          <widget class="QWidget" name="widget2" native="true"/>
+          <widget class="QWidget" name="widget4" native="true"/>
          </widget>
         </item>
        </layout>
@@ -107,14 +107,6 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <customwidgets>
-  <customwidget>
-   <class>PlotWidget</class>
-   <extends>QWidget</extends>
-   <header>plotwidget.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections>
   <connection>
