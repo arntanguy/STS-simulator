@@ -39,13 +39,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Connect Menu Events
     connect(ui->actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout(bool)));
-
-
-    /* ui->plotWidget1->applySettings("plotWidget1");
-    ui->plotWidget2->applySettings("plotWidget2");
-    ui->plotWidget3->applySettings("plotWidget3");
-    ui->plotWidget4->applySettings("plotWidget4"); */
-
 }
 
 MainWindow::~MainWindow()

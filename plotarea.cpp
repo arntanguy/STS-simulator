@@ -11,6 +11,7 @@ PlotArea::PlotArea(const QString &name, QWidget *parent) :
 
     ui->setupUi(this);
     ui->plotWidget->setTitle(mName);
+    ui->plotWidget->applySettings(mName);
 
     // Connect PlotArea events
     connect( ui->plotConfigButton, SIGNAL(clicked()), this, SLOT(openConfigDialog()) );
@@ -37,4 +38,5 @@ void PlotArea::plotConfigChanged()
 {
     qDebug() << "Plot configuration changed";
     mConfigDialog->accept();
+    ui->plotWidget->applySettings(mName);
 }

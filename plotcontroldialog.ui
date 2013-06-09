@@ -13,37 +13,8 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>Range</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="1">
-       <widget class="QDoubleSpinBox" name="minRangeValue"/>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="minRangeLabel">
-        <property name="text">
-         <string>Min</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QDoubleSpinBox" name="maxRangeValue"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="maxRangeLabel">
-        <property name="text">
-         <string>Max</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="0">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
       <string>Precision</string>
@@ -75,7 +46,85 @@
      </layout>
     </widget>
    </item>
-   <item>
+   <item row="0" column="1">
+    <widget class="QGroupBox" name="groupBox_4">
+     <property name="title">
+      <string>Plot info</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Title</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="plotTitle"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Horizontal axis</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="lineEdit"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Vertical axis</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="lineEdit_2"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Range</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="1" column="0">
+       <widget class="QLabel" name="maxRangeLabel">
+        <property name="text">
+         <string>Max</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QDoubleSpinBox" name="minRangeValue"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDoubleSpinBox" name="maxRangeValue"/>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="minRangeLabel">
+        <property name="text">
+         <string>Min</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="1">
     <widget class="QGroupBox" name="groupBox_3">
      <property name="title">
       <string>Legend</string>
@@ -98,16 +147,6 @@
      </layout>
     </widget>
    </item>
-   <item>
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -118,5 +157,22 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>PlotControlDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>206</x>
+     <y>308</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>206</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
