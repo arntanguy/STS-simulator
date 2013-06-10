@@ -10,8 +10,8 @@ PlotControlDialog::PlotControlDialog(const QString &plotName, QWidget *parent) :
     ui->setupUi(this);
     mPlotName = plotName;
 
+    init();
     initFromConfig();
-
 
     connect(this->ui->buttonBox, SIGNAL(accepted()), parent, SLOT(plotConfigChanged()));
     connect(this->ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
@@ -20,6 +20,14 @@ PlotControlDialog::PlotControlDialog(const QString &plotName, QWidget *parent) :
 PlotControlDialog::~PlotControlDialog()
 {
     delete ui;
+}
+
+void PlotControlDialog::init()
+{
+    ui->horizontalAxisScale->addItem(tr("Linear"), "linear");
+    ui->horizontalAxisScale->addItem(tr("Log10"), "log10");
+    ui->verticalAxisScale->addItem(tr("Linear"), "linear");
+    ui->verticalAxisScale->addItem(tr("Log10"), "log10");
 }
 
 void PlotControlDialog::initFromConfig()
@@ -37,6 +45,15 @@ void PlotControlDialog::initFromConfig()
     ui->titleLineEdit->setText(mSettings.value("title", mPlotName).toString());
     ui->horizontalAxisLineEdit->setText(mSettings.value("horizontalAxisName", "X Axis").toString());
     ui->verticalAxisLineEdit->setText(mSettings.value("verticalAxisName", "X Axis").toString());
+    mSettings.endGroup();
+
+    mSettings.beginGroup("Plot/"+mPlotName+"/axisScale");
+    int index = ui->horizontalAxisScale->findData(mSettings.value("horizontalAxisScale", "linear").toString());
+    if(index != -1)
+        ui->horizontalAxisScale->setCurrentIndex(index);
+    index = ui->verticalAxisScale->findData(mSettings.value("verticalAxisScale", "linear").toString());
+    if(index != -1)
+        ui->verticalAxisScale->setCurrentIndex(index);
     mSettings.endGroup();
 }
 
@@ -61,6 +78,11 @@ void PlotControlDialog::accept()
     mSettings.setValue("title", ui->titleLineEdit->text());
     mSettings.setValue("horizontalAxisName", ui->horizontalAxisLineEdit->text());
     mSettings.setValue("verticalAxisName", ui->verticalAxisLineEdit->text());
+    mSettings.endGroup();
+
+    mSettings.beginGroup("Plot/"+mPlotName+"/axisScale");
+    mSettings.setValue("horizontalAxisScale", ui->horizontalAxisScale->itemData(ui->horizontalAxisScale->currentIndex()));
+    mSettings.setValue("verticalAxisScale", ui->verticalAxisScale->itemData(ui->verticalAxisScale->currentIndex()));
     mSettings.endGroup();
 
     QDialog::accept();

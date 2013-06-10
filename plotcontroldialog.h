@@ -24,6 +24,7 @@ private:
     QSettings mSettings;
 
 private:
+    void init();
     void initFromConfig();
 };
 

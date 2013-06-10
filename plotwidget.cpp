@@ -10,6 +10,7 @@
 
 #include <QPushButton>
 #include <qwt_widget_overlay.h>
+#include <qwt_date_scale_engine.h>
 
 /*!
  * \brief PlotWidget::PlotWidget
@@ -61,7 +62,6 @@ void PlotWidget::setupPlot() {
     // axis legends
     this->setAxisTitle(QwtPlot::xBottom, "V");
     this->setAxisTitle(QwtPlot::yLeft, "P<sub>T</sub>(V)");
-
 }
 
 void PlotWidget::initOverlay()
@@ -237,6 +237,21 @@ void PlotWidget::applySettings( const QString &plotName)
     // axis legends
     setAxisTitle(QwtPlot::xBottom, settings.value("horizontalAxisName", "X Axis").toString());
     setAxisTitle(QwtPlot::yLeft, settings.value("verticalAxisName", "X Axis").toString());
+    settings.endGroup();
+
+    settings.beginGroup("Plot/"+plotName+"/axisScale");
+    QString scale = settings.value("horizontalAxisScale", "linear").toString();
+    if(scale == "log10") {
+        setAxisScaleEngine(QwtPlot::xBottom, new QwtLogScaleEngine());
+    } else {
+        setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine());
+    }
+    scale = settings.value("verticalAxisScale", "linear").toString();
+    if(scale == "log10") {
+        setAxisScaleEngine(QwtPlot::yLeft, new QwtLogScaleEngine());
+    } else {
+        setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine());
+    }
     settings.endGroup();
 
     setAutoReplot( false );

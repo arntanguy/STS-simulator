@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>413</width>
-    <height>331</height>
+    <width>659</width>
+    <height>364</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -141,7 +141,7 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="1">
+   <item row="2" column="0">
     <widget class="QGroupBox" name="groupBox_3">
      <property name="title">
       <string>Legend</string>
@@ -160,6 +160,35 @@
          <string>Legend around plot</string>
         </property>
        </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QGroupBox" name="groupBox_5">
+     <property name="title">
+      <string>Axis scale</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_3">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Horizontal axis</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Vertical axis</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="horizontalAxisScale"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="verticalAxisScale"/>
       </item>
      </layout>
     </widget>
