@@ -32,6 +32,12 @@ void PlotControlDialog::initFromConfig()
     mSettings.beginGroup("Plot/"+mPlotName+"/legendItem");
     ui->legendItemCheckBox->setChecked(mSettings.value("isEnabled", false).toBool());
     mSettings.endGroup();
+
+    mSettings.beginGroup("Plot/"+mPlotName+"/info");
+    ui->titleLineEdit->setText(mSettings.value("title", mPlotName).toString());
+    ui->horizontalAxisLineEdit->setText(mSettings.value("horizontalAxisName", "X Axis").toString());
+    ui->verticalAxisLineEdit->setText(mSettings.value("verticalAxisName", "X Axis").toString());
+    mSettings.endGroup();
 }
 
 void PlotControlDialog::accept()
@@ -44,6 +50,17 @@ void PlotControlDialog::accept()
     mSettings.beginGroup("Plot/"+mPlotName+"/legendItem");
     mSettings.setValue("isEnabled", ui->legendItemCheckBox->isChecked());
     mSettings.setValue("numCurves", 3);
+    mSettings.endGroup();
+
+    mSettings.beginGroup("Plot/"+mPlotName+"/range");
+    mSettings.setValue("min", ui->minRangeValue->value());
+    mSettings.setValue("max", ui->maxRangeValue->value());
+    mSettings.endGroup();
+
+    mSettings.beginGroup("Plot/"+mPlotName+"/info");
+    mSettings.setValue("title", ui->titleLineEdit->text());
+    mSettings.setValue("horizontalAxisName", ui->horizontalAxisLineEdit->text());
+    mSettings.setValue("verticalAxisName", ui->verticalAxisLineEdit->text());
     mSettings.endGroup();
 
     QDialog::accept();

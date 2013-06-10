@@ -60,7 +60,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLineEdit" name="plotTitle"/>
+       <widget class="QLineEdit" name="titleLineEdit"/>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_2">
@@ -70,7 +70,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="lineEdit"/>
+       <widget class="QLineEdit" name="horizontalAxisLineEdit"/>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_3">
@@ -80,7 +80,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLineEdit" name="lineEdit_2"/>
+       <widget class="QLineEdit" name="verticalAxisLineEdit"/>
       </item>
      </layout>
     </widget>
@@ -109,10 +109,27 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QDoubleSpinBox" name="minRangeValue"/>
+       <widget class="QDoubleSpinBox" name="minRangeValue">
+        <property name="minimum">
+         <double>-100000.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>1000000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>-10.000000000000000</double>
+        </property>
+       </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QDoubleSpinBox" name="maxRangeValue"/>
+       <widget class="QDoubleSpinBox" name="maxRangeValue">
+        <property name="maximum">
+         <double>10000000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>10.000000000000000</double>
+        </property>
+       </widget>
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="minRangeLabel">

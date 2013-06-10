@@ -38,5 +38,7 @@ void PlotArea::plotConfigChanged()
 {
     qDebug() << "Plot configuration changed";
     mConfigDialog->accept();
+
+
     ui->plotWidget->applySettings(mName);
 }

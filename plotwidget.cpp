@@ -109,7 +109,7 @@ void PlotWidget::applySettings( const QString &plotName)
 
     if ( settings.value("isEnabled", false).toBool() )
     {
-        QwtPlot::LegendPosition legendPosition = static_cast<QwtPlot::LegendPosition>(settings.value("position" , QwtPlot::TopLegend).toInt());
+        QwtPlot::LegendPosition legendPosition = static_cast<QwtPlot::LegendPosition>(settings.value("position" , QwtPlot::BottomLegend).toInt());
         if ( legendPosition > QwtPlot::TopLegend )
         {
             if ( legend() )
@@ -224,13 +224,27 @@ void PlotWidget::applySettings( const QString &plotName)
         curve->setLegendIconSize( QSize( sz, sz ) );
     }
 
+    settings.endGroup();
+
+    settings.beginGroup("Plot/"+plotName+"/range");
+    double min = settings.value("min", -10.d).toDouble();
+    double max = settings.value("max", 10.d).toDouble();
+    this->setAxisScale(QwtPlot::xBottom, min, max);
+    settings.endGroup();
+
+    settings.beginGroup("Plot/"+plotName+"/info");
+    setTitle(settings.value("title", plotName).toString());
+    // axis legends
+    setAxisTitle(QwtPlot::xBottom, settings.value("horizontalAxisName", "X Axis").toString());
+    setAxisTitle(QwtPlot::yLeft, settings.value("verticalAxisName", "X Axis").toString());
+    settings.endGroup();
+
     setAutoReplot( false );
     if ( mIsDirty )
     {
         mIsDirty = false;
         replot();
     }
-    settings.endGroup();
 }
 
 void PlotWidget::replot()
