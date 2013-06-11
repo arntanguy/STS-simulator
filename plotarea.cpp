@@ -34,6 +34,10 @@ void PlotArea::openConfigDialog()
     mConfigDialog->exec();
 }
 
+/*!
+ * \brief PlotArea::plotConfigChanged
+ *  Applies the new configuration.
+ */
 void PlotArea::plotConfigChanged()
 {
     qDebug() << "Plot configuration changed";

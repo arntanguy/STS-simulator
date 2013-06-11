@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>659</width>
-    <height>364</height>
+    <height>384</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -144,22 +144,28 @@
    <item row="2" column="0">
     <widget class="QGroupBox" name="groupBox_3">
      <property name="title">
-      <string>Legend</string>
+      <string>External Legend</string>
      </property>
-     <layout class="QFormLayout" name="formLayout">
+     <layout class="QFormLayout" name="formLayout_4">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+      </property>
       <item row="0" column="0">
-       <widget class="QCheckBox" name="legendItemCheckBox">
+       <widget class="QCheckBox" name="legendCheckBox">
         <property name="text">
-         <string>Legend on plot</string>
+         <string>Enabled</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QCheckBox" name="legendCheckBox">
+       <widget class="QLabel" name="label_8">
         <property name="text">
-         <string>Legend around plot</string>
+         <string>Position</string>
         </property>
        </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="legendPositionComboBox"/>
       </item>
      </layout>
     </widget>
@@ -189,6 +195,42 @@
       </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="verticalAxisScale"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QGroupBox" name="groupBox_6">
+     <property name="title">
+      <string>Legend on plot</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0" colspan="2">
+       <widget class="QCheckBox" name="legendItemCheckBox">
+        <property name="text">
+         <string>Enabled</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Horizontal</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="legendItemHorizontalPositionComboBox"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Vertical</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="legendItemVerticalPositionComboBox"/>
       </item>
      </layout>
     </widget>

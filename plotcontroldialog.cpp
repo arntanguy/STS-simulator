@@ -2,6 +2,7 @@
 #include <QDebug>
 #include "plotcontroldialog.h"
 #include "ui_plotcontroldialog.h"
+#include <qwt_plot.h>
 
 PlotControlDialog::PlotControlDialog(const QString &plotName, QWidget *parent) :
     QDialog(parent),
@@ -22,23 +23,57 @@ PlotControlDialog::~PlotControlDialog()
     delete ui;
 }
 
+/*!
+ * \brief PlotControlDialog::init
+ *  Init config dialog (combobox...)
+ */
 void PlotControlDialog::init()
 {
+    // Init Axis scale controls
     ui->horizontalAxisScale->addItem(tr("Linear"), "linear");
     ui->horizontalAxisScale->addItem(tr("Log10"), "log10");
     ui->verticalAxisScale->addItem(tr("Linear"), "linear");
     ui->verticalAxisScale->addItem(tr("Log10"), "log10");
+
+    // Init legend position controls
+    ui->legendPositionComboBox->addItem(tr("Top"), QwtPlot::TopLegend);
+    ui->legendPositionComboBox->addItem(tr("Bottom"), QwtPlot::BottomLegend);
+    ui->legendPositionComboBox->addItem(tr("Left"), QwtPlot::LeftLegend);
+    ui->legendPositionComboBox->addItem(tr("Right"), QwtPlot::RightLegend);
+
+    ui->legendItemHorizontalPositionComboBox->addItem(tr("Left"), Qt::AlignLeft);
+    ui->legendItemHorizontalPositionComboBox->addItem(tr("Center"), Qt::AlignHCenter);
+    ui->legendItemHorizontalPositionComboBox->addItem(tr("Right"), Qt::AlignRight);
+
+    ui->legendItemVerticalPositionComboBox->addItem(tr("Top"), Qt::AlignTop);
+    ui->legendItemVerticalPositionComboBox->addItem(tr("Center"), Qt::AlignVCenter);
+    ui->legendItemVerticalPositionComboBox->addItem(tr("Bottom"), Qt::AlignBottom);
 }
 
+/*!
+ * \brief PlotControlDialog::initFromConfig
+ *  Initialize from saved configuration (QSettings)
+ */
 void PlotControlDialog::initFromConfig()
 {
     qDebug() << "PlotControlDialog::initFromConfig()";
     mSettings.beginGroup("Plot/"+mPlotName+"/legend");
     ui->legendCheckBox->setChecked(mSettings.value("isEnabled", false).toBool());
+    int index = ui->legendPositionComboBox->findData(mSettings.value("position", Qt::AlignBottom).toInt());
+    if(index != -1)
+        ui->legendPositionComboBox->setCurrentIndex(index);
     mSettings.endGroup();
 
     mSettings.beginGroup("Plot/"+mPlotName+"/legendItem");
     ui->legendItemCheckBox->setChecked(mSettings.value("isEnabled", false).toBool());
+    QVariant align = static_cast<int>(Qt::AlignRight);
+    index = ui->legendItemHorizontalPositionComboBox->findData(mSettings.value("horizontalPosition", align).toInt());
+    if(index != -1)
+        ui->legendItemHorizontalPositionComboBox->setCurrentIndex(index);
+    align = static_cast<int>(Qt::AlignTop);
+    index = ui->legendItemVerticalPositionComboBox->findData(mSettings.value("verticalPosition", align).toInt());
+    if(index != -1)
+        ui->legendItemVerticalPositionComboBox->setCurrentIndex(index);
     mSettings.endGroup();
 
     mSettings.beginGroup("Plot/"+mPlotName+"/info");
@@ -48,7 +83,7 @@ void PlotControlDialog::initFromConfig()
     mSettings.endGroup();
 
     mSettings.beginGroup("Plot/"+mPlotName+"/axisScale");
-    int index = ui->horizontalAxisScale->findData(mSettings.value("horizontalAxisScale", "linear").toString());
+    index = ui->horizontalAxisScale->findData(mSettings.value("horizontalAxisScale", "linear").toString());
     if(index != -1)
         ui->horizontalAxisScale->setCurrentIndex(index);
     index = ui->verticalAxisScale->findData(mSettings.value("verticalAxisScale", "linear").toString());
@@ -57,15 +92,28 @@ void PlotControlDialog::initFromConfig()
     mSettings.endGroup();
 }
 
+/*!
+ * \brief PlotControlDialog::accept
+ *  Saves all the parameters set within the config dialog (QSettings)
+ *  Discards config dialog
+ */
 void PlotControlDialog::accept()
 {
     qDebug() << "PlotControlDialog::accept()";
     mSettings.beginGroup("Plot/"+mPlotName+"/legend");
     mSettings.setValue("isEnabled", ui->legendCheckBox->isChecked());
+    mSettings.setValue("position", ui->legendPositionComboBox->itemData(ui->legendPositionComboBox->currentIndex()));
     mSettings.endGroup();
 
     mSettings.beginGroup("Plot/"+mPlotName+"/legendItem");
     mSettings.setValue("isEnabled", ui->legendItemCheckBox->isChecked());
+    int horizontalPos = ui->legendItemHorizontalPositionComboBox->itemData(ui->legendItemHorizontalPositionComboBox->currentIndex()).toInt();
+    int verticalPos = ui->legendItemVerticalPositionComboBox->itemData(ui->legendItemVerticalPositionComboBox->currentIndex()).toInt();
+    Qt::Alignment aX = static_cast<Qt::Alignment>(horizontalPos);
+    Qt::Alignment aY = static_cast<Qt::Alignment>(verticalPos);
+    mSettings.setValue("horizontalPosition", horizontalPos);
+    mSettings.setValue("verticalPosition", verticalPos);
+    mSettings.setValue("alignment", static_cast<int>(aX|aY));
     mSettings.setValue("numCurves", 3);
     mSettings.endGroup();
 
