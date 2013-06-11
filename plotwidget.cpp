@@ -230,6 +230,9 @@ void PlotWidget::applySettings( const QString &plotName)
     double min = settings.value("min", -10.d).toDouble();
     double max = settings.value("max", 10.d).toDouble();
     this->setAxisScale(QwtPlot::xBottom, min, max);
+    // Replot and then set zoom base to the current axis scale.
+    QwtPlot::replot();
+    mPlotZoomer->setZoomBase();
     settings.endGroup();
 
     settings.beginGroup("Plot/"+plotName+"/info");
@@ -271,4 +274,5 @@ void PlotWidget::replot()
     }
 
     QwtPlot::replot();
+
 }
