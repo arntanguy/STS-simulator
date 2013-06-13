@@ -6,41 +6,19 @@
 class Curve: public QwtPlotCurve
 {
 public:
-    Curve( int index ):
-        d_index( index )
-    {
-        setRenderHint( QwtPlotItem::RenderAntialiased );
-        initData();
-    }
+    Curve( const QString &name );
 
-    void setCurveTitle( const QString &title )
-    {
-        QString txt("%1 %2");
-        setTitle( QString( "%1 %2" ).arg( title ).arg( d_index ) );
-    }
-
-    void initData()
-    {
-        QVector<QPointF> points;
-
-        double y = qrand() % 1000;
-
-        for ( double x = 0.0; x <= 1000.0; x += 100.0 )
-        {
-            double off = qrand() % 200 - 100;
-            if ( y + off > 980.0 || y + off < 20.0 )
-                off = -off;
-
-            y += off;
-
-            points += QPointF( x, y );
-        }
-
-        setSamples( points );
-    }
+    void initData();
+    void setResolution(int resolution);
 
 private:
-    const int d_index;
+    void init();
+
+
+private:
+    QString mName;
+
+    int mResolution;
 };
 
 

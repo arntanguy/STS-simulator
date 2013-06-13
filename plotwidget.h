@@ -7,9 +7,9 @@
 #include <qwt_plot_zoomer.h>
 #include <qwt_plot_picker.h>
 #include <qwt_legend.h>
+#include <QSettings>
 
 class LegendItem;
-class Settings;
 
 namespace Ui {
 class PlotWidget;
@@ -31,6 +31,7 @@ private:
     LegendItem *mLegendItem;
     bool mIsDirty;
 
+    QSettings mSettings;
     QString mName;
 
 private:
@@ -40,6 +41,8 @@ private:
 
     void insertCurve();
 
+    void setPrecision();
+
 
 
 public Q_SLOTS:
@@ -47,6 +50,7 @@ public Q_SLOTS:
 
 public:
     virtual void replot();
+    void setPrecision(int precision);
 };
 
 #endif // PLOTWIDGET_H

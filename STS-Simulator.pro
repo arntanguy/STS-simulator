@@ -18,18 +18,18 @@ SOURCES += main.cpp\
     aboutdialog.cpp \
     plotwidget.cpp \
     legenditem.cpp \
-    curve.cpp \
     plotarea.cpp \
-    plotcontroldialog.cpp
+    plotcontroldialog.cpp \
+    curve.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
     plotwidget.h \
-    settings.h \
     legenditem.h \
-    curve.h \
     plotarea.h \
-    plotcontroldialog.h
+    plotcontroldialog.h \
+    randomcurve.h \
+    curve.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
@@ -39,3 +39,5 @@ FORMS    += mainwindow.ui \
 
 INCLUDEPATH += /usr/local/qwt-6.1.0-rc3/include
 LIBS +=  -L/usr/local/qwt-6.1.0-rc3/lib -lqwt
+
+QMAKE_CXXFLAGS += -std=c++0x

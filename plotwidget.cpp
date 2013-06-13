@@ -4,8 +4,8 @@
 #include <qwt_plot_canvas.h>
 #include <qwt_plot_grid.h>
 #include <qwt_plot_layout.h>
+#include "randomcurve.h"
 #include "curve.h"
-#include "settings.h"
 #include "legenditem.h"
 
 #include <QPushButton>
@@ -88,28 +88,31 @@ void PlotWidget::insertCurve()
     };
     const int numColors = sizeof( colors ) / sizeof( colors[0] );
 
-    QwtPlotCurve *curve = new Curve( counter++ );
+    //QwtPlotCurve *curve = new RandomCurve( counter++ );
+    //curve->setPen( QColor( colors[ counter % numColors ] ), 2 );
+    //curve->attach( this );
+    Curve *curve = new Curve( QString("Curve ")+counter );
     curve->setPen( QColor( colors[ counter % numColors ] ), 2 );
     curve->attach( this );
+    counter++;
 }
 
 /**
  * @brief PlotWidget::applySettings
- *      Apply graph settings from the saved settings (using QSettings)
+ *      Apply graph mSettings from the saved mSettings (using QSettings)
  * @param plotName
  *      Name of the plot
  */
 void PlotWidget::applySettings( const QString &plotName)
 {
-    QSettings settings;
-    settings.beginGroup("Plot/"+plotName+"/legend");
+    mSettings.beginGroup("Plot/"+plotName+"/legend");
 
     mIsDirty = false;
     setAutoReplot( true );
 
-    if ( settings.value("isEnabled", false).toBool() )
+    if ( mSettings.value("isEnabled", false).toBool() )
     {
-        QwtPlot::LegendPosition legendPosition = static_cast<QwtPlot::LegendPosition>(settings.value("position" , QwtPlot::BottomLegend).toInt());
+        QwtPlot::LegendPosition legendPosition = static_cast<QwtPlot::LegendPosition>(mSettings.value("position" , QwtPlot::BottomLegend).toInt());
         if ( legendPosition > QwtPlot::TopLegend )
         {
             if ( legend() )
@@ -157,10 +160,10 @@ void PlotWidget::applySettings( const QString &plotName)
         delete mExternalLegend;
         mExternalLegend = NULL;
     }
-    settings.endGroup();
+    mSettings.endGroup();
 
-    settings.beginGroup("Plot/"+plotName+"/legendItem");
-    if ( settings.value("isEnabled", true).toBool() )
+    mSettings.beginGroup("Plot/"+plotName+"/legendItem");
+    if ( mSettings.value("isEnabled", true).toBool() )
     {
         if ( mLegendItem == NULL )
         {
@@ -168,10 +171,10 @@ void PlotWidget::applySettings( const QString &plotName)
             mLegendItem->attach( this );
         }
 
-        mLegendItem->setMaxColumns( settings.value("numColumns", 1).toInt() );
+        mLegendItem->setMaxColumns( mSettings.value("numColumns", 1).toInt() );
         QVariant v = static_cast<int>(Qt::AlignRight | Qt::AlignTop);
-        mLegendItem->setAlignment( Qt::Alignment( settings.value("alignment", v ).value<int>() ) );
-        QwtPlotLegendItem::BackgroundMode bgMode = static_cast<QwtPlotLegendItem::BackgroundMode>(settings.value("backgroundMode", 0).toInt());
+        mLegendItem->setAlignment( Qt::Alignment( mSettings.value("alignment", v ).value<int>() ) );
+        QwtPlotLegendItem::BackgroundMode bgMode = static_cast<QwtPlotLegendItem::BackgroundMode>(mSettings.value("backgroundMode", 0).toInt());
         mLegendItem->setBackgroundMode(
             QwtPlotLegendItem::BackgroundMode( bgMode ) );
         if ( bgMode ==
@@ -191,7 +194,7 @@ void PlotWidget::applySettings( const QString &plotName)
         }
 
         QFont font = mLegendItem->font();
-        font.setPointSize( settings.value("size", 10).toInt());
+        font.setPointSize( mSettings.value("size", 10).toInt());
         mLegendItem->setFont( font );
     }
     else
@@ -201,7 +204,7 @@ void PlotWidget::applySettings( const QString &plotName)
     }
 
     QwtPlotItemList curveList = itemList( QwtPlotItem::Rtti_PlotCurve );
-    int numCurves = settings.value("numCurves", 4).toInt();
+    int numCurves = mSettings.value("numCurves", 4).toInt();
     if ( curveList.size() != numCurves)
     {
         while ( curveList.size() > numCurves)
@@ -217,45 +220,49 @@ void PlotWidget::applySettings( const QString &plotName)
     curveList = itemList( QwtPlotItem::Rtti_PlotCurve );
     for ( int i = 0; i < curveList.count(); i++ )
     {
-        Curve* curve = static_cast<Curve*>( curveList[i] );
-        curve->setCurveTitle( settings.value("title", "Curve").toString() );
+        RandomCurve* curve = static_cast<RandomCurve*>( curveList[i] );
+        curve->setCurveTitle( mSettings.value("title", "Curve").toString() );
 
-        int sz = 0.5 * settings.value("size", 10).toInt();
+        int sz = 0.5 * mSettings.value("size", 10).toInt();
         curve->setLegendIconSize( QSize( sz, sz ) );
     }
 
-    settings.endGroup();
+    mSettings.endGroup();
 
-    settings.beginGroup("Plot/"+plotName+"/range");
-    double min = settings.value("min", -10.d).toDouble();
-    double max = settings.value("max", 10.d).toDouble();
+    mSettings.beginGroup("Plot/"+plotName+"/range");
+    double min = mSettings.value("min", -10.d).toDouble();
+    double max = mSettings.value("max", 10.d).toDouble();
     this->setAxisScale(QwtPlot::xBottom, min, max);
     // Replot and then set zoom base to the current axis scale.
     QwtPlot::replot();
     mPlotZoomer->setZoomBase();
-    settings.endGroup();
+    mSettings.endGroup();
 
-    settings.beginGroup("Plot/"+plotName+"/info");
-    setTitle(settings.value("title", plotName).toString());
+    mSettings.beginGroup("Plot/"+plotName+"/info");
+    setTitle(mSettings.value("title", plotName).toString());
     // axis legends
-    setAxisTitle(QwtPlot::xBottom, settings.value("horizontalAxisName", "X Axis").toString());
-    setAxisTitle(QwtPlot::yLeft, settings.value("verticalAxisName", "X Axis").toString());
-    settings.endGroup();
+    setAxisTitle(QwtPlot::xBottom, mSettings.value("horizontalAxisName", "X Axis").toString());
+    setAxisTitle(QwtPlot::yLeft, mSettings.value("verticalAxisName", "X Axis").toString());
+    mSettings.endGroup();
 
-    settings.beginGroup("Plot/"+plotName+"/axisScale");
-    QString scale = settings.value("horizontalAxisScale", "linear").toString();
+    mSettings.beginGroup("Plot/"+plotName+"/axisScale");
+    QString scale = mSettings.value("horizontalAxisScale", "linear").toString();
     if(scale == "log10") {
         setAxisScaleEngine(QwtPlot::xBottom, new QwtLogScaleEngine());
     } else {
         setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine());
     }
-    scale = settings.value("verticalAxisScale", "linear").toString();
+    scale = mSettings.value("verticalAxisScale", "linear").toString();
     if(scale == "log10") {
         setAxisScaleEngine(QwtPlot::yLeft, new QwtLogScaleEngine());
     } else {
         setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine());
     }
-    settings.endGroup();
+    mSettings.endGroup();
+
+    mSettings.beginGroup("Plot/"+plotName+"/precision");
+    setPrecision(mSettings.value("resolution", 1000).toDouble());
+    mSettings.endGroup();
 
     setAutoReplot( false );
     if ( mIsDirty )
@@ -275,4 +282,27 @@ void PlotWidget::replot()
 
     QwtPlot::replot();
 
+}
+
+/*!
+ * \brief PlotWidget::setPrecision
+ *  Assign the precision to the curves.
+ *  It the new precision is different from the current function,
+ *  calling this function will cause all the curves to be update (new values computed),
+ *  and the full plot will have to be redrawn.
+ *  This operation might be quite expensive, use with caution.
+ * \param precision
+ *  The new precision to apply (number of points to be computed).
+ */
+void PlotWidget::setPrecision(int precision)
+{
+    QwtPlotItemList items = QwtPlotDict::itemList();
+    for(auto it = items.begin(); it != items.end(); it++) {
+        Curve *curve = 0;
+        curve = dynamic_cast<Curve *>(*it);
+        if(curve != 0) {
+            qDebug() << "Curve " << curve->title().text() ;
+            curve->setResolution(precision);
+        }
+    }
 }

@@ -90,6 +90,15 @@ void PlotControlDialog::initFromConfig()
     if(index != -1)
         ui->verticalAxisScale->setCurrentIndex(index);
     mSettings.endGroup();
+
+    mSettings.beginGroup("Plot/"+mPlotName+"/precision");
+    ui->plotResolution->setValue(mSettings.value("resolution", 1000).toDouble());
+    mSettings.endGroup();
+
+    mSettings.beginGroup("Plot/"+mPlotName+"/range");
+    ui->minRangeValue->setValue(mSettings.value("min", 0).toDouble());
+    ui->maxRangeValue->setValue(mSettings.value("max", 1000).toDouble());
+    mSettings.endGroup();
 }
 
 /*!
@@ -131,6 +140,10 @@ void PlotControlDialog::accept()
     mSettings.beginGroup("Plot/"+mPlotName+"/axisScale");
     mSettings.setValue("horizontalAxisScale", ui->horizontalAxisScale->itemData(ui->horizontalAxisScale->currentIndex()));
     mSettings.setValue("verticalAxisScale", ui->verticalAxisScale->itemData(ui->verticalAxisScale->currentIndex()));
+    mSettings.endGroup();
+
+    mSettings.beginGroup("Plot/"+mPlotName+"/precision");
+    mSettings.setValue("resolution", ui->plotResolution->value());
     mSettings.endGroup();
 
     QDialog::accept();

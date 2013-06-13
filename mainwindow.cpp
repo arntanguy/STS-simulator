@@ -2,10 +2,10 @@
 #include "ui_mainwindow.h"
 #include "aboutdialog.h"
 #include "plotwidget.h"
-#include "settings.h"
 #include "plotarea.h"
 
 #include <QMdiSubWindow>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Connect Menu Events
     connect(ui->actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout(bool)));
+    connect(ui->actionLoad_Experimental_Data, SIGNAL(triggered(bool)), this, SLOT(actionLoadExperimentalData(bool)));
 }
 
 MainWindow::~MainWindow()
@@ -62,4 +63,19 @@ void MainWindow::actionAbout(bool)
 {
     AboutDialog dialog(this);
     dialog.exec();
+}
+
+void MainWindow::actionLoadExperimentalData(bool)
+{
+    // Load previously used directory when loading experimental data
+    QString startDir = mSettings.value("Save/experimentalDataDirectory", "").toString();
+
+    QString fileName = QFileDialog::getOpenFileName(this,
+     tr("Open Experimental Data"), startDir, tr("Experimental Data Files(*.csv *.txt);;All Files (*.*)"));
+    qDebug() << fileName;
+
+    // Save currently used directory for later use
+    if(!fileName.isNull()) {
+        mSettings.setValue("Save/experimentalDataDirectory", QFileInfo(fileName).absoluteDir().absolutePath());
+    }
 }

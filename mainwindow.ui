@@ -75,6 +75,8 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionLoad_Experimental_Data"/>
+    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -105,6 +107,11 @@
     <string>Quit</string>
    </property>
   </action>
+  <action name="actionLoad_Experimental_Data">
+   <property name="text">
+    <string>Load Experimental Data</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
@@ -127,4 +134,3 @@
   </connection>
  </connections>
 </ui>
-
