@@ -5,6 +5,7 @@
 
 class QAction;
 class PlotControlDialog;
+class PlotWidget;
 
 namespace Ui {
 class PlotArea;
@@ -17,6 +18,8 @@ class PlotArea : public QWidget
 public:
     explicit PlotArea(const QString &name, QWidget *parent = 0);
     ~PlotArea();
+
+    PlotWidget *getPlotWidget();
     
 private:
     Ui::PlotArea *ui;

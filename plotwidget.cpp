@@ -203,39 +203,6 @@ void PlotWidget::applySettings( const QString &plotName)
         mLegendItem = NULL;
     }
 
-    QwtPlotItemList curveList = itemList( QwtPlotItem::Rtti_PlotCurve );
-    int numCurves = mSettings.value("numCurves", 4).toInt();
-    if ( curveList.size() != numCurves)
-    {
-        while ( curveList.size() > numCurves)
-        {
-            QwtPlotItem* curve = curveList.takeFirst();
-            delete curve;
-        }
-
-        for ( int i = curveList.size(); i < numCurves; i++ )
-            insertCurve();
-    }
-
-    curveList = itemList( QwtPlotItem::Rtti_PlotCurve );
-    for ( int i = 0; i < curveList.count(); i++ )
-    {
-        RandomCurve* curve = static_cast<RandomCurve*>( curveList[i] );
-        curve->setCurveTitle( mSettings.value("title", "Curve").toString() );
-
-        int sz = 0.5 * mSettings.value("size", 10).toInt();
-        curve->setLegendIconSize( QSize( sz, sz ) );
-    }
-
-    mSettings.endGroup();
-
-    mSettings.beginGroup("Plot/"+plotName+"/range");
-    double min = mSettings.value("min", -10.d).toDouble();
-    double max = mSettings.value("max", 10.d).toDouble();
-    this->setAxisScale(QwtPlot::xBottom, min, max);
-    // Replot and then set zoom base to the current axis scale.
-    QwtPlot::replot();
-    mPlotZoomer->setZoomBase();
     mSettings.endGroup();
 
     mSettings.beginGroup("Plot/"+plotName+"/info");
@@ -260,9 +227,44 @@ void PlotWidget::applySettings( const QString &plotName)
     }
     mSettings.endGroup();
 
+    QwtPlotItemList curveList = itemList( QwtPlotItem::Rtti_PlotCurve );
+    int numCurves = mSettings.value("numCurves", 4).toInt();
+    if ( curveList.size() != numCurves)
+    {
+        while ( curveList.size() > numCurves)
+        {
+            QwtPlotItem* curve = curveList.takeFirst();
+            delete curve;
+        }
+
+        for ( int i = curveList.size(); i < numCurves; i++ )
+            insertCurve();
+    }
+
+    curveList = itemList( QwtPlotItem::Rtti_PlotCurve );
+    for ( int i = 0; i < curveList.count(); i++ )
+    {
+        RandomCurve* curve = static_cast<RandomCurve*>( curveList[i] );
+        curve->setCurveTitle( mSettings.value("title", "Curve").toString() );
+
+        int sz = 0.5 * mSettings.value("size", 10).toInt();
+        curve->setLegendIconSize( QSize( sz, sz ) );
+    }
+
+    // Curves must be added before that call!
     mSettings.beginGroup("Plot/"+plotName+"/precision");
     setPrecision(mSettings.value("resolution", 1000).toDouble());
     mSettings.endGroup();
+
+    mSettings.beginGroup("Plot/"+plotName+"/range");
+    double min = mSettings.value("min", -10.d).toDouble();
+    double max = mSettings.value("max", 10.d).toDouble();
+    this->setAxisScale(QwtPlot::xBottom, min, max);
+    // Replot and then set zoom base to the current axis scale.
+    QwtPlot::replot();
+    mPlotZoomer->setZoomBase();
+    mSettings.endGroup();
+
 
     setAutoReplot( false );
     if ( mIsDirty )
@@ -274,14 +276,14 @@ void PlotWidget::applySettings( const QString &plotName)
 
 void PlotWidget::replot()
 {
-    if ( autoReplot() )
+ /*   if ( autoReplot() )
     {
         mIsDirty = true;
         return;
     }
+*/
 
     QwtPlot::replot();
-
 }
 
 /*!

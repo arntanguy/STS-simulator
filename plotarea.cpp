@@ -25,7 +25,11 @@ PlotArea::~PlotArea()
     delete ui;
 }
 
-
+// ======================== PUBLIC FUNCTIONS ============================
+PlotWidget *PlotArea::getPlotWidget()
+{
+    return ui->plotWidget;
+}
 
 // ======================== SLOTS =======================================
 void PlotArea::openConfigDialog()

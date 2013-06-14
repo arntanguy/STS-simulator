@@ -3,9 +3,12 @@
 #include "aboutdialog.h"
 #include "plotwidget.h"
 #include "plotarea.h"
+#include "csvexperimentaldatareader.h"
+#include "curve.h"
 
 #include <QMdiSubWindow>
 #include <QFileDialog>
+#include <QColor>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -50,11 +53,6 @@ MainWindow::~MainWindow()
 
 // ============== PRIVATE FUNCTIONS ================
 void MainWindow::readSettings() {
-    //QSettings settings;
-    //settings.beginGroup("GlobalPlotOptions/legend");
-    //settings.value("isEnabled", false).toBool();
-    //move(settings.value("pos", QPoint(200, 200)).toPoint());
-    //settings.endGroup();
 }
 
 
@@ -72,7 +70,33 @@ void MainWindow::actionLoadExperimentalData(bool)
 
     QString fileName = QFileDialog::getOpenFileName(this,
      tr("Open Experimental Data"), startDir, tr("Experimental Data Files(*.csv *.txt);;All Files (*.*)"));
-    qDebug() << fileName;
+
+
+    CSVExperimentalDataReader reader;
+    reader.parseFile(fileName, "\t");
+
+
+    const char *colors[] =
+    {
+        "LightSalmon",
+        "SteelBlue",
+        "Yellow",
+        "Fuchsia",
+        "PaleGreen",
+        "PaleTurquoise",
+        "Cornsilk",
+        "HotPink",
+        "Peru",
+        "Maroon"
+    };
+    const int numColors = sizeof( colors ) / sizeof( colors[0] );
+    Curve *curve = new Curve( QString("Experimental DZ2") );
+    curve->setPen( QColor( colors[ numColors ] ), 2 );
+    curve->setSamples(reader.getColumn(0, 1000).getData(), reader.getColumn(4, 1000).getData());
+    curve->attach( mPlotArea3->getPlotWidget() );
+    mPlotArea3->getPlotWidget()->replot();
+
+
 
     // Save currently used directory for later use
     if(!fileName.isNull()) {

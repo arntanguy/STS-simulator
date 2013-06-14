@@ -20,7 +20,10 @@ SOURCES += main.cpp\
     legenditem.cpp \
     plotarea.cpp \
     plotcontroldialog.cpp \
-    curve.cpp
+    curve.cpp \
+    csvfilereader.cpp \
+    csvexperimentaldatareader.cpp \
+    datacolumn.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -29,7 +32,10 @@ HEADERS  += mainwindow.h \
     plotarea.h \
     plotcontroldialog.h \
     randomcurve.h \
-    curve.h
+    curve.h \
+    csvfilereader.h \
+    csvexperimentaldatareader.h \
+    datacolumn.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
