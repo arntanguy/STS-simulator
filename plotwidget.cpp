@@ -257,9 +257,20 @@ void PlotWidget::applySettings( const QString &plotName)
     mSettings.endGroup();
 
     mSettings.beginGroup("Plot/"+plotName+"/range");
-    double min = mSettings.value("min", -10.d).toDouble();
-    double max = mSettings.value("max", 10.d).toDouble();
-    this->setAxisScale(QwtPlot::xBottom, min, max);
+    if(!mSettings.value("autoAbscissa", true).toBool()) {
+        double min = mSettings.value("minAbscissa", -10.d).toDouble();
+        double max = mSettings.value("maxAbscissa", 10.d).toDouble();
+        this->setAxisScale(QwtPlot::xBottom, min, max);
+    } else {
+        this->setAxisAutoScale(QwtPlot::xBottom, true);
+    }
+    if(!mSettings.value("autoOrdinate", true).toBool()) {
+        double min = mSettings.value("minOrdinate", -10.d).toDouble();
+        double max = mSettings.value("maxOrdinate", 10.d).toDouble();
+        this->setAxisScale(QwtPlot::yLeft, min, max);
+    } else {
+        this->setAxisAutoScale(QwtPlot::yLeft, true);
+    }
     // Replot and then set zoom base to the current axis scale.
     QwtPlot::replot();
     mPlotZoomer->setZoomBase();

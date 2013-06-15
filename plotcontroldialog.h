@@ -26,6 +26,10 @@ private:
 private:
     void init();
     void initFromConfig();
+
+public slots:
+    void autoAbscissaChecked(bool checked);
+    void autoOrdinateChecked(bool checked);
 };
 
 #endif // PLOTCONTROLDIALOG_H

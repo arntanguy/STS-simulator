@@ -16,6 +16,8 @@ PlotControlDialog::PlotControlDialog(const QString &plotName, QWidget *parent) :
 
     connect(this->ui->buttonBox, SIGNAL(accepted()), parent, SLOT(plotConfigChanged()));
     connect(this->ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(this->ui->autoAbscissa, SIGNAL(toggled(bool)), this, SLOT(autoAbscissaChecked(bool)));
+    connect(this->ui->autoOrdinate, SIGNAL(toggled(bool)), this, SLOT(autoOrdinateChecked(bool)));
 }
 
 PlotControlDialog::~PlotControlDialog()
@@ -95,9 +97,18 @@ void PlotControlDialog::initFromConfig()
     ui->plotResolution->setValue(mSettings.value("resolution", 1000).toDouble());
     mSettings.endGroup();
 
+
+
+
+    // ========= Plot range ===========
     mSettings.beginGroup("Plot/"+mPlotName+"/range");
-    ui->minRangeValue->setValue(mSettings.value("min", 0).toDouble());
-    ui->maxRangeValue->setValue(mSettings.value("max", 1000).toDouble());
+    autoAbscissaChecked(mSettings.value("autoAbscissa", true).toBool());
+    ui->minAbscissaRange->setValue(mSettings.value("minAbscissa", 0).toDouble());
+    ui->maxAbscissaRange->setValue(mSettings.value("maxAbscissa", 1000).toDouble());
+
+    autoOrdinateChecked(mSettings.value("autoOrdinate", true).toBool());
+    ui->minOrdinateRange->setValue(mSettings.value("minOrdinate", 0).toDouble());
+    ui->maxOrdinateRange->setValue(mSettings.value("maxOrdinate", 1000).toDouble());
     mSettings.endGroup();
 }
 
@@ -127,8 +138,12 @@ void PlotControlDialog::accept()
     mSettings.endGroup();
 
     mSettings.beginGroup("Plot/"+mPlotName+"/range");
-    mSettings.setValue("min", ui->minRangeValue->value());
-    mSettings.setValue("max", ui->maxRangeValue->value());
+    mSettings.setValue("autoAbscissa", ui->autoAbscissa->isChecked());
+    mSettings.setValue("minAbscissa", ui->minAbscissaRange->value());
+    mSettings.setValue("maxAbscissa", ui->maxAbscissaRange->value());
+    mSettings.setValue("autoOrdinate", ui->autoOrdinate->isChecked());
+    mSettings.setValue("minOrdinate", ui->minOrdinateRange->value());
+    mSettings.setValue("maxOrdinate", ui->maxOrdinateRange->value());
     mSettings.endGroup();
 
     mSettings.beginGroup("Plot/"+mPlotName+"/info");
@@ -147,4 +162,20 @@ void PlotControlDialog::accept()
     mSettings.endGroup();
 
     QDialog::accept();
+}
+
+
+// =========================== SLOTS =================================
+void PlotControlDialog::autoAbscissaChecked(bool checked)
+{
+    ui->autoAbscissa->setChecked(checked);
+    ui->minAbscissaRange->setEnabled(!checked);
+    ui->maxAbscissaRange->setEnabled(!checked);
+}
+
+void PlotControlDialog::autoOrdinateChecked(bool checked)
+{
+    ui->autoOrdinate->setChecked(checked);
+    ui->minOrdinateRange->setEnabled(!checked);
+    ui->maxOrdinateRange->setEnabled(!checked);
 }
