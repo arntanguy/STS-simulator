@@ -10,6 +10,7 @@
 #include <QSettings>
 
 class LegendItem;
+class QwtPlotGrid;
 
 namespace Ui {
 class PlotWidget;
@@ -31,12 +32,14 @@ private:
     LegendItem *mLegendItem;
     bool mIsDirty;
 
+    QwtPlotGrid *mPlotGrid;
+
     QSettings mSettings;
     QString mName;
 
 private:
     void initZoom();
-    void initOverlay();
+    void initGrid();
     void setupPlot();
 
     void insertCurve();

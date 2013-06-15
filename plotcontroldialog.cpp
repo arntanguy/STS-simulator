@@ -50,6 +50,11 @@ void PlotControlDialog::init()
     ui->legendItemVerticalPositionComboBox->addItem(tr("Top"), Qt::AlignTop);
     ui->legendItemVerticalPositionComboBox->addItem(tr("Center"), Qt::AlignVCenter);
     ui->legendItemVerticalPositionComboBox->addItem(tr("Bottom"), Qt::AlignBottom);
+
+    ui->majorGridPenStyle->addItem(tr("Solid Line"), Qt::SolidLine);
+    ui->majorGridPenStyle->addItem(tr("Dot Line"), Qt::DotLine);
+    ui->minorGridPenStyle->addItem(tr("Solid Line"), Qt::SolidLine);
+    ui->minorGridPenStyle->addItem(tr("Dot Line"), Qt::DotLine);
 }
 
 /*!
@@ -110,6 +115,26 @@ void PlotControlDialog::initFromConfig()
     ui->minOrdinateRange->setValue(mSettings.value("minOrdinate", 0).toDouble());
     ui->maxOrdinateRange->setValue(mSettings.value("maxOrdinate", 1000).toDouble());
     mSettings.endGroup();
+
+    // =============== Plot Grid ==================
+    mSettings.beginGroup("Plot/"+mPlotName+"/grid");
+    ui->gridEnabled->setChecked(mSettings.value("isEnabled", true).toBool());
+
+    index = ui->majorGridPenStyle->findData(mSettings.value("majorPen/style", Qt::SolidLine).toString());
+    if(index != -1)
+        ui->majorGridPenStyle->setCurrentIndex(index);
+    ui->majorGridAbscissiaPenEnabled->setChecked(mSettings.value("majorPen/abscissiaIsEnabled", true).toBool());
+    ui->majorGridOrdinatePenEnabled->setChecked(mSettings.value("majorPen/ordinateIsEnabled", true).toBool());
+    ui->majorGridPenWidth->setValue(mSettings.value("majorPen/width", 0.0).toDouble());
+
+    index = ui->minorGridPenStyle->findData(mSettings.value("minorPen/style", Qt::DotLine).toString());
+    if(index != -1)
+        ui->minorGridPenStyle->setCurrentIndex(index);
+    ui->minorGridAbscissiaPenEnabled->setChecked(mSettings.value("minorPen/abscissiaIsEnabled", true).toBool());
+    ui->minorGridOrdinatePenEnabled->setChecked(mSettings.value("minorPen/ordinateIsEnabled", true).toBool());
+    ui->minorGridPenWidth->setValue(mSettings.value("minorPen/width", 0.0).toDouble());
+    mSettings.endGroup();
+
 }
 
 /*!
@@ -159,6 +184,19 @@ void PlotControlDialog::accept()
 
     mSettings.beginGroup("Plot/"+mPlotName+"/precision");
     mSettings.setValue("resolution", ui->plotResolution->value());
+    mSettings.endGroup();
+
+    mSettings.beginGroup("Plot/"+mPlotName+"/grid");
+    mSettings.setValue("isEnabled", ui->gridEnabled->isChecked());
+    mSettings.setValue("majorPen/abscissiaIsEnabled", ui->majorGridAbscissiaPenEnabled->isChecked());
+    mSettings.setValue("majorPen/ordinateIsEnabled", ui->majorGridOrdinatePenEnabled->isChecked());
+    mSettings.setValue("majorPen/style", ui->majorGridPenStyle->itemData(ui->majorGridPenStyle->currentIndex()));
+    mSettings.setValue("majorPen/width", ui->majorGridPenWidth->value());
+
+    mSettings.setValue("minorPen/abscissiaIsEnabled", ui->minorGridAbscissiaPenEnabled->isChecked());
+    mSettings.setValue("minorPen/ordinateIsEnabled", ui->minorGridOrdinatePenEnabled->isChecked());
+    mSettings.setValue("minorPen/style", ui->minorGridPenStyle->itemData(ui->minorGridPenStyle->currentIndex()));
+    mSettings.setValue("minorPen/width", ui->minorGridPenWidth->value());
     mSettings.endGroup();
 
     QDialog::accept();

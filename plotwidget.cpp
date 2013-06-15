@@ -11,6 +11,7 @@
 #include <QPushButton>
 #include <qwt_widget_overlay.h>
 #include <qwt_date_scale_engine.h>
+#include <qwt_plot_grid.h>
 
 /*!
  * \brief PlotWidget::PlotWidget
@@ -28,7 +29,7 @@ PlotWidget::PlotWidget(QWidget *parent) :
 
     setupPlot();
     initZoom();
-    initOverlay();
+    initGrid();
 
     replot();
 }
@@ -64,8 +65,10 @@ void PlotWidget::setupPlot() {
     this->setAxisTitle(QwtPlot::yLeft, "P<sub>T</sub>(V)");
 }
 
-void PlotWidget::initOverlay()
+void PlotWidget::initGrid()
 {
+    mPlotGrid = new QwtPlotGrid();
+    mPlotGrid->attach(this);
 }
 
 
@@ -276,6 +279,21 @@ void PlotWidget::applySettings( const QString &plotName)
     mPlotZoomer->setZoomBase();
     mSettings.endGroup();
 
+    mSettings.beginGroup("Plot/"+plotName+"/grid");
+    if(mSettings.value("isEnabled", true).toBool())
+        mPlotGrid->attach(this);
+    else
+        mPlotGrid->detach();
+
+    mPlotGrid->enableX(mSettings.value("majorPen/abscissiaIsEnabled", true).toBool());
+    mPlotGrid->enableY(mSettings.value("majorPen/ordinateIsEnabled", true).toBool());
+    mPlotGrid->enableXMin(mSettings.value("minorPen/abscissiaIsEnabled", false).toBool());
+    mPlotGrid->enableYMin(mSettings.value("minorPen/ordinateIsEnabled", false).toBool());
+    Qt::PenStyle penStyle = static_cast<Qt::PenStyle>(mSettings.value("majorPen/style", Qt::SolidLine).toInt());
+    mPlotGrid->setMajorPen(Qt::black, mSettings.value("majorPen/width", 0.0).toDouble(), penStyle);
+    penStyle = static_cast<Qt::PenStyle>(mSettings.value("minorPen/style", Qt::DotLine).toInt());
+    mPlotGrid->setMinorPen(Qt::black, mSettings.value("minorPen/width", 0.0).toDouble(), penStyle);
+    mSettings.endGroup();
 
     setAutoReplot( false );
     if ( mIsDirty )
