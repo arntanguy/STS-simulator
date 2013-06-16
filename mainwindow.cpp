@@ -182,9 +182,12 @@ void MainWindow::actionNewProject(bool)
 
 void MainWindow::slotNewProject()
 {
+    // Load previously used directory when loading experimental data
+    QString startDir = mSettings.value("Save/newProjectDirectory", "").toString();
+
     qDebug() << "MainWindow::slotNewProject()";
     QString fileName = QFileDialog::getSaveFileName(this, tr("Project location"),
-                                                    "",
+                                                    startDir,
                                                     tr("STS-Project (*.sts);;All Files (*.*)"));
     qDebug() << fileName;
     if(!(fileName.endsWith(".sts") || fileName.endsWith(".STS"))) {
@@ -193,7 +196,7 @@ void MainWindow::slotNewProject()
 
     // Save currently used directory for later use
     if(!fileName.isNull()) {
-        mSettings.setValue("Save/projectDirectory", QFileInfo(fileName).absoluteDir().absolutePath());
+        mSettings.setValue("Save/newProjectDirectory", QFileInfo(fileName).absoluteDir().absolutePath());
     }
 
     ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
