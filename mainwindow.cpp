@@ -56,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionLoad_Experimental_Data, SIGNAL(triggered(bool)), this, SLOT(actionLoadExperimentalData(bool)));
     connect(ui->actionSave_As, SIGNAL(triggered(bool)), this, SLOT(actionSaveAs(bool)));
     connect(ui->actionSave, SIGNAL(triggered(bool)), this, SLOT(actionSave(bool)));
+    connect(ui->actionNew_Project, SIGNAL(triggered(bool)), this, SLOT(actionNewProject(bool)));
     connect(ui->actionLoad_Project, SIGNAL(triggered(bool)), this, SLOT(actionLoadProject(bool)));
 }
 
@@ -172,6 +173,11 @@ void MainWindow::actionSaveAs(bool)
 
     ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
     singleton->saveAs(fileName);
+}
+
+void MainWindow::actionNewProject(bool)
+{
+    slotNewProject();
 }
 
 void MainWindow::slotNewProject()

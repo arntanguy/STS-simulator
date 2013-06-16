@@ -79,6 +79,7 @@
     <addaction name="actionSave"/>
     <addaction name="actionSave_As"/>
     <addaction name="separator"/>
+    <addaction name="actionNew_Project"/>
     <addaction name="actionLoad_Project"/>
     <addaction name="actionLoad_Experimental_Data"/>
     <addaction name="separator"/>
@@ -130,6 +131,11 @@
   <action name="actionLoad_Project">
    <property name="text">
     <string>Load Project</string>
+   </property>
+  </action>
+  <action name="actionNew_Project">
+   <property name="text">
+    <string>New Project</string>
    </property>
   </action>
  </widget>

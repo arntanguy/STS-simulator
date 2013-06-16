@@ -23,6 +23,7 @@ private:
 
 public slots:
     void actionAbout(bool);
+    void actionNewProject(bool);
     void actionLoadProject(bool);
     void actionLoadExperimentalData(bool);
     void actionSaveAs(bool);
