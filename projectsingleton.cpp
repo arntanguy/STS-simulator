@@ -1,9 +1,17 @@
 #include "projectsingleton.h"
 #include <QDebug>
+#include <QStringList>
 
 
 ProjectSingleton::ProjectSingleton()
 {
+}
+
+ProjectSingleton::~ProjectSingleton()
+{
+    qDebug() << "ProjectSingleton::~ProjectSingleton()";
+    mSettings->sync();
+    delete mSettings;
 }
 
 void ProjectSingleton::createNewProject(const QString &fileName)
@@ -30,6 +38,44 @@ void ProjectSingleton::openProject(const QString& fileName)
         mSettings = new QSettings(fileName, QSettings::IniFormat);
         qDebug() << "ProjectSingleton:: opening configuration for project " << fileName;
     }
+}
+
+void ProjectSingleton::save()
+{
+    if(!mFileName.isEmpty())
+    {
+        mSettings->sync();
+        if(mSettings->status() != QSettings::NoError) {
+            qDebug() << "Error while saving!";
+            qDebug() << "XXX: do something with the error!";
+        }
+    }
+}
+
+/*!
+ * Moves all values of current QSettings to a new QSettings synced with another path
+ */
+void ProjectSingleton::saveAs(const QString& newPath)
+{
+    QSettings *s = new QSettings(newPath, QSettings::IniFormat);
+
+    if(s->allKeys().count() < 1)
+    {
+        QStringList keys = mSettings->allKeys();
+        for(int i = 0; i < keys.count(); i++)
+        {
+            s->setValue(keys.at(i), mSettings->value(keys.at(i)));
+        }
+        delete mSettings;
+        mSettings = s;
+        save();
+    } else {
+        qDebug() << "WARNING: trying to move to non empty settings";
+    }
+}
+
+void checkStatus()
+{
 }
 
 QSettings *ProjectSingleton::getSettings()

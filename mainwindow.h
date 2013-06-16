@@ -24,6 +24,8 @@ private:
 public slots:
     void actionAbout(bool);
     void actionLoadExperimentalData(bool);
+    void actionSaveAs(bool);
+    void actionSave(bool);
     void slotNewProject();
     void slotOpenProject(QString &fileName);
 

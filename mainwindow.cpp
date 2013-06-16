@@ -50,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // Connect Menu Events
     connect(ui->actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout(bool)));
     connect(ui->actionLoad_Experimental_Data, SIGNAL(triggered(bool)), this, SLOT(actionLoadExperimentalData(bool)));
+    connect(ui->actionSave_As, SIGNAL(triggered(bool)), this, SLOT(actionSaveAs(bool)));
+    connect(ui->actionSave, SIGNAL(triggered(bool)), this, SLOT(actionSave(bool)));
 }
 
 MainWindow::~MainWindow()
@@ -109,6 +111,30 @@ void MainWindow::actionLoadExperimentalData(bool)
     if(!fileName.isNull()) {
         mSettings.setValue("Save/experimentalDataDirectory", QFileInfo(fileName).absoluteDir().absolutePath());
     }
+}
+
+void MainWindow::actionSave(bool)
+{
+    ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
+    if(singleton->hasProject()) {
+        singleton->save();
+    } else {
+        actionSaveAs(true);
+    }
+}
+
+void MainWindow::actionSaveAs(bool)
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Project location"),
+                                                    "",
+                                                    tr("STS-Project (*.sts);;All Files (*.*)"));
+    qDebug() << fileName;
+    if(!(fileName.endsWith(".sts") || fileName.endsWith(".STS"))) {
+        fileName = fileName + ".sts";
+    }
+
+    ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
+    singleton->saveAs(fileName);
 }
 
 void MainWindow::slotNewProject()

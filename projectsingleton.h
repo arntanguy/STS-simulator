@@ -9,9 +9,16 @@ class ProjectSingleton
 {
 public:
     ProjectSingleton();
+    ~ProjectSingleton();
     void createNewProject(const QString &fileName);
     void openProject(const QString& fileName);
+    void saveAs(const QString& newPath);
+    void save();
+
     QSettings *getSettings();
+    bool hasProject() const {
+        return !mFileName.isEmpty();
+    }
 
 private:
     QString mFileName;
