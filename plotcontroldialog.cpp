@@ -2,6 +2,7 @@
 #include <QDebug>
 #include "plotcontroldialog.h"
 #include "ui_plotcontroldialog.h"
+#include "projectsingleton.h"
 #include <qwt_plot.h>
 
 PlotControlDialog::PlotControlDialog(const QString &plotName, QWidget *parent) :
@@ -10,6 +11,7 @@ PlotControlDialog::PlotControlDialog(const QString &plotName, QWidget *parent) :
 {
     ui->setupUi(this);
     mPlotName = plotName;
+    mSettings = Singleton<ProjectSingleton>::Instance().getSettings();
 
     init();
     initFromConfig();
@@ -22,6 +24,7 @@ PlotControlDialog::PlotControlDialog(const QString &plotName, QWidget *parent) :
 
 PlotControlDialog::~PlotControlDialog()
 {
+    mSettings->sync();
     delete ui;
 }
 
@@ -64,76 +67,76 @@ void PlotControlDialog::init()
 void PlotControlDialog::initFromConfig()
 {
     qDebug() << "PlotControlDialog::initFromConfig()";
-    mSettings.beginGroup("Plot/"+mPlotName+"/legend");
-    ui->legendCheckBox->setChecked(mSettings.value("isEnabled", false).toBool());
-    int index = ui->legendPositionComboBox->findData(mSettings.value("position", Qt::AlignBottom).toInt());
+    mSettings->beginGroup("Plot/"+mPlotName+"/legend");
+    ui->legendCheckBox->setChecked(mSettings->value("isEnabled", false).toBool());
+    int index = ui->legendPositionComboBox->findData(mSettings->value("position", Qt::AlignBottom).toInt());
     if(index != -1)
         ui->legendPositionComboBox->setCurrentIndex(index);
-    mSettings.endGroup();
+    mSettings->endGroup();
 
-    mSettings.beginGroup("Plot/"+mPlotName+"/legendItem");
-    ui->legendItemCheckBox->setChecked(mSettings.value("isEnabled", false).toBool());
+    mSettings->beginGroup("Plot/"+mPlotName+"/legendItem");
+    ui->legendItemCheckBox->setChecked(mSettings->value("isEnabled", false).toBool());
     QVariant align = static_cast<int>(Qt::AlignRight);
-    index = ui->legendItemHorizontalPositionComboBox->findData(mSettings.value("horizontalPosition", align).toInt());
+    index = ui->legendItemHorizontalPositionComboBox->findData(mSettings->value("horizontalPosition", align).toInt());
     if(index != -1)
         ui->legendItemHorizontalPositionComboBox->setCurrentIndex(index);
     align = static_cast<int>(Qt::AlignTop);
-    index = ui->legendItemVerticalPositionComboBox->findData(mSettings.value("verticalPosition", align).toInt());
+    index = ui->legendItemVerticalPositionComboBox->findData(mSettings->value("verticalPosition", align).toInt());
     if(index != -1)
         ui->legendItemVerticalPositionComboBox->setCurrentIndex(index);
-    mSettings.endGroup();
+    mSettings->endGroup();
 
-    mSettings.beginGroup("Plot/"+mPlotName+"/info");
-    ui->titleLineEdit->setText(mSettings.value("title", mPlotName).toString());
-    ui->horizontalAxisLineEdit->setText(mSettings.value("horizontalAxisName", "X Axis").toString());
-    ui->verticalAxisLineEdit->setText(mSettings.value("verticalAxisName", "X Axis").toString());
-    mSettings.endGroup();
+    mSettings->beginGroup("Plot/"+mPlotName+"/info");
+    ui->titleLineEdit->setText(mSettings->value("title", mPlotName).toString());
+    ui->horizontalAxisLineEdit->setText(mSettings->value("horizontalAxisName", "X Axis").toString());
+    ui->verticalAxisLineEdit->setText(mSettings->value("verticalAxisName", "X Axis").toString());
+    mSettings->endGroup();
 
-    mSettings.beginGroup("Plot/"+mPlotName+"/axisScale");
-    index = ui->horizontalAxisScale->findData(mSettings.value("horizontalAxisScale", "linear").toString());
+    mSettings->beginGroup("Plot/"+mPlotName+"/axisScale");
+    index = ui->horizontalAxisScale->findData(mSettings->value("horizontalAxisScale", "linear").toString());
     if(index != -1)
         ui->horizontalAxisScale->setCurrentIndex(index);
-    index = ui->verticalAxisScale->findData(mSettings.value("verticalAxisScale", "linear").toString());
+    index = ui->verticalAxisScale->findData(mSettings->value("verticalAxisScale", "linear").toString());
     if(index != -1)
         ui->verticalAxisScale->setCurrentIndex(index);
-    mSettings.endGroup();
+    mSettings->endGroup();
 
-    mSettings.beginGroup("Plot/"+mPlotName+"/precision");
-    ui->plotResolution->setValue(mSettings.value("resolution", 1000).toDouble());
-    mSettings.endGroup();
+    mSettings->beginGroup("Plot/"+mPlotName+"/precision");
+    ui->plotResolution->setValue(mSettings->value("resolution", 1000).toDouble());
+    mSettings->endGroup();
 
 
 
 
     // ========= Plot range ===========
-    mSettings.beginGroup("Plot/"+mPlotName+"/range");
-    autoAbscissaChecked(mSettings.value("autoAbscissa", true).toBool());
-    ui->minAbscissaRange->setValue(mSettings.value("minAbscissa", 0).toDouble());
-    ui->maxAbscissaRange->setValue(mSettings.value("maxAbscissa", 1000).toDouble());
+    mSettings->beginGroup("Plot/"+mPlotName+"/range");
+    autoAbscissaChecked(mSettings->value("autoAbscissa", true).toBool());
+    ui->minAbscissaRange->setValue(mSettings->value("minAbscissa", 0).toDouble());
+    ui->maxAbscissaRange->setValue(mSettings->value("maxAbscissa", 1000).toDouble());
 
-    autoOrdinateChecked(mSettings.value("autoOrdinate", true).toBool());
-    ui->minOrdinateRange->setValue(mSettings.value("minOrdinate", 0).toDouble());
-    ui->maxOrdinateRange->setValue(mSettings.value("maxOrdinate", 1000).toDouble());
-    mSettings.endGroup();
+    autoOrdinateChecked(mSettings->value("autoOrdinate", true).toBool());
+    ui->minOrdinateRange->setValue(mSettings->value("minOrdinate", 0).toDouble());
+    ui->maxOrdinateRange->setValue(mSettings->value("maxOrdinate", 1000).toDouble());
+    mSettings->endGroup();
 
     // =============== Plot Grid ==================
-    mSettings.beginGroup("Plot/"+mPlotName+"/grid");
-    ui->gridEnabled->setChecked(mSettings.value("isEnabled", true).toBool());
+    mSettings->beginGroup("Plot/"+mPlotName+"/grid");
+    ui->gridEnabled->setChecked(mSettings->value("isEnabled", true).toBool());
 
-    index = ui->majorGridPenStyle->findData(mSettings.value("majorPen/style", Qt::SolidLine).toString());
+    index = ui->majorGridPenStyle->findData(mSettings->value("majorPen/style", Qt::SolidLine).toString());
     if(index != -1)
         ui->majorGridPenStyle->setCurrentIndex(index);
-    ui->majorGridAbscissiaPenEnabled->setChecked(mSettings.value("majorPen/abscissiaIsEnabled", true).toBool());
-    ui->majorGridOrdinatePenEnabled->setChecked(mSettings.value("majorPen/ordinateIsEnabled", true).toBool());
-    ui->majorGridPenWidth->setValue(mSettings.value("majorPen/width", 0.0).toDouble());
+    ui->majorGridAbscissiaPenEnabled->setChecked(mSettings->value("majorPen/abscissiaIsEnabled", true).toBool());
+    ui->majorGridOrdinatePenEnabled->setChecked(mSettings->value("majorPen/ordinateIsEnabled", true).toBool());
+    ui->majorGridPenWidth->setValue(mSettings->value("majorPen/width", 0.0).toDouble());
 
-    index = ui->minorGridPenStyle->findData(mSettings.value("minorPen/style", Qt::DotLine).toString());
+    index = ui->minorGridPenStyle->findData(mSettings->value("minorPen/style", Qt::DotLine).toString());
     if(index != -1)
         ui->minorGridPenStyle->setCurrentIndex(index);
-    ui->minorGridAbscissiaPenEnabled->setChecked(mSettings.value("minorPen/abscissiaIsEnabled", true).toBool());
-    ui->minorGridOrdinatePenEnabled->setChecked(mSettings.value("minorPen/ordinateIsEnabled", true).toBool());
-    ui->minorGridPenWidth->setValue(mSettings.value("minorPen/width", 0.0).toDouble());
-    mSettings.endGroup();
+    ui->minorGridAbscissiaPenEnabled->setChecked(mSettings->value("minorPen/abscissiaIsEnabled", true).toBool());
+    ui->minorGridOrdinatePenEnabled->setChecked(mSettings->value("minorPen/ordinateIsEnabled", true).toBool());
+    ui->minorGridPenWidth->setValue(mSettings->value("minorPen/width", 0.0).toDouble());
+    mSettings->endGroup();
 
 }
 
@@ -145,59 +148,59 @@ void PlotControlDialog::initFromConfig()
 void PlotControlDialog::accept()
 {
     qDebug() << "PlotControlDialog::accept()";
-    mSettings.beginGroup("Plot/"+mPlotName+"/legend");
-    mSettings.setValue("isEnabled", ui->legendCheckBox->isChecked());
-    mSettings.setValue("position", ui->legendPositionComboBox->itemData(ui->legendPositionComboBox->currentIndex()));
-    mSettings.endGroup();
+    mSettings->beginGroup("Plot/"+mPlotName+"/legend");
+    mSettings->setValue("isEnabled", ui->legendCheckBox->isChecked());
+    mSettings->setValue("position", ui->legendPositionComboBox->itemData(ui->legendPositionComboBox->currentIndex()));
+    mSettings->endGroup();
 
-    mSettings.beginGroup("Plot/"+mPlotName+"/legendItem");
-    mSettings.setValue("isEnabled", ui->legendItemCheckBox->isChecked());
+    mSettings->beginGroup("Plot/"+mPlotName+"/legendItem");
+    mSettings->setValue("isEnabled", ui->legendItemCheckBox->isChecked());
     int horizontalPos = ui->legendItemHorizontalPositionComboBox->itemData(ui->legendItemHorizontalPositionComboBox->currentIndex()).toInt();
     int verticalPos = ui->legendItemVerticalPositionComboBox->itemData(ui->legendItemVerticalPositionComboBox->currentIndex()).toInt();
     Qt::Alignment aX = static_cast<Qt::Alignment>(horizontalPos);
     Qt::Alignment aY = static_cast<Qt::Alignment>(verticalPos);
-    mSettings.setValue("horizontalPosition", horizontalPos);
-    mSettings.setValue("verticalPosition", verticalPos);
-    mSettings.setValue("alignment", static_cast<int>(aX|aY));
-    mSettings.setValue("numCurves", 3);
-    mSettings.endGroup();
+    mSettings->setValue("horizontalPosition", horizontalPos);
+    mSettings->setValue("verticalPosition", verticalPos);
+    mSettings->setValue("alignment", static_cast<int>(aX|aY));
+    mSettings->setValue("numCurves", 3);
+    mSettings->endGroup();
 
-    mSettings.beginGroup("Plot/"+mPlotName+"/range");
-    mSettings.setValue("autoAbscissa", ui->autoAbscissa->isChecked());
-    mSettings.setValue("minAbscissa", ui->minAbscissaRange->value());
-    mSettings.setValue("maxAbscissa", ui->maxAbscissaRange->value());
-    mSettings.setValue("autoOrdinate", ui->autoOrdinate->isChecked());
-    mSettings.setValue("minOrdinate", ui->minOrdinateRange->value());
-    mSettings.setValue("maxOrdinate", ui->maxOrdinateRange->value());
-    mSettings.endGroup();
+    mSettings->beginGroup("Plot/"+mPlotName+"/range");
+    mSettings->setValue("autoAbscissa", ui->autoAbscissa->isChecked());
+    mSettings->setValue("minAbscissa", ui->minAbscissaRange->value());
+    mSettings->setValue("maxAbscissa", ui->maxAbscissaRange->value());
+    mSettings->setValue("autoOrdinate", ui->autoOrdinate->isChecked());
+    mSettings->setValue("minOrdinate", ui->minOrdinateRange->value());
+    mSettings->setValue("maxOrdinate", ui->maxOrdinateRange->value());
+    mSettings->endGroup();
 
-    mSettings.beginGroup("Plot/"+mPlotName+"/info");
-    mSettings.setValue("title", ui->titleLineEdit->text());
-    mSettings.setValue("horizontalAxisName", ui->horizontalAxisLineEdit->text());
-    mSettings.setValue("verticalAxisName", ui->verticalAxisLineEdit->text());
-    mSettings.endGroup();
+    mSettings->beginGroup("Plot/"+mPlotName+"/info");
+    mSettings->setValue("title", ui->titleLineEdit->text());
+    mSettings->setValue("horizontalAxisName", ui->horizontalAxisLineEdit->text());
+    mSettings->setValue("verticalAxisName", ui->verticalAxisLineEdit->text());
+    mSettings->endGroup();
 
-    mSettings.beginGroup("Plot/"+mPlotName+"/axisScale");
-    mSettings.setValue("horizontalAxisScale", ui->horizontalAxisScale->itemData(ui->horizontalAxisScale->currentIndex()));
-    mSettings.setValue("verticalAxisScale", ui->verticalAxisScale->itemData(ui->verticalAxisScale->currentIndex()));
-    mSettings.endGroup();
+    mSettings->beginGroup("Plot/"+mPlotName+"/axisScale");
+    mSettings->setValue("horizontalAxisScale", ui->horizontalAxisScale->itemData(ui->horizontalAxisScale->currentIndex()));
+    mSettings->setValue("verticalAxisScale", ui->verticalAxisScale->itemData(ui->verticalAxisScale->currentIndex()));
+    mSettings->endGroup();
 
-    mSettings.beginGroup("Plot/"+mPlotName+"/precision");
-    mSettings.setValue("resolution", ui->plotResolution->value());
-    mSettings.endGroup();
+    mSettings->beginGroup("Plot/"+mPlotName+"/precision");
+    mSettings->setValue("resolution", ui->plotResolution->value());
+    mSettings->endGroup();
 
-    mSettings.beginGroup("Plot/"+mPlotName+"/grid");
-    mSettings.setValue("isEnabled", ui->gridEnabled->isChecked());
-    mSettings.setValue("majorPen/abscissiaIsEnabled", ui->majorGridAbscissiaPenEnabled->isChecked());
-    mSettings.setValue("majorPen/ordinateIsEnabled", ui->majorGridOrdinatePenEnabled->isChecked());
-    mSettings.setValue("majorPen/style", ui->majorGridPenStyle->itemData(ui->majorGridPenStyle->currentIndex()));
-    mSettings.setValue("majorPen/width", ui->majorGridPenWidth->value());
+    mSettings->beginGroup("Plot/"+mPlotName+"/grid");
+    mSettings->setValue("isEnabled", ui->gridEnabled->isChecked());
+    mSettings->setValue("majorPen/abscissiaIsEnabled", ui->majorGridAbscissiaPenEnabled->isChecked());
+    mSettings->setValue("majorPen/ordinateIsEnabled", ui->majorGridOrdinatePenEnabled->isChecked());
+    mSettings->setValue("majorPen/style", ui->majorGridPenStyle->itemData(ui->majorGridPenStyle->currentIndex()));
+    mSettings->setValue("majorPen/width", ui->majorGridPenWidth->value());
 
-    mSettings.setValue("minorPen/abscissiaIsEnabled", ui->minorGridAbscissiaPenEnabled->isChecked());
-    mSettings.setValue("minorPen/ordinateIsEnabled", ui->minorGridOrdinatePenEnabled->isChecked());
-    mSettings.setValue("minorPen/style", ui->minorGridPenStyle->itemData(ui->minorGridPenStyle->currentIndex()));
-    mSettings.setValue("minorPen/width", ui->minorGridPenWidth->value());
-    mSettings.endGroup();
+    mSettings->setValue("minorPen/abscissiaIsEnabled", ui->minorGridAbscissiaPenEnabled->isChecked());
+    mSettings->setValue("minorPen/ordinateIsEnabled", ui->minorGridOrdinatePenEnabled->isChecked());
+    mSettings->setValue("minorPen/style", ui->minorGridPenStyle->itemData(ui->minorGridPenStyle->currentIndex()));
+    mSettings->setValue("minorPen/width", ui->minorGridPenWidth->value());
+    mSettings->endGroup();
 
     QDialog::accept();
 }

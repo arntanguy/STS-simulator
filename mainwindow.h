@@ -24,6 +24,8 @@ private:
 public slots:
     void actionAbout(bool);
     void actionLoadExperimentalData(bool);
+    void slotNewProject();
+    void slotOpenProject(QString &fileName);
 
 private:
     Ui::MainWindow *ui;

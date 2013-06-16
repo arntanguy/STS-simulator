@@ -23,7 +23,9 @@ SOURCES += main.cpp\
     curve.cpp \
     csvfilereader.cpp \
     csvexperimentaldatareader.cpp \
-    datacolumn.cpp
+    datacolumn.cpp \
+    projectsingleton.cpp \
+    projectdialog.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -35,13 +37,17 @@ HEADERS  += mainwindow.h \
     curve.h \
     csvfilereader.h \
     csvexperimentaldatareader.h \
-    datacolumn.h
+    datacolumn.h \
+    singleton.h \
+    projectsingleton.h \
+    projectdialog.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
     plotwidget.ui \
     plotarea.ui \
-    plotcontroldialog.ui
+    plotcontroldialog.ui \
+    projectdialog.ui
 
 INCLUDEPATH += /usr/local/qwt-6.1.0-rc3/include
 LIBS +=  -L/usr/local/qwt-6.1.0-rc3/lib -lqwt

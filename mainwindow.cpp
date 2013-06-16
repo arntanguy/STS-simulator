@@ -5,6 +5,8 @@
 #include "plotarea.h"
 #include "csvexperimentaldatareader.h"
 #include "curve.h"
+#include "projectdialog.h"
+#include "projectsingleton.h"
 
 #include <QMdiSubWindow>
 #include <QFileDialog>
@@ -15,6 +17,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // First, load a project
+    ProjectDialog projectDialog(this);
+    projectDialog.exec();
+
 
     mPlotArea1 = new PlotArea("Plot1");
     mPlotArea2 = new PlotArea("Plot2");
@@ -102,4 +109,29 @@ void MainWindow::actionLoadExperimentalData(bool)
     if(!fileName.isNull()) {
         mSettings.setValue("Save/experimentalDataDirectory", QFileInfo(fileName).absoluteDir().absolutePath());
     }
+}
+
+void MainWindow::slotNewProject()
+{
+    qDebug() << "MainWindow::slotNewProject()";
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Project location"),
+                                                    "",
+                                                    tr("STS-Project (*.sts);;All Files (*.*)"));
+    qDebug() << fileName;
+    if(!(fileName.endsWith(".sts") || fileName.endsWith(".STS"))) {
+        fileName = fileName + ".sts";
+    }
+    ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
+    singleton->createNewProject(fileName);
+
+    QSettings settings;
+    settings.beginGroup("project");
+    settings.setValue("recentList",settings.value("recentList", "").toString()+","+fileName);
+    settings.endGroup();
+}
+
+void MainWindow::slotOpenProject(QString &fileName)
+{
+    ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
+    singleton->openProject(fileName);
 }

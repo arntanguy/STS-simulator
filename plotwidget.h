@@ -34,7 +34,7 @@ private:
 
     QwtPlotGrid *mPlotGrid;
 
-    QSettings mSettings;
+    QSettings *mSettings;
     QString mName;
 
 private:

@@ -7,6 +7,7 @@
 #include "randomcurve.h"
 #include "curve.h"
 #include "legenditem.h"
+#include "projectsingleton.h"
 
 #include <QPushButton>
 #include <qwt_widget_overlay.h>
@@ -26,6 +27,8 @@ PlotWidget::PlotWidget(QWidget *parent) :
      mName( "Plot" )
 {
     ui->setupUi(this);
+
+    mSettings = Singleton<ProjectSingleton>::Instance().getSettings();
 
     setupPlot();
     initZoom();
@@ -102,20 +105,20 @@ void PlotWidget::insertCurve()
 
 /**
  * @brief PlotWidget::applySettings
- *      Apply graph mSettings from the saved mSettings (using QSettings)
+ *      Apply graph mSettings->from the saved mSettings->(using QSettings)
  * @param plotName
  *      Name of the plot
  */
 void PlotWidget::applySettings( const QString &plotName)
 {
-    mSettings.beginGroup("Plot/"+plotName+"/legend");
+    mSettings->beginGroup("Plot/"+plotName+"/legend");
 
     mIsDirty = false;
     setAutoReplot( true );
 
-    if ( mSettings.value("isEnabled", false).toBool() )
+    if ( mSettings->value("isEnabled", false).toBool() )
     {
-        QwtPlot::LegendPosition legendPosition = static_cast<QwtPlot::LegendPosition>(mSettings.value("position" , QwtPlot::BottomLegend).toInt());
+        QwtPlot::LegendPosition legendPosition = static_cast<QwtPlot::LegendPosition>(mSettings->value("position" , QwtPlot::BottomLegend).toInt());
         if ( legendPosition > QwtPlot::TopLegend )
         {
             if ( legend() )
@@ -163,10 +166,10 @@ void PlotWidget::applySettings( const QString &plotName)
         delete mExternalLegend;
         mExternalLegend = NULL;
     }
-    mSettings.endGroup();
+    mSettings->endGroup();
 
-    mSettings.beginGroup("Plot/"+plotName+"/legendItem");
-    if ( mSettings.value("isEnabled", true).toBool() )
+    mSettings->beginGroup("Plot/"+plotName+"/legendItem");
+    if ( mSettings->value("isEnabled", true).toBool() )
     {
         if ( mLegendItem == NULL )
         {
@@ -174,10 +177,10 @@ void PlotWidget::applySettings( const QString &plotName)
             mLegendItem->attach( this );
         }
 
-        mLegendItem->setMaxColumns( mSettings.value("numColumns", 1).toInt() );
+        mLegendItem->setMaxColumns( mSettings->value("numColumns", 1).toInt() );
         QVariant v = static_cast<int>(Qt::AlignRight | Qt::AlignTop);
-        mLegendItem->setAlignment( Qt::Alignment( mSettings.value("alignment", v ).value<int>() ) );
-        QwtPlotLegendItem::BackgroundMode bgMode = static_cast<QwtPlotLegendItem::BackgroundMode>(mSettings.value("backgroundMode", 0).toInt());
+        mLegendItem->setAlignment( Qt::Alignment( mSettings->value("alignment", v ).value<int>() ) );
+        QwtPlotLegendItem::BackgroundMode bgMode = static_cast<QwtPlotLegendItem::BackgroundMode>(mSettings->value("backgroundMode", 0).toInt());
         mLegendItem->setBackgroundMode(
             QwtPlotLegendItem::BackgroundMode( bgMode ) );
         if ( bgMode ==
@@ -197,7 +200,7 @@ void PlotWidget::applySettings( const QString &plotName)
         }
 
         QFont font = mLegendItem->font();
-        font.setPointSize( mSettings.value("size", 10).toInt());
+        font.setPointSize( mSettings->value("size", 10).toInt());
         mLegendItem->setFont( font );
     }
     else
@@ -206,32 +209,32 @@ void PlotWidget::applySettings( const QString &plotName)
         mLegendItem = NULL;
     }
 
-    mSettings.endGroup();
+    mSettings->endGroup();
 
-    mSettings.beginGroup("Plot/"+plotName+"/info");
-    setTitle(mSettings.value("title", plotName).toString());
+    mSettings->beginGroup("Plot/"+plotName+"/info");
+    setTitle(mSettings->value("title", plotName).toString());
     // axis legends
-    setAxisTitle(QwtPlot::xBottom, mSettings.value("horizontalAxisName", "X Axis").toString());
-    setAxisTitle(QwtPlot::yLeft, mSettings.value("verticalAxisName", "X Axis").toString());
-    mSettings.endGroup();
+    setAxisTitle(QwtPlot::xBottom, mSettings->value("horizontalAxisName", "X Axis").toString());
+    setAxisTitle(QwtPlot::yLeft, mSettings->value("verticalAxisName", "X Axis").toString());
+    mSettings->endGroup();
 
-    mSettings.beginGroup("Plot/"+plotName+"/axisScale");
-    QString scale = mSettings.value("horizontalAxisScale", "linear").toString();
+    mSettings->beginGroup("Plot/"+plotName+"/axisScale");
+    QString scale = mSettings->value("horizontalAxisScale", "linear").toString();
     if(scale == "log10") {
         setAxisScaleEngine(QwtPlot::xBottom, new QwtLogScaleEngine());
     } else {
         setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine());
     }
-    scale = mSettings.value("verticalAxisScale", "linear").toString();
+    scale = mSettings->value("verticalAxisScale", "linear").toString();
     if(scale == "log10") {
         setAxisScaleEngine(QwtPlot::yLeft, new QwtLogScaleEngine());
     } else {
         setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine());
     }
-    mSettings.endGroup();
+    mSettings->endGroup();
 
     QwtPlotItemList curveList = itemList( QwtPlotItem::Rtti_PlotCurve );
-    int numCurves = mSettings.value("numCurves", 4).toInt();
+    int numCurves = mSettings->value("numCurves", 4).toInt();
     if ( curveList.size() != numCurves)
     {
         while ( curveList.size() > numCurves)
@@ -248,28 +251,28 @@ void PlotWidget::applySettings( const QString &plotName)
     for ( int i = 0; i < curveList.count(); i++ )
     {
         RandomCurve* curve = static_cast<RandomCurve*>( curveList[i] );
-        curve->setCurveTitle( mSettings.value("title", "Curve").toString() );
+        curve->setCurveTitle( mSettings->value("title", "Curve").toString() );
 
-        int sz = 0.5 * mSettings.value("size", 10).toInt();
+        int sz = 0.5 * mSettings->value("size", 10).toInt();
         curve->setLegendIconSize( QSize( sz, sz ) );
     }
 
     // Curves must be added before that call!
-    mSettings.beginGroup("Plot/"+plotName+"/precision");
-    setPrecision(mSettings.value("resolution", 1000).toDouble());
-    mSettings.endGroup();
+    mSettings->beginGroup("Plot/"+plotName+"/precision");
+    setPrecision(mSettings->value("resolution", 1000).toDouble());
+    mSettings->endGroup();
 
-    mSettings.beginGroup("Plot/"+plotName+"/range");
-    if(!mSettings.value("autoAbscissa", true).toBool()) {
-        double min = mSettings.value("minAbscissa", -10.d).toDouble();
-        double max = mSettings.value("maxAbscissa", 10.d).toDouble();
+    mSettings->beginGroup("Plot/"+plotName+"/range");
+    if(!mSettings->value("autoAbscissa", true).toBool()) {
+        double min = mSettings->value("minAbscissa", -10.d).toDouble();
+        double max = mSettings->value("maxAbscissa", 10.d).toDouble();
         this->setAxisScale(QwtPlot::xBottom, min, max);
     } else {
         this->setAxisAutoScale(QwtPlot::xBottom, true);
     }
-    if(!mSettings.value("autoOrdinate", true).toBool()) {
-        double min = mSettings.value("minOrdinate", -10.d).toDouble();
-        double max = mSettings.value("maxOrdinate", 10.d).toDouble();
+    if(!mSettings->value("autoOrdinate", true).toBool()) {
+        double min = mSettings->value("minOrdinate", -10.d).toDouble();
+        double max = mSettings->value("maxOrdinate", 10.d).toDouble();
         this->setAxisScale(QwtPlot::yLeft, min, max);
     } else {
         this->setAxisAutoScale(QwtPlot::yLeft, true);
@@ -277,23 +280,23 @@ void PlotWidget::applySettings( const QString &plotName)
     // Replot and then set zoom base to the current axis scale.
     QwtPlot::replot();
     mPlotZoomer->setZoomBase();
-    mSettings.endGroup();
+    mSettings->endGroup();
 
-    mSettings.beginGroup("Plot/"+plotName+"/grid");
-    if(mSettings.value("isEnabled", true).toBool())
+    mSettings->beginGroup("Plot/"+plotName+"/grid");
+    if(mSettings->value("isEnabled", true).toBool())
         mPlotGrid->attach(this);
     else
         mPlotGrid->detach();
 
-    mPlotGrid->enableX(mSettings.value("majorPen/abscissiaIsEnabled", true).toBool());
-    mPlotGrid->enableY(mSettings.value("majorPen/ordinateIsEnabled", true).toBool());
-    mPlotGrid->enableXMin(mSettings.value("minorPen/abscissiaIsEnabled", false).toBool());
-    mPlotGrid->enableYMin(mSettings.value("minorPen/ordinateIsEnabled", false).toBool());
-    Qt::PenStyle penStyle = static_cast<Qt::PenStyle>(mSettings.value("majorPen/style", Qt::SolidLine).toInt());
-    mPlotGrid->setMajorPen(Qt::black, mSettings.value("majorPen/width", 0.0).toDouble(), penStyle);
-    penStyle = static_cast<Qt::PenStyle>(mSettings.value("minorPen/style", Qt::DotLine).toInt());
-    mPlotGrid->setMinorPen(Qt::black, mSettings.value("minorPen/width", 0.0).toDouble(), penStyle);
-    mSettings.endGroup();
+    mPlotGrid->enableX(mSettings->value("majorPen/abscissiaIsEnabled", true).toBool());
+    mPlotGrid->enableY(mSettings->value("majorPen/ordinateIsEnabled", true).toBool());
+    mPlotGrid->enableXMin(mSettings->value("minorPen/abscissiaIsEnabled", false).toBool());
+    mPlotGrid->enableYMin(mSettings->value("minorPen/ordinateIsEnabled", false).toBool());
+    Qt::PenStyle penStyle = static_cast<Qt::PenStyle>(mSettings->value("majorPen/style", Qt::SolidLine).toInt());
+    mPlotGrid->setMajorPen(Qt::black, mSettings->value("majorPen/width", 0.0).toDouble(), penStyle);
+    penStyle = static_cast<Qt::PenStyle>(mSettings->value("minorPen/style", Qt::DotLine).toInt());
+    mPlotGrid->setMinorPen(Qt::black, mSettings->value("minorPen/width", 0.0).toDouble(), penStyle);
+    mSettings->endGroup();
 
     setAutoReplot( false );
     if ( mIsDirty )
