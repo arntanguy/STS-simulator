@@ -129,12 +129,16 @@ void MainWindow::actionLoadExperimentalData(bool)
 
 void MainWindow::actionLoadProject(bool)
 {
+    // Load previously used directory when loading experimental data
+    QString startDir = mSettings.value("Save/projectDirectory", "").toString();
+
     QString fileName = QFileDialog::getOpenFileName(this, tr("Project location"),
-                                                    "",
+                                                    startDir,
                                                     tr("STS-Project (*.sts);;All Files (*.*)"));
     if(!fileName.isEmpty()) {
         qDebug() << "Loading Project : " << fileName;
         openProject(fileName);
+        mSettings.setValue("Save/projectDirectory", QFileInfo(fileName).absoluteDir().absolutePath());
     }
 }
 
@@ -150,12 +154,20 @@ void MainWindow::actionSave(bool)
 
 void MainWindow::actionSaveAs(bool)
 {
+    // Load previously used directory when loading experimental data
+    QString startDir = mSettings.value("Save/projectDirectory", "").toString();
+
     QString fileName = QFileDialog::getSaveFileName(this, tr("Project location"),
-                                                    "",
+                                                    startDir,
                                                     tr("STS-Project (*.sts);;All Files (*.*)"));
     qDebug() << fileName;
     if(!(fileName.endsWith(".sts") || fileName.endsWith(".STS"))) {
         fileName = fileName + ".sts";
+    }
+
+    // Save currently used directory for later use
+    if(!fileName.isNull()) {
+        mSettings.setValue("Save/projectDirectory", QFileInfo(fileName).absoluteDir().absolutePath());
     }
 
     ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
@@ -172,6 +184,12 @@ void MainWindow::slotNewProject()
     if(!(fileName.endsWith(".sts") || fileName.endsWith(".STS"))) {
         fileName = fileName + ".sts";
     }
+
+    // Save currently used directory for later use
+    if(!fileName.isNull()) {
+        mSettings.setValue("Save/projectDirectory", QFileInfo(fileName).absoluteDir().absolutePath());
+    }
+
     ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
     singleton->createNewProject(fileName);
 
