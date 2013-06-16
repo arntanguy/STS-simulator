@@ -5,7 +5,6 @@
 #include "plotarea.h"
 #include "csvexperimentaldatareader.h"
 #include "curve.h"
-#include "projectdialog.h"
 #include "projectsingleton.h"
 
 #include <QMdiSubWindow>
@@ -42,11 +41,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QVBoxLayout *l4 = new QVBoxLayout;
     l4->addWidget(mPlotArea4);
     ui->widget4->setLayout(l4);
-
-
-    // First, load a project
-    //ProjectDialog projectDialog(this);
-    //projectDialog.exec();
 
     // Show main window maximized
     showMaximized();
