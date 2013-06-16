@@ -18,10 +18,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // First, load a project
-    ProjectDialog projectDialog(this);
-    projectDialog.exec();
-
+    // Creates the first instance of the singleton
+    ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
+    singleton->loadDefaultConfig();
 
     mPlotArea1 = new PlotArea("Plot1");
     mPlotArea2 = new PlotArea("Plot2");
@@ -44,6 +43,11 @@ MainWindow::MainWindow(QWidget *parent) :
     l4->addWidget(mPlotArea4);
     ui->widget4->setLayout(l4);
 
+
+    // First, load a project
+    //ProjectDialog projectDialog(this);
+    //projectDialog.exec();
+
     // Show main window maximized
     showMaximized();
 
@@ -52,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionLoad_Experimental_Data, SIGNAL(triggered(bool)), this, SLOT(actionLoadExperimentalData(bool)));
     connect(ui->actionSave_As, SIGNAL(triggered(bool)), this, SLOT(actionSaveAs(bool)));
     connect(ui->actionSave, SIGNAL(triggered(bool)), this, SLOT(actionSave(bool)));
+    connect(ui->actionLoad_Project, SIGNAL(triggered(bool)), this, SLOT(actionLoadProject(bool)));
 }
 
 MainWindow::~MainWindow()
@@ -61,7 +66,16 @@ MainWindow::~MainWindow()
 
 
 // ============== PRIVATE FUNCTIONS ================
-void MainWindow::readSettings() {
+void MainWindow::openProject(const QString &project) {
+    // 1 - Save current Project
+
+    // 2 - Load default config
+    // XXX: TODO
+
+    // 3 - Load project config
+    ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
+    // The singleton will emit the signal when the configuration is loaded
+    singleton->openProject(project);
 }
 
 
@@ -113,6 +127,17 @@ void MainWindow::actionLoadExperimentalData(bool)
     }
 }
 
+void MainWindow::actionLoadProject(bool)
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Project location"),
+                                                    "",
+                                                    tr("STS-Project (*.sts);;All Files (*.*)"));
+    if(!fileName.isEmpty()) {
+        qDebug() << "Loading Project : " << fileName;
+        openProject(fileName);
+    }
+}
+
 void MainWindow::actionSave(bool)
 {
     ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
@@ -158,6 +183,6 @@ void MainWindow::slotNewProject()
 
 void MainWindow::slotOpenProject(QString &fileName)
 {
-    ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
-    singleton->openProject(fileName);
+    qDebug() << "MainWindow::slotOpenProject("<<fileName<<")";
+    openProject(fileName);
 }

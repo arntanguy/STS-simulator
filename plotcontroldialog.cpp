@@ -11,11 +11,12 @@ PlotControlDialog::PlotControlDialog(const QString &plotName, QWidget *parent) :
 {
     ui->setupUi(this);
     mPlotName = plotName;
-    mSettings = Singleton<ProjectSingleton>::Instance().getSettings();
 
     init();
     initFromConfig();
 
+    connect(this->ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(this->ui->buttonBox, SIGNAL(accepted()), this, SLOT(close()));
     connect(this->ui->buttonBox, SIGNAL(accepted()), parent, SLOT(plotConfigChanged()));
     connect(this->ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     connect(this->ui->autoAbscissa, SIGNAL(toggled(bool)), this, SLOT(autoAbscissaChecked(bool)));
@@ -24,7 +25,6 @@ PlotControlDialog::PlotControlDialog(const QString &plotName, QWidget *parent) :
 
 PlotControlDialog::~PlotControlDialog()
 {
-    mSettings->sync();
     delete ui;
 }
 
@@ -66,6 +66,8 @@ void PlotControlDialog::init()
  */
 void PlotControlDialog::initFromConfig()
 {
+    QSettings *mSettings = Singleton<ProjectSingleton>::Instance().getSettings();
+
     qDebug() << "PlotControlDialog::initFromConfig()";
     mSettings->beginGroup("Plot/"+mPlotName+"/legend");
     ui->legendCheckBox->setChecked(mSettings->value("isEnabled", false).toBool());
@@ -133,8 +135,8 @@ void PlotControlDialog::initFromConfig()
     index = ui->minorGridPenStyle->findData(mSettings->value("minorPen/style", Qt::DotLine).toString());
     if(index != -1)
         ui->minorGridPenStyle->setCurrentIndex(index);
-    ui->minorGridAbscissiaPenEnabled->setChecked(mSettings->value("minorPen/abscissiaIsEnabled", true).toBool());
-    ui->minorGridOrdinatePenEnabled->setChecked(mSettings->value("minorPen/ordinateIsEnabled", true).toBool());
+    ui->minorGridAbscissiaPenEnabled->setChecked(mSettings->value("minorPen/abscissiaIsEnabled", false).toBool());
+    ui->minorGridOrdinatePenEnabled->setChecked(mSettings->value("minorPen/ordinateIsEnabled", false).toBool());
     ui->minorGridPenWidth->setValue(mSettings->value("minorPen/width", 0.0).toDouble());
     mSettings->endGroup();
 
@@ -147,6 +149,7 @@ void PlotControlDialog::initFromConfig()
  */
 void PlotControlDialog::accept()
 {
+    QSettings *mSettings = Singleton<ProjectSingleton>::Instance().getSettings();
     qDebug() << "PlotControlDialog::accept()";
     mSettings->beginGroup("Plot/"+mPlotName+"/legend");
     mSettings->setValue("isEnabled", ui->legendCheckBox->isChecked());
@@ -202,6 +205,7 @@ void PlotControlDialog::accept()
     mSettings->setValue("minorPen/width", ui->minorGridPenWidth->value());
     mSettings->endGroup();
 
+    mSettings->sync();
     QDialog::accept();
 }
 

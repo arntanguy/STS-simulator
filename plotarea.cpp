@@ -12,12 +12,11 @@ PlotArea::PlotArea(const QString &name, QWidget *parent) :
     ui->setupUi(this);
     ui->plotWidget->setTitle(mName);
     ui->plotWidget->applySettings(mName);
+    ui->plotWidget->setName(mName);
 
     // Connect PlotArea events
     connect( ui->plotConfigButton, SIGNAL(clicked()), this, SLOT(openConfigDialog()) );
 
-    mConfigDialog = new PlotControlDialog(mName, this);
-    mConfigDialog->setWindowTitle(tr("Configuring plot ")+mName);
 }
 
 PlotArea::~PlotArea()
@@ -34,8 +33,10 @@ PlotWidget *PlotArea::getPlotWidget()
 // ======================== SLOTS =======================================
 void PlotArea::openConfigDialog()
 {
+    PlotControlDialog mConfigDialog(mName, this);
+    mConfigDialog.setWindowTitle(tr("Configuring plot ")+mName);
     qDebug() << "Opening Graph control dialog";
-    mConfigDialog->exec();
+    mConfigDialog.exec();
 }
 
 /*!
@@ -45,8 +46,6 @@ void PlotArea::openConfigDialog()
 void PlotArea::plotConfigChanged()
 {
     qDebug() << "Plot configuration changed";
-    mConfigDialog->accept();
-
 
     ui->plotWidget->applySettings(mName);
 }

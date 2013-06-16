@@ -28,11 +28,11 @@ PlotWidget::PlotWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    mSettings = Singleton<ProjectSingleton>::Instance().getSettings();
-
     setupPlot();
     initZoom();
     initGrid();
+
+    connect(&Singleton<ProjectSingleton>::Instance(), SIGNAL(projectChanged()), this, SLOT(configurationChanged()));
 
     replot();
 }
@@ -103,6 +103,12 @@ void PlotWidget::insertCurve()
     counter++;
 }
 
+void PlotWidget::configurationChanged()
+{
+    qDebug() << "PlotWidget::configurationChanged()";
+    applySettings(mName);
+}
+
 /**
  * @brief PlotWidget::applySettings
  *      Apply graph mSettings->from the saved mSettings->(using QSettings)
@@ -111,7 +117,9 @@ void PlotWidget::insertCurve()
  */
 void PlotWidget::applySettings( const QString &plotName)
 {
+    QSettings *mSettings = Singleton<ProjectSingleton>::Instance().getSettings();
     mSettings->beginGroup("Plot/"+plotName+"/legend");
+    qDebug() << "PlotWidget::applySettings, Plot title: " << mSettings->value("Plot/Plot1/info/title", "error");
 
     mIsDirty = false;
     setAutoReplot( true );

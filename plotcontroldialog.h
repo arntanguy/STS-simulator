@@ -21,7 +21,6 @@ public:
 private:
     Ui::PlotControlDialog *ui;
     QString mPlotName;
-    QSettings *mSettings;
 
 private:
     void init();

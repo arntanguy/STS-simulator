@@ -19,10 +19,11 @@ public:
     ~MainWindow();
 
 private:
-    void readSettings();
+    void openProject(const QString &project);
 
 public slots:
     void actionAbout(bool);
+    void actionLoadProject(bool);
     void actionLoadExperimentalData(bool);
     void actionSaveAs(bool);
     void actionSave(bool);

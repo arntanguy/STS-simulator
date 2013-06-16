@@ -24,6 +24,10 @@ public:
     explicit PlotWidget(QWidget *parent = 0);
     virtual ~PlotWidget();
 
+
+    void setName(const QString &name) {
+        mName = name;
+    }
 private:
     Ui::PlotWidget *ui;
     QwtPlotZoomer *mPlotZoomer;
@@ -34,7 +38,6 @@ private:
 
     QwtPlotGrid *mPlotGrid;
 
-    QSettings *mSettings;
     QString mName;
 
 private:
@@ -50,6 +53,7 @@ private:
 
 public Q_SLOTS:
     void applySettings(const QString &plotName );
+    void configurationChanged();
 
 public:
     virtual void replot();
