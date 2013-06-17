@@ -6,6 +6,7 @@
 class Curve: public QwtPlotCurve
 {
 public:
+    Curve();
     Curve( const QString &name );
 
     void initData();
@@ -16,10 +17,10 @@ private:
 
 
 private:
-    QString mName;
-
     int mResolution;
 };
+
+Q_DECLARE_METATYPE(Curve*)
 
 
 #endif // CURVE_H

@@ -1,6 +1,6 @@
 #include "curve.h"
 
-Curve::Curve(const QString &name) : mName(name)
+Curve::Curve()
 {
     init();
     mResolution = 1;
@@ -8,9 +8,17 @@ Curve::Curve(const QString &name) : mName(name)
     initData();
 }
 
+Curve::Curve(const QString &name)
+{
+    init();
+    mResolution = 1;
+    //XXX: temporary
+    initData();
+    setTitle(name);
+}
+
 void Curve::init()
 {
-    setTitle(mName);
     setRenderHint( QwtPlotItem::RenderAntialiased );
 }
 

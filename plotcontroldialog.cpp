@@ -3,24 +3,38 @@
 #include "plotcontroldialog.h"
 #include "ui_plotcontroldialog.h"
 #include "projectsingleton.h"
+#include "curvesingleton.h"
+#include "newcurvedialog.h"
+#include "curve.h"
+#include "plotarea.h"
+#include "plotwidget.h"
 #include <qwt_plot.h>
+#include <QStandardItem>
+#include <QStandardItemModel>
 
-PlotControlDialog::PlotControlDialog(const QString &plotName, QWidget *parent) :
+PlotControlDialog::PlotControlDialog(const QString &plotName, PlotArea *parent) :
     QDialog(parent),
     ui(new Ui::PlotControlDialog)
 {
     ui->setupUi(this);
+    mPlot = parent->getPlotWidget();
     mPlotName = plotName;
 
     init();
     initFromConfig();
 
+    // Dialog
     connect(this->ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(this->ui->buttonBox, SIGNAL(accepted()), this, SLOT(close()));
     connect(this->ui->buttonBox, SIGNAL(accepted()), parent, SLOT(plotConfigChanged()));
     connect(this->ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
+    // Plot page
     connect(this->ui->autoAbscissa, SIGNAL(toggled(bool)), this, SLOT(autoAbscissaChecked(bool)));
     connect(this->ui->autoOrdinate, SIGNAL(toggled(bool)), this, SLOT(autoOrdinateChecked(bool)));
+
+    // Curve page
+    connect(ui->newCurveButton, SIGNAL(clicked()), this, SLOT(newCurve()));
 }
 
 PlotControlDialog::~PlotControlDialog()
@@ -56,8 +70,18 @@ void PlotControlDialog::init()
 
     ui->majorGridPenStyle->addItem(tr("Solid Line"), Qt::SolidLine);
     ui->majorGridPenStyle->addItem(tr("Dot Line"), Qt::DotLine);
+    ui->majorGridPenStyle->addItem(tr("Dash Line"), Qt::DashLine);
+    ui->majorGridPenStyle->addItem(tr("Dash and Dot Line"), Qt::DashDotLine);
+    ui->majorGridPenStyle->addItem(tr("Dash Dot Dot Dash Line"), Qt::DashDotDotLine);
     ui->minorGridPenStyle->addItem(tr("Solid Line"), Qt::SolidLine);
     ui->minorGridPenStyle->addItem(tr("Dot Line"), Qt::DotLine);
+    ui->minorGridPenStyle->addItem(tr("Dash Line"), Qt::DashLine);
+    ui->minorGridPenStyle->addItem(tr("Dash and Dot Line"), Qt::DashDotLine);
+    ui->minorGridPenStyle->addItem(tr("Dash Dot Dot Dash Line"), Qt::DashDotDotLine);
+
+    CurveSingleton *curveSingleton = &Singleton<CurveSingleton>::Instance();
+    QStandardItemModel *model = new QStandardItemModel();
+    ui->curveSelection->setModel( model );
 }
 
 /*!
@@ -205,6 +229,18 @@ void PlotControlDialog::accept()
     mSettings->setValue("minorPen/width", ui->minorGridPenWidth->value());
     mSettings->endGroup();
 
+    // Display selected curves
+    Curve *curve = 0;
+    foreach(QStandardItem *item, mCurveItems) {
+        // Only show selected curves
+        if(item->checkState() == Qt::Checked) {
+            curve = static_cast<Curve *>(item->data().value<Curve *>());
+            if(curve != 0) {
+                curve->attach(mPlot);
+            }
+        }
+    }
+
     mSettings->sync();
     QDialog::accept();
 }
@@ -223,4 +259,33 @@ void PlotControlDialog::autoOrdinateChecked(bool checked)
     ui->autoOrdinate->setChecked(checked);
     ui->minOrdinateRange->setEnabled(!checked);
     ui->maxOrdinateRange->setEnabled(!checked);
+}
+
+void PlotControlDialog::newCurve()
+{
+    NewCurveDialog dialog(this);
+    connect(&dialog, SIGNAL(accepted()), this, SLOT(newCurveAvailable()));
+    dialog.exec();
+}
+
+void PlotControlDialog::newCurveAvailable()
+{
+    QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->curveSelection->model());
+    model->clear();
+    mCurveItems.clear();
+
+    QMap<QString, Curve *> map = Singleton<CurveSingleton>::Instance().getCurves();
+    QMapIterator<QString, Curve*> i(map);
+    int j=0;
+    while (i.hasNext()) {
+        i.next();
+        QStandardItem *Item = new QStandardItem();
+        Item->setCheckable( true );
+        Item->setCheckState( Qt::Checked );
+        Item->setEditable(false);
+        Item->setText(i.value()->title().text());
+        Item->setData(QVariant::fromValue(i.value()));
+        mCurveItems.append(Item);
+        model->setItem( j++, Item );
+    }
 }
