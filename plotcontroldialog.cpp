@@ -79,9 +79,10 @@ void PlotControlDialog::init()
     ui->minorGridPenStyle->addItem(tr("Dash and Dot Line"), Qt::DashDotLine);
     ui->minorGridPenStyle->addItem(tr("Dash Dot Dot Dash Line"), Qt::DashDotDotLine);
 
-    CurveSingleton *curveSingleton = &Singleton<CurveSingleton>::Instance();
     QStandardItemModel *model = new QStandardItemModel();
     ui->curveSelection->setModel( model );
+    // TODO: load from config
+    newCurveAvailable();
 }
 
 /*!
@@ -233,10 +234,12 @@ void PlotControlDialog::accept()
     Curve *curve = 0;
     foreach(QStandardItem *item, mCurveItems) {
         // Only show selected curves
-        if(item->checkState() == Qt::Checked) {
-            curve = static_cast<Curve *>(item->data().value<Curve *>());
-            if(curve != 0) {
+        curve = static_cast<Curve *>(item->data().value<Curve *>());
+        if(curve != 0) {
+            if(item->checkState() == Qt::Checked) {
                 curve->attach(mPlot);
+            } else {
+                curve->detach();
             }
         }
     }
@@ -281,7 +284,10 @@ void PlotControlDialog::newCurveAvailable()
         i.next();
         QStandardItem *Item = new QStandardItem();
         Item->setCheckable( true );
-        Item->setCheckState( Qt::Checked );
+        if(i.value()->isVisible())
+            Item->setCheckState( Qt::Checked );
+        else
+            Item->setCheckState( Qt::Unchecked );
         Item->setEditable(false);
         Item->setText(i.value()->title().text());
         Item->setData(QVariant::fromValue(i.value()));

@@ -74,35 +74,6 @@ void PlotWidget::initGrid()
     mPlotGrid->attach(this);
 }
 
-
-void PlotWidget::insertCurve()
-{
-    static int counter = 1;
-
-    const char *colors[] =
-    {
-        "LightSalmon",
-        "SteelBlue",
-        "Yellow",
-        "Fuchsia",
-        "PaleGreen",
-        "PaleTurquoise",
-        "Cornsilk",
-        "HotPink",
-        "Peru",
-        "Maroon"
-    };
-    const int numColors = sizeof( colors ) / sizeof( colors[0] );
-
-    //QwtPlotCurve *curve = new RandomCurve( counter++ );
-    //curve->setPen( QColor( colors[ counter % numColors ] ), 2 );
-    //curve->attach( this );
-    Curve *curve = new Curve( QString("Curve ")+counter );
-    curve->setPen( QColor( colors[ counter % numColors ] ), 2 );
-    curve->attach( this );
-    counter++;
-}
-
 void PlotWidget::configurationChanged()
 {
     qDebug() << "PlotWidget::configurationChanged()";
@@ -240,30 +211,6 @@ void PlotWidget::applySettings( const QString &plotName)
         setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine());
     }
     mSettings->endGroup();
-
-    QwtPlotItemList curveList = itemList( QwtPlotItem::Rtti_PlotCurve );
-    int numCurves = mSettings->value("numCurves", 4).toInt();
-    if ( curveList.size() != numCurves)
-    {
-        while ( curveList.size() > numCurves)
-        {
-            QwtPlotItem* curve = curveList.takeFirst();
-            delete curve;
-        }
-
-        for ( int i = curveList.size(); i < numCurves; i++ )
-            insertCurve();
-    }
-
-    curveList = itemList( QwtPlotItem::Rtti_PlotCurve );
-    for ( int i = 0; i < curveList.count(); i++ )
-    {
-        RandomCurve* curve = static_cast<RandomCurve*>( curveList[i] );
-        curve->setCurveTitle( mSettings->value("title", "Curve").toString() );
-
-        int sz = 0.5 * mSettings->value("size", 10).toInt();
-        curve->setLegendIconSize( QSize( sz, sz ) );
-    }
 
     // Curves must be added before that call!
     mSettings->beginGroup("Plot/"+plotName+"/precision");
