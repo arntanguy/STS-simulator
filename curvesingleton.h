@@ -15,10 +15,14 @@ public:
     CurveSingleton();
     void addCurve(Curve *curve);
     void removeCurve(Curve *curve);
-    QMap<QString, Curve *> getCurves() const;
+    QMap<unsigned int, Curve *> getCurves() const;
+    Curve* getCurve(unsigned int id) const;
+
+    void save();
+    void loadFromSettings();
 
 private:
-    QMap<QString, Curve *> mCurves;
+    QMap<unsigned int, Curve *> mCurves;
 
 signals:
     void newCurveAvailable(Curve *);

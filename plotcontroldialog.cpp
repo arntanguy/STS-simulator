@@ -133,7 +133,19 @@ void PlotControlDialog::initFromConfig()
     mSettings->endGroup();
 
 
-
+    QStringList enabledCurveIds = mSettings->value("Plot/"+mPlotName+"/curves/enabledCurveIds", QStringList()).toStringList();
+    qDebug() << "loading enabled curve ids: "<<enabledCurveIds;
+    Curve *curve = 0;
+    foreach(QStandardItem *item, mCurveItems) {
+        // Only show selected curves
+        curve = static_cast<Curve *>(item->data().value<Curve *>());
+        if( enabledCurveIds.contains(QString::number(curve->getId())) ) {
+            // TODO: save which curve is attached.
+            item->setCheckState(Qt::Checked);
+        } else {
+            item->setCheckState(Qt::Unchecked);
+        }
+    }
 
     // ========= Plot range ===========
     mSettings->beginGroup("Plot/"+mPlotName+"/range");
@@ -231,18 +243,25 @@ void PlotControlDialog::accept()
     mSettings->endGroup();
 
     // Display selected curves
+    QStringList enabledCurveIds;
     Curve *curve = 0;
     foreach(QStandardItem *item, mCurveItems) {
         // Only show selected curves
         curve = static_cast<Curve *>(item->data().value<Curve *>());
         if(curve != 0) {
             if(item->checkState() == Qt::Checked) {
+                // TODO: save which curve is attached.
                 curve->attach(mPlot);
+                enabledCurveIds << QString::number(curve->getId());
             } else {
                 curve->detach();
             }
         }
     }
+    qDebug() << "enabled curves " << enabledCurveIds;
+    mSettings->beginGroup("Plot/"+mPlotName+"/curves");
+    mSettings->setValue("enabledCurveIds", enabledCurveIds);
+    mSettings->endGroup();
 
     mSettings->sync();
     QDialog::accept();
@@ -277,14 +296,15 @@ void PlotControlDialog::newCurveAvailable()
     model->clear();
     mCurveItems.clear();
 
-    QMap<QString, Curve *> map = Singleton<CurveSingleton>::Instance().getCurves();
-    QMapIterator<QString, Curve*> i(map);
+    QMap<unsigned int, Curve *> map = Singleton<CurveSingleton>::Instance().getCurves();
+    QMapIterator<unsigned int, Curve*> i(map);
     int j=0;
     while (i.hasNext()) {
         i.next();
         QStandardItem *Item = new QStandardItem();
         Item->setCheckable( true );
-        if(i.value()->isVisible())
+        // XXX: doesn't work, check if attached to plot
+        if(i.value()->plot() != 0)
             Item->setCheckState( Qt::Checked );
         else
             Item->setCheckState( Qt::Unchecked );

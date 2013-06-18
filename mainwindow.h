@@ -21,6 +21,9 @@ public:
 private:
     void openProject(const QString &project);
 
+protected:
+    virtual void closeEvent(QCloseEvent *);
+
 public slots:
     void actionAbout(bool);
     void actionNewProject(bool);

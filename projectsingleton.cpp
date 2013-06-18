@@ -1,4 +1,5 @@
 #include "projectsingleton.h"
+#include "curvesingleton.h"
 #include <QDebug>
 #include <QStringList>
 
@@ -46,6 +47,10 @@ void ProjectSingleton::openProject(const QString& fileName)
     mFileName = fileName;
     delete mSettings;
     mSettings = new QSettings(fileName, QSettings::IniFormat);
+
+    // Load all curves
+    Singleton<CurveSingleton>::Instance().loadFromSettings();
+
     qDebug() << "ProjectSingleton:: opening configuration for project " << fileName << ", qsettings " << mSettings->fileName();
     emit projectChanged();
     qDebug() << "Plot title: " << mSettings->value("Plot/Plot1/info/title", "error");
@@ -55,6 +60,9 @@ void ProjectSingleton::save()
 {
     if(!mFileName.isEmpty())
     {
+        // Save all curves
+        Singleton<CurveSingleton>::Instance().save();
+
         mSettings->sync();
         if(mSettings->status() != QSettings::NoError) {
             qDebug() << "Error while saving!";

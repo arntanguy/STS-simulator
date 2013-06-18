@@ -1,4 +1,8 @@
 #include "curve.h"
+#include <algorithm>
+#include "projectsingleton.h"
+
+unsigned int Curve::mCurveStaticId = 0;
 
 Curve::Curve()
 {
@@ -6,6 +10,12 @@ Curve::Curve()
     mResolution = 1;
     //XXX: temporary
     initData();
+    setId(mCurveStaticId);
+}
+
+Curve::Curve(int id)
+{
+    setId(id);
 }
 
 Curve::Curve(const QString &name)
@@ -15,11 +25,24 @@ Curve::Curve(const QString &name)
     //XXX: temporary
     initData();
     setTitle(name);
+    setId(mCurveStaticId);
 }
 
 void Curve::init()
 {
     setRenderHint( QwtPlotItem::RenderAntialiased );
+}
+
+void Curve::setId(unsigned int id)
+{
+    qDebug() << "set id " << id;
+    if(id >= mCurveStaticId) {
+        mCurveId = id;
+        mCurveStaticId = std::max(id, mCurveStaticId) + 1;
+    } else {
+        // XXX: handle error
+        mCurveId = -1;
+    }
 }
 
 void Curve::initData()
@@ -53,4 +76,44 @@ void Curve::setResolution(int resolution)
 {
     mResolution = resolution;
     initData();
+}
+
+/*!
+ * \brief Curve::loadFromSettings
+ *  Load curve from settings.
+ *  WARNING: the curve id must be set beforehand Curve *curve = new Curve(42);
+ *  Project settings state must be at root group
+ */
+void Curve::loadFromSettings()
+{
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup("Curves/"+QString::number(mCurveId));
+    setTitle(settings->value("title", "Unknown").toString());
+    setResolution(settings->value("resolution", 0).toInt());
+
+    // Load pen
+    QPen pen;
+    pen.setColor(settings->value("color", Qt::black).value<QColor>());
+    pen.setWidth(settings->value("thickness", 0.0d).toDouble());
+    pen.setStyle(static_cast<Qt::PenStyle>(settings->value("style", Qt::SolidLine).toInt()));
+    // Apply pen
+    setPen(pen);
+
+    settings->endGroup();
+}
+
+void Curve::save()
+{
+    qDebug() << "Saving curve "<<mCurveId<<","<<title().text();
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup("Curves/"+QString::number(mCurveId)+"/");
+    qDebug() << "current group: " << settings->group();
+    settings->setValue("id", mCurveId);
+    settings->setValue("title", title().text());
+    settings->setValue("resolution", mResolution);
+
+    settings->setValue("color", pen().color());
+    settings->setValue("thickness", pen().width());
+    settings->setValue("style", pen().style());
+    settings->endGroup();
 }

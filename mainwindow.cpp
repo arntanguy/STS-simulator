@@ -10,6 +10,7 @@
 #include <QMdiSubWindow>
 #include <QFileDialog>
 #include <QColor>
+#include <QCloseEvent>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -59,6 +60,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+//Virtual
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    qDebug() << "Close event, save...";
+    actionSave(true);
+    event->accept();
+}
 
 // ============== PRIVATE FUNCTIONS ================
 void MainWindow::openProject(const QString &project) {

@@ -6,6 +6,7 @@
 #include <qwt_plot_layout.h>
 #include "randomcurve.h"
 #include "curve.h"
+#include "curvesingleton.h"
 #include "legenditem.h"
 #include "projectsingleton.h"
 
@@ -211,6 +212,15 @@ void PlotWidget::applySettings( const QString &plotName)
         setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine());
     }
     mSettings->endGroup();
+
+
+    QStringList enabledCurveIds = mSettings->value("Plot/"+plotName+"/curves/enabledCurveIds", QStringList()).toStringList();
+    CurveSingleton *curveSingleton = &Singleton<CurveSingleton>::Instance();
+    Curve *curve = 0;
+    foreach(QString id, enabledCurveIds) {
+        curve = curveSingleton->getCurve(id.toInt());
+        if(curve != 0) curve->attach(this);
+    }
 
     // Curves must be added before that call!
     mSettings->beginGroup("Plot/"+plotName+"/precision");
