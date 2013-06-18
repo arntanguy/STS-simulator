@@ -35,6 +35,7 @@ PlotControlDialog::PlotControlDialog(const QString &plotName, PlotArea *parent) 
 
     // Curve page
     connect(ui->newCurveButton, SIGNAL(clicked()), this, SLOT(newCurve()));
+    connect(ui->curveSelection, SIGNAL(doubleClicked ( const QModelIndex &)), this, SLOT(editCurve(const QModelIndex &)));
 }
 
 PlotControlDialog::~PlotControlDialog()
@@ -138,12 +139,14 @@ void PlotControlDialog::initFromConfig()
     Curve *curve = 0;
     foreach(QStandardItem *item, mCurveItems) {
         // Only show selected curves
-        curve = static_cast<Curve *>(item->data().value<Curve *>());
-        if( enabledCurveIds.contains(QString::number(curve->getId())) ) {
-            // TODO: save which curve is attached.
-            item->setCheckState(Qt::Checked);
-        } else {
-            item->setCheckState(Qt::Unchecked);
+        curve = dynamic_cast<Curve *>(item->data().value<Curve *>());
+        if(curve != 0) {
+            if( enabledCurveIds.contains(QString::number(curve->getId())) ) {
+                // TODO: save which curve is attached.
+                item->setCheckState(Qt::Checked);
+            } else {
+                item->setCheckState(Qt::Unchecked);
+            }
         }
     }
 
@@ -247,7 +250,7 @@ void PlotControlDialog::accept()
     Curve *curve = 0;
     foreach(QStandardItem *item, mCurveItems) {
         // Only show selected curves
-        curve = static_cast<Curve *>(item->data().value<Curve *>());
+        curve = static_cast<Curve *>(item->data(Qt::UserRole).value<Curve *>());
         if(curve != 0) {
             if(item->checkState() == Qt::Checked) {
                 // TODO: save which curve is attached.
@@ -256,6 +259,8 @@ void PlotControlDialog::accept()
             } else {
                 curve->detach();
             }
+        } else {
+            qDebug() << "NULL curve";
         }
     }
     qDebug() << "enabled curves " << enabledCurveIds;
@@ -290,6 +295,25 @@ void PlotControlDialog::newCurve()
     dialog.exec();
 }
 
+void PlotControlDialog::editCurve(const QModelIndex &index)
+{
+    NewCurveDialog dialog(this);
+    dialog.setWindowTitle(tr("Edit Curve"));
+    QStandardItemModel *model = dynamic_cast<QStandardItemModel *>(ui->curveSelection->model());
+    if(model != 0) {
+        QVariant item = model->data(index, Qt::UserRole);
+        if(item.isValid()) {
+            qDebug() << item;
+            Curve *curve = static_cast<Curve *>(item.value<Curve *>());
+            if(curve != 0) {
+                dialog.loadFromCurve(curve);
+            }
+        }
+    }
+    connect(&dialog, SIGNAL(accepted()), this, SLOT(newCurveAvailable()));
+    dialog.exec();
+}
+
 void PlotControlDialog::newCurveAvailable()
 {
     QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->curveSelection->model());
@@ -310,7 +334,7 @@ void PlotControlDialog::newCurveAvailable()
             Item->setCheckState( Qt::Unchecked );
         Item->setEditable(false);
         Item->setText(i.value()->title().text());
-        Item->setData(QVariant::fromValue(i.value()));
+        Item->setData(QVariant::fromValue(i.value()), Qt::UserRole);
         mCurveItems.append(Item);
         model->setItem( j++, Item );
     }

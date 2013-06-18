@@ -8,8 +8,7 @@ NewCurveDialog::NewCurveDialog(QWidget *parent) :
     ui(new Ui::NewCurveDialog)
 {
     ui->setupUi(this);
-    mCurve = new Curve();
-
+    mCurve = 0;
     init();
 
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
@@ -29,9 +28,19 @@ void NewCurveDialog::init()
     ui->curvePenStyle->addItem(tr("Dash Dot Dot Dash Line"), Qt::DashDotDotLine);
 }
 
+void NewCurveDialog::loadFromCurve(Curve *curve)
+{
+    mCurve = curve;
+    if(mCurve != 0) {
+        ui->curveName->setText(mCurve->title().text());
+        ui->curveColor->setCurrentColor(mCurve->pen().color());
+    }
+}
+
 // ========================= SLOTS ============================
 void NewCurveDialog::accept()
 {
+    if(mCurve == 0)  mCurve = new Curve();
     mCurve->setTitle(ui->curveName->text());
     Qt::PenStyle pen = static_cast<Qt::PenStyle>(ui->curvePenStyle->itemData(ui->curvePenStyle->currentIndex()).toInt());
     mCurve->setPen(ui->curveColor->currentColor(), ui->curveThickness->value(), pen);

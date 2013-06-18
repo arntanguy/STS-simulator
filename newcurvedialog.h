@@ -16,6 +16,8 @@ class NewCurveDialog : public QDialog
 public:
     explicit NewCurveDialog(QWidget *parent = 0);
     ~NewCurveDialog();
+
+    void loadFromCurve(Curve *curve);
     
 private:
     void init();

@@ -7,6 +7,7 @@
 class QStandardItem;
 class PlotArea;
 class PlotWidget;
+class QModelIndex;
 
 namespace Ui {
 class PlotControlDialog;
@@ -37,6 +38,7 @@ public slots:
     void autoAbscissaChecked(bool checked);
     void autoOrdinateChecked(bool checked);
     void newCurve();
+    void editCurve(const QModelIndex &);
     void newCurveAvailable();
 };
 
