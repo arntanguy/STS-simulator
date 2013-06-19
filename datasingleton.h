@@ -17,16 +17,31 @@ public:
     void addData(Data *data)
     {
         mData[data->getId()] = data;
+        emit newDataAvailable(data);
+    }
+
+    QStringList getExperimentalDataPaths() {
+        QStringList paths;
+        foreach(QString key, mData.keys()) {
+            if(mData[key]->getType() == Data::Experimental) {
+                paths << mData[key]->getId();
+            }
+        }
+        return paths;
     }
 
     Data* getData(const QString& id) {
         return mData[id];
     }
 
+    void loadFromSettings();
+    void save();
+
 signals:
-    
+    void newDataAvailable(Data *);
+
 public slots:
-    
+
 private:
     QMap<QString, Data *>	mData;
 };

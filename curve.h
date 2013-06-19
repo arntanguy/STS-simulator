@@ -3,6 +3,8 @@
 
 #include <qwt_plot_curve.h>
 
+class Data;
+
 class Curve: public QwtPlotCurve
 {
 public:
@@ -10,7 +12,6 @@ public:
     Curve(int id);
     Curve( const QString &name );
 
-    void initData();
     void setResolution(int resolution);
 
     unsigned int getId() const {
@@ -20,12 +21,17 @@ public:
     void save();
     void loadFromSettings();
 
+    void setExperimentalData(const QString &experimentId, const QString &abscissiaColumnName, const QString &ordinateColumnName);
+
 private:
     void init();
     void setId(unsigned int id);
 
 
 private:
+    Data *mData;
+    QString mExperimentalAbscissia, mExperimentalOrdinate;
+
     int mResolution;
     static unsigned int mCurveStaticId;
     unsigned int mCurveId;

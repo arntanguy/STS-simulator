@@ -1,6 +1,7 @@
 #include "curve.h"
 #include <algorithm>
 #include "projectsingleton.h"
+#include "datasingleton.h"
 
 unsigned int Curve::mCurveStaticId = 0;
 
@@ -8,8 +9,6 @@ Curve::Curve()
 {
     init();
     mResolution = 1;
-    //XXX: temporary
-    initData();
     setId(mCurveStaticId);
 }
 
@@ -22,8 +21,6 @@ Curve::Curve(const QString &name)
 {
     init();
     mResolution = 1;
-    //XXX: temporary
-    initData();
     setTitle(name);
     setId(mCurveStaticId);
 }
@@ -45,24 +42,14 @@ void Curve::setId(unsigned int id)
     }
 }
 
-void Curve::initData()
+void Curve::setExperimentalData(const QString &experimentId, const QString &abscissiaColumnName, const QString &ordinateColumnName)
 {
-//    QVector<QPointF> points;
-//
-//    double y = qrand() % 1000;
-//
-//    for ( double x = 0.0; x <= 1000.0; x += 1000.0/mResolution )
-//    {
-//        double off = qrand() % 200 - 100;
-//        if ( y + off > 980.0 || y + off < 20.0 )
-//            off = -off;
-//
-//        y += off;
-//
-//        points += QPointF( x, y );
-//    }
-//
-//    setSamples( points );
+    mData = Singleton<DataSingleton>::Instance().getData(experimentId);
+    mExperimentalAbscissia = abscissiaColumnName;
+    mExperimentalOrdinate = ordinateColumnName;
+    if(mData != 0) {
+        setSamples(mData->getColumn(abscissiaColumnName, mResolution).getData(), mData->getColumn(ordinateColumnName, mResolution).getData());
+    }
 }
 
 /*!
@@ -75,7 +62,6 @@ void Curve::initData()
 void Curve::setResolution(int resolution)
 {
     mResolution = resolution;
-    initData();
 }
 
 /*!
@@ -90,6 +76,15 @@ void Curve::loadFromSettings()
     settings->beginGroup("Curves/"+QString::number(mCurveId));
     setTitle(settings->value("title", "Unknown").toString());
     setResolution(settings->value("resolution", 0).toInt());
+
+    // Load data
+    QString path = settings->value("data", "").toString();;
+    Data::Type type = static_cast<Data::Type>(settings->value("type", Data::Experimental).toInt());
+    if(type == Data::Experimental) {
+        QString abscissia = settings->value("abscissia", "").toString();
+        QString ordinate = settings->value("ordinate", "").toString();
+        setExperimentalData(path, abscissia, ordinate);
+    }
 
     // Load pen
     QPen pen;
@@ -115,5 +110,14 @@ void Curve::save()
     settings->setValue("color", pen().color());
     settings->setValue("thickness", pen().width());
     settings->setValue("style", pen().style());
+    if(mData != 0) {
+        Data::Type type = mData->getType();
+        settings->setValue("type", type);
+        if(type == Data::Experimental) {
+            settings->setValue("abscissia", mExperimentalAbscissia);
+            settings->setValue("ordinate", mExperimentalOrdinate);
+        }
+        settings->setValue("data", mData->getId());
+    }
     settings->endGroup();
 }

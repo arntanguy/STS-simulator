@@ -1,5 +1,6 @@
 #include "projectsingleton.h"
 #include "curvesingleton.h"
+#include "datasingleton.h"
 #include <QDebug>
 #include <QStringList>
 
@@ -49,6 +50,7 @@ void ProjectSingleton::openProject(const QString& fileName)
     mSettings = new QSettings(fileName, QSettings::IniFormat);
 
     // Load all curves
+    Singleton<DataSingleton>::Instance().loadFromSettings();
     Singleton<CurveSingleton>::Instance().loadFromSettings();
 
     qDebug() << "ProjectSingleton:: opening configuration for project " << fileName << ", qsettings " << mSettings->fileName();
@@ -62,6 +64,7 @@ void ProjectSingleton::save()
     {
         // Save all curves
         Singleton<CurveSingleton>::Instance().save();
+        Singleton<DataSingleton>::Instance().save();
 
         mSettings->sync();
         if(mSettings->status() != QSettings::NoError) {

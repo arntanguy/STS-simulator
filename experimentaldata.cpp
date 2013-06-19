@@ -4,6 +4,7 @@
 
 ExperimentalData::ExperimentalData()
 {
+    mType = Experimental;
 }
 
 ExperimentalData::~ExperimentalData()

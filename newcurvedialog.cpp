@@ -3,6 +3,7 @@
 #include "curve.h"
 #include "curvesingleton.h"
 #include "datasingleton.h"
+#include "projectsingleton.h"
 #include "experimentaldata.h"
 
 #include <QSettings>
@@ -40,11 +41,38 @@ void NewCurveDialog::init()
 
 void NewCurveDialog::loadFromCurve(Curve *curve)
 {
+
+    //Loads the data first
+    QStringList dataPaths = Singleton<DataSingleton>::Instance().getExperimentalDataPaths();
+    ui->dataLoaded->clear();
+    foreach(QString data, dataPaths) {
+        ui->dataLoaded->addItem(QFileInfo(data).baseName(), data);
+    }
+
     mCurve = curve;
     if(mCurve != 0) {
         ui->curveName->setText(mCurve->title().text());
         ui->curveColor->setCurrentColor(mCurve->pen().color());
     }
+
+    // XXX: load settings outside of curve, not very clean, but works
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup("Curves/"+QString::number(curve->getId()));
+    Data::Type type = static_cast<Data::Type>(settings->value("type", Data::Experimental).toInt());
+    if(type == Data::Experimental) {
+        QString abscissia = settings->value("abscissia", "").toString();
+        QString ordinate = settings->value("ordinate", "").toString();
+        int index = ui->dataAbscissia->findData(abscissia);
+        if(index != -1) {
+            ui->dataAbscissia->setCurrentIndex(index);
+        }
+        index = ui->dataOrdinate->findData(ordinate);
+        if(index != -1) {
+            ui->dataOrdinate->setCurrentIndex(index);
+        }
+    }
+    settings->endGroup();
+
 }
 
 // ========================= SLOTS ============================
@@ -60,15 +88,12 @@ void NewCurveDialog::accept()
     // If there is experimental data
     QString fileName = ui->dataLoaded->itemData(ui->dataLoaded->currentIndex()).toString();
     if(!fileName.isEmpty()) {
-        Data *data = Singleton<DataSingleton>::Instance().getData(fileName);
-        if(data != 0) {
             QString abscissia = ui->dataAbscissia->itemData(ui->dataAbscissia->currentIndex()).toString();
             QString ordinate = ui->dataOrdinate->itemData(ui->dataOrdinate->currentIndex()).toString();
             if(!abscissia.isEmpty() && !ordinate.isEmpty()) {
                 qDebug() << "NewCurveDialog::accept(): setting experimental curve data ("<<abscissia<<", "<<ordinate<<")" << endl;
-                mCurve->setSamples(data->getColumn(abscissia, 100).getData(), data->getColumn(ordinate, 100).getData());
+                mCurve->setExperimentalData(fileName, abscissia, ordinate);
             }
-        }
     }
 
     Singleton<CurveSingleton>::Instance().addCurve(mCurve);
@@ -123,5 +148,9 @@ void NewCurveDialog::dataFileChanged(int index)
             ui->dataAbscissia->addItem(column, column);
             ui->dataOrdinate->addItem(column, column);
         }
+    }
+    int ind = ui->dataAbscissia->findData("V");
+    if(ind != -1) {
+        ui->dataAbscissia->setCurrentIndex(index);
     }
 }
