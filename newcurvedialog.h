@@ -28,6 +28,8 @@ private:
 
 public slots:
     void accept();
+    void loadDataFile();
+    void dataFileChanged(int);
 };
 
 #endif // NEWCURVEDIALOG_H

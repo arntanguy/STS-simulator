@@ -47,22 +47,22 @@ void Curve::setId(unsigned int id)
 
 void Curve::initData()
 {
-    QVector<QPointF> points;
-
-    double y = qrand() % 1000;
-
-    for ( double x = 0.0; x <= 1000.0; x += 1000.0/mResolution )
-    {
-        double off = qrand() % 200 - 100;
-        if ( y + off > 980.0 || y + off < 20.0 )
-            off = -off;
-
-        y += off;
-
-        points += QPointF( x, y );
-    }
-
-    setSamples( points );
+//    QVector<QPointF> points;
+//
+//    double y = qrand() % 1000;
+//
+//    for ( double x = 0.0; x <= 1000.0; x += 1000.0/mResolution )
+//    {
+//        double off = qrand() % 200 - 100;
+//        if ( y + off > 980.0 || y + off < 20.0 )
+//            off = -off;
+//
+//        y += off;
+//
+//        points += QPointF( x, y );
+//    }
+//
+//    setSamples( points );
 }
 
 /*!

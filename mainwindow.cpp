@@ -91,43 +91,43 @@ void MainWindow::actionAbout(bool)
 
 void MainWindow::actionLoadExperimentalData(bool)
 {
-    // Load previously used directory when loading experimental data
-    QString startDir = mSettings.value("Save/experimentalDataDirectory", "").toString();
+ //   // Load previously used directory when loading experimental data
+ //   QString startDir = mSettings.value("Save/experimentalDataDirectory", "").toString();
 
-    QString fileName = QFileDialog::getOpenFileName(this,
-     tr("Open Experimental Data"), startDir, tr("Experimental Data Files(*.csv *.txt);;All Files (*.*)"));
-
-
-    CSVExperimentalDataReader reader;
-    reader.parseFile(fileName, "\t");
+ //   QString fileName = QFileDialog::getOpenFileName(this,
+ //    tr("Open Experimental Data"), startDir, tr("Experimental Data Files(*.csv *.txt);;All Files (*.*)"));
 
 
-    const char *colors[] =
-    {
-        "LightSalmon",
-        "SteelBlue",
-        "Yellow",
-        "Fuchsia",
-        "PaleGreen",
-        "PaleTurquoise",
-        "Cornsilk",
-        "HotPink",
-        "Peru",
-        "Maroon"
-    };
-    const int numColors = sizeof( colors ) / sizeof( colors[0] );
-    Curve *curve = new Curve( QString("Experimental DZ2") );
-    curve->setPen( QColor( colors[ numColors ] ), 2 );
-    curve->setSamples(reader.getColumn(0, 1000).getData(), reader.getColumn(4, 1000).getData());
-    curve->attach( mPlotArea3->getPlotWidget() );
-    mPlotArea3->getPlotWidget()->replot();
+ //   CSVExperimentalDataReader<double> reader;
+ //   reader.parseFile(fileName, "\t");
+
+
+ //   const char *colors[] =
+ //   {
+ //       "LightSalmon",
+ //       "SteelBlue",
+ //       "Yellow",
+ //       "Fuchsia",
+ //       "PaleGreen",
+ //       "PaleTurquoise",
+ //       "Cornsilk",
+ //       "HotPink",
+ //       "Peru",
+ //       "Maroon"
+ //   };
+ //   const int numColors = sizeof( colors ) / sizeof( colors[0] );
+ //   Curve *curve = new Curve( QString("Experimental DZ2") );
+ //   curve->setPen( QColor( colors[ numColors ] ), 2 );
+ //   curve->setSamples(reader.getColumn("V", 1000).getData(), reader.getColumn("DZ1", 1000).getData());
+ //   curve->attach( mPlotArea3->getPlotWidget() );
+ //   mPlotArea3->getPlotWidget()->replot();
 
 
 
-    // Save currently used directory for later use
-    if(!fileName.isNull()) {
-        mSettings.setValue("Save/experimentalDataDirectory", QFileInfo(fileName).absoluteDir().absolutePath());
-    }
+ //   // Save currently used directory for later use
+ //   if(!fileName.isNull()) {
+ //       mSettings.setValue("Save/experimentalDataDirectory", QFileInfo(fileName).absoluteDir().absolutePath());
+ //   }
 }
 
 void MainWindow::actionLoadProject(bool)

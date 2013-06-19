@@ -19,9 +19,10 @@ public:
         mData.append(value);
     }
 
-    QVector<T> getData() {
+    QVector<T> getData() const {
         return mData;
     }
+
 private:
     QString mTitle;
     QVector<T> mData;

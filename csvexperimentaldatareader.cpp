@@ -15,30 +15,30 @@ void CSVExperimentalDataReader::processTitleLine(const QString &line)
 {
     CSVFileReader::processTitleLine(line);
     for(int i=0; i<mColumnTitles.size(); i++) {
-        mData.append(DataColumn<double>());
+        DataColumn<double> col(mColumnTitles[i]);
+        mData[mColumnTitles[i]] = col;
+
     }
 }
 
 void CSVExperimentalDataReader::processLine(const QString &line)
 {
     QStringList split = splitLine(line);
-    qDebug() << split;
+    //qDebug() << split;
 
-    for(int i=0; i<mColumnTitles.size(); i++) {
+    for(int i=0; i<mData.size(); i++) {
         if(i < split.size()) {
             double value = split[i].toDouble();
-            mData[i].addValue(value);
+            mData[mColumnTitles[i]].addValue(value);
         }
     }
 }
 
 
 //XXX: precision is ignored for now
-DataColumn<double> CSVExperimentalDataReader::getColumn(int column, int precision)
+DataColumn<double> CSVExperimentalDataReader::getColumn(const QString& column, int precision)
 {
-    if(column < mData.size()) {
-        // XXX take care of precision
-        return mData[column];
-    }
+    // XXX take care of precision
+    return mData[column];
 }
 

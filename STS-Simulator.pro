@@ -27,7 +27,10 @@ SOURCES += main.cpp\
     projectsingleton.cpp \
     newcurvedialog.cpp \
     qtcolorpicker.cpp \
-    curvesingleton.cpp
+    curvesingleton.cpp \
+    datasingleton.cpp \
+    data.cpp \
+    experimentaldata.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -44,7 +47,10 @@ HEADERS  += mainwindow.h \
     projectsingleton.h \
     newcurvedialog.h \
     qtcolorpicker.h \
-    curvesingleton.h
+    curvesingleton.h \
+    datasingleton.h \
+    data.h \
+    experimentaldata.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \

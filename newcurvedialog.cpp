@@ -2,6 +2,12 @@
 #include "ui_newcurvedialog.h"
 #include "curve.h"
 #include "curvesingleton.h"
+#include "datasingleton.h"
+#include "experimentaldata.h"
+
+#include <QSettings>
+#include <QFileDialog>
+#include <QMessageBox>
 
 NewCurveDialog::NewCurveDialog(QWidget *parent) :
     QDialog(parent),
@@ -12,6 +18,10 @@ NewCurveDialog::NewCurveDialog(QWidget *parent) :
     init();
 
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+
+    // Data page
+    connect(ui->dataLoadButton, SIGNAL(clicked()), this, SLOT(loadDataFile()));
+    connect(ui->dataLoaded, SIGNAL(currentIndexChanged(int)), this, SLOT(dataFileChanged(int)));
 }
 
 NewCurveDialog::~NewCurveDialog()
@@ -44,6 +54,74 @@ void NewCurveDialog::accept()
     mCurve->setTitle(ui->curveName->text());
     Qt::PenStyle pen = static_cast<Qt::PenStyle>(ui->curvePenStyle->itemData(ui->curvePenStyle->currentIndex()).toInt());
     mCurve->setPen(ui->curveColor->currentColor(), ui->curveThickness->value(), pen);
+
+    // Set curve data
+
+    // If there is experimental data
+    QString fileName = ui->dataLoaded->itemData(ui->dataLoaded->currentIndex()).toString();
+    if(!fileName.isEmpty()) {
+        Data *data = Singleton<DataSingleton>::Instance().getData(fileName);
+        if(data != 0) {
+            QString abscissia = ui->dataAbscissia->itemData(ui->dataAbscissia->currentIndex()).toString();
+            QString ordinate = ui->dataOrdinate->itemData(ui->dataOrdinate->currentIndex()).toString();
+            if(!abscissia.isEmpty() && !ordinate.isEmpty()) {
+                qDebug() << "NewCurveDialog::accept(): setting experimental curve data ("<<abscissia<<", "<<ordinate<<")" << endl;
+                mCurve->setSamples(data->getColumn(abscissia, 100).getData(), data->getColumn(ordinate, 100).getData());
+            }
+        }
+    }
+
     Singleton<CurveSingleton>::Instance().addCurve(mCurve);
     QDialog::accept();
+}
+
+void NewCurveDialog::loadDataFile()
+{
+    // Load previously used directory when loading experimental data
+    QSettings mSettings;
+    QString startDir = mSettings.value("Save/experimentalDataDirectory", "").toString();
+
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Open Experimental Data"), startDir, tr("Experimental Data Files(*.csv *.txt);;All Files (*.*)"));
+
+
+    int index = ui->dataLoaded->findData(fileName);
+    if(index != -1) {
+        QMessageBox::StandardButton ret = QMessageBox::question(this, tr("Data file already loaded"),
+                                tr("This data file has already been loaded. If you have modified it in an external program, it might need to be loaded again.\n"
+                                   "Do you want to load ")+fileName+tr(" again?"),
+                                QMessageBox::Yes | QMessageBox::No);
+        if(ret == QMessageBox::Yes) {
+            qDebug() << "XXX: load file again";
+        }
+    }
+    else {
+        ExperimentalData *data = new ExperimentalData();
+        data->loadFromFile(fileName);
+        Singleton<DataSingleton>::Instance().addData(data);
+        ui->dataLoaded->addItem(QFileInfo(fileName).baseName(), fileName);
+    }
+
+    // Save currently used directory for later use
+    if(!fileName.isNull()) {
+        mSettings.setValue("Save/experimentalDataDirectory", QFileInfo(fileName).absoluteDir().absolutePath());
+    }
+}
+
+
+void NewCurveDialog::dataFileChanged(int index)
+{
+    QString fileName = ui->dataLoaded->itemData(index).toString();
+    qDebug() << "Data file changed: " << fileName;
+
+
+    // Fill in the QComboBox for choosing abscissia and ordinate
+    Data *data = Singleton<DataSingleton>::Instance().getData(fileName);
+    if(data != 0) {
+        QStringList columns = data->getAvailableColumns();
+        foreach(QString column, columns) {
+            ui->dataAbscissia->addItem(column, column);
+            ui->dataOrdinate->addItem(column, column);
+        }
+    }
 }

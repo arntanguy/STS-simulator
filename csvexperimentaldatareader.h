@@ -3,8 +3,7 @@
 
 #include "csvfilereader.h"
 #include "datacolumn.h"
-#include <QVector>
-
+#include <QMap>
 
 class CSVExperimentalDataReader : public CSVFileReader
 {
@@ -12,7 +11,10 @@ public:
     CSVExperimentalDataReader();
     virtual ~CSVExperimentalDataReader();
 
-    DataColumn<double> getColumn(int column, int precision);
+    DataColumn<double> getColumn(const QString &column, int precision);
+    QMap<QString, DataColumn<double>> getData() const {
+                                 return mData;
+};
 
 protected:
     // ============= Virtual functions ===================
@@ -22,7 +24,7 @@ protected:
     virtual void processLine(const QString &line);
 
 private:
-    QVector<DataColumn<double>> mData;
+    QMap<QString, DataColumn<double>> mData;
 };
 
 #endif // CSVEXPERIMENTALDATAREADER_H
