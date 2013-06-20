@@ -133,20 +133,22 @@ void PlotControlDialog::initFromConfig()
     ui->plotResolution->setValue(mSettings->value("resolution", 1000).toDouble());
     mSettings->endGroup();
 
-
     QStringList enabledCurveIds = mSettings->value("Plot/"+mPlotName+"/curves/enabledCurveIds", QStringList()).toStringList();
     qDebug() << "loading enabled curve ids: "<<enabledCurveIds;
     Curve *curve = 0;
     foreach(QStandardItem *item, mCurveItems) {
         // Only show selected curves
-        curve = dynamic_cast<Curve *>(item->data().value<Curve *>());
+        curve = static_cast<Curve *>(item->data(Qt::UserRole).value<Curve *>());
         if(curve != 0) {
             if( enabledCurveIds.contains(QString::number(curve->getId())) ) {
+                qDebug() << "curve " << curve->getId() << " enabled";
                 // TODO: save which curve is attached.
                 item->setCheckState(Qt::Checked);
             } else {
                 item->setCheckState(Qt::Unchecked);
             }
+        } else {
+            qDebug() << "null curve";
         }
     }
 
