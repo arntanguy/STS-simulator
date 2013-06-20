@@ -42,10 +42,12 @@ void NewCurveDialog::init()
     //Loads the data first
     QStringList dataPaths = Singleton<DataSingleton>::Instance().getExperimentalDataPaths();
     ui->dataLoaded->clear();
-    foreach(QString data, dataPaths) {
-        ui->dataLoaded->addItem(QFileInfo(data).baseName(), data);
+    if(!dataPaths.isEmpty()) {
+        foreach(QString data, dataPaths) {
+            ui->dataLoaded->addItem(QFileInfo(data).baseName(), data);
+        }
+        dataFileChanged(ui->dataLoaded->currentIndex());
     }
-    dataFileChanged(ui->dataLoaded->currentIndex());
 
     ui->curvePenStyle->addItem(tr("Solid Line"), Qt::SolidLine);
     ui->curvePenStyle->addItem(tr("Dot Line"), Qt::DotLine);
@@ -56,6 +58,11 @@ void NewCurveDialog::init()
 
     ui->curveType->addItem(tr("Experimental"), Data::Experimental);
     ui->curveType->addItem(tr("Function"), Data::Function);
+
+    int index = ui->curveType->findData(Data::Experimental);
+    if(index != -1) {
+        curveTypeChanged(index);
+    }
 }
 
 void NewCurveDialog::loadFromCurve(Curve *curve)
