@@ -20,6 +20,9 @@ NewCurveDialog::NewCurveDialog(QWidget *parent) :
 
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
 
+    // Curve page
+    connect(ui->curveType, SIGNAL(currentIndexChanged(int)), this, SLOT(curveTypeChanged(int)));
+
     // Data page
     connect(ui->dataLoadButton, SIGNAL(clicked()), this, SLOT(loadDataFile()));
     connect(ui->dataLoaded, SIGNAL(currentIndexChanged(int)), this, SLOT(dataFileChanged(int)));
@@ -45,6 +48,10 @@ void NewCurveDialog::init()
     ui->curvePenStyle->addItem(tr("Dash Line"), Qt::DashLine);
     ui->curvePenStyle->addItem(tr("Dash and Dot Line"), Qt::DashDotLine);
     ui->curvePenStyle->addItem(tr("Dash Dot Dot Dash Line"), Qt::DashDotDotLine);
+
+
+    ui->curveType->addItem(tr("Experimental"), Data::Experimental);
+    ui->curveType->addItem(tr("Function"), Data::Function);
 }
 
 void NewCurveDialog::loadFromCurve(Curve *curve)
@@ -54,6 +61,12 @@ void NewCurveDialog::loadFromCurve(Curve *curve)
     if(mCurve != 0) {
         ui->curveName->setText(mCurve->title().text());
         ui->curveColor->setCurrentColor(mCurve->pen().color());
+
+        int index = ui->curveType->findData(mCurve->getType());
+        if(index != -1) {
+            ui->curveType->setCurrentIndex(index);
+            curveTypeChanged(index);
+        }
     }
 
     // XXX: load settings outside of curve, not very clean, but works
@@ -157,5 +170,21 @@ void NewCurveDialog::dataFileChanged(int index)
     int ind = ui->dataAbscissia->findData("V");
     if(ind != -1) {
         ui->dataAbscissia->setCurrentIndex(index);
+    }
+}
+
+void NewCurveDialog::curveTypeChanged(int index)
+{
+    Data::Type type = static_cast<Data::Type>(ui->curveType->itemData(index).toUInt());
+    if(type == Data::Experimental) {
+        int index = ui->tabWidget->indexOf(ui->functionTab);
+        ui->tabWidget->setTabEnabled(index, false);
+        index = ui->tabWidget->indexOf(ui->experimentalDataTab);
+        ui->tabWidget->setTabEnabled(index, true);
+    } else {
+        int index = ui->tabWidget->indexOf(ui->experimentalDataTab);
+        ui->tabWidget->setTabEnabled(index, false);
+        index = ui->tabWidget->indexOf(ui->functionTab);
+        ui->tabWidget->setTabEnabled(index, true);
     }
 }

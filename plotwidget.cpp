@@ -255,8 +255,8 @@ void PlotWidget::applySettings( const QString &plotName)
 
     mPlotGrid->enableX(mSettings->value("majorPen/abscissiaIsEnabled", true).toBool());
     mPlotGrid->enableY(mSettings->value("majorPen/ordinateIsEnabled", true).toBool());
-    mPlotGrid->enableXMin(mSettings->value("minorPen/abscissiaIsEnabled", false).toBool());
-    mPlotGrid->enableYMin(mSettings->value("minorPen/ordinateIsEnabled", false).toBool());
+    mPlotGrid->enableXMin(mSettings->value("minorPen/abscissiaIsEnabled", true).toBool());
+    mPlotGrid->enableYMin(mSettings->value("minorPen/ordinateIsEnabled", true).toBool());
     Qt::PenStyle penStyle = static_cast<Qt::PenStyle>(mSettings->value("majorPen/style", Qt::SolidLine).toInt());
     mPlotGrid->setMajorPen(Qt::black, mSettings->value("majorPen/width", 0.0).toDouble(), penStyle);
     penStyle = static_cast<Qt::PenStyle>(mSettings->value("minorPen/style", Qt::DotLine).toInt());

@@ -12,13 +12,13 @@ class NewCurveDialog;
 class NewCurveDialog : public QDialog
 {
     Q_OBJECT
-    
+
 public:
     explicit NewCurveDialog(QWidget *parent = 0);
     ~NewCurveDialog();
 
     void loadFromCurve(Curve *curve);
-    
+
 private:
     void init();
 
@@ -30,6 +30,7 @@ public slots:
     void accept();
     void loadDataFile();
     void dataFileChanged(int);
+    void curveTypeChanged(int);
 };
 
 #endif // NEWCURVEDIALOG_H

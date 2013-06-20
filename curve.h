@@ -2,8 +2,8 @@
 #define CURVE_H
 
 #include <qwt_plot_curve.h>
+#include "data.h"
 
-class Data;
 
 class Curve: public QwtPlotCurve
 {
@@ -16,6 +16,10 @@ public:
 
     unsigned int getId() const {
         return mCurveId;
+    }
+
+    Data::Type getType() const {
+        return mData->getType();
     }
 
     void save();

@@ -103,7 +103,7 @@ void PlotControlDialog::initFromConfig()
     mSettings->endGroup();
 
     mSettings->beginGroup("Plot/"+mPlotName+"/legendItem");
-    ui->legendItemCheckBox->setChecked(mSettings->value("isEnabled", false).toBool());
+    ui->legendItemCheckBox->setChecked(mSettings->value("isEnabled", true).toBool());
     QVariant align = static_cast<int>(Qt::AlignRight);
     index = ui->legendItemHorizontalPositionComboBox->findData(mSettings->value("horizontalPosition", align).toInt());
     if(index != -1)
@@ -177,8 +177,8 @@ void PlotControlDialog::initFromConfig()
     index = ui->minorGridPenStyle->findData(mSettings->value("minorPen/style", Qt::DotLine).toString());
     if(index != -1)
         ui->minorGridPenStyle->setCurrentIndex(index);
-    ui->minorGridAbscissiaPenEnabled->setChecked(mSettings->value("minorPen/abscissiaIsEnabled", false).toBool());
-    ui->minorGridOrdinatePenEnabled->setChecked(mSettings->value("minorPen/ordinateIsEnabled", false).toBool());
+    ui->minorGridAbscissiaPenEnabled->setChecked(mSettings->value("minorPen/abscissiaIsEnabled", true).toBool());
+    ui->minorGridOrdinatePenEnabled->setChecked(mSettings->value("minorPen/ordinateIsEnabled", true).toBool());
     ui->minorGridPenWidth->setValue(mSettings->value("minorPen/width", 0.0).toDouble());
     mSettings->endGroup();
 

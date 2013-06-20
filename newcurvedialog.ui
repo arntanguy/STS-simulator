@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>824</width>
-    <height>496</height>
+    <height>565</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,9 +17,9 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="curveParametersTab">
       <attribute name="title">
        <string>Curve parameters</string>
       </attribute>
@@ -68,9 +68,6 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
-           <widget class="QComboBox" name="curvePenStyle"/>
-          </item>
           <item row="3" column="0">
            <widget class="QLabel" name="label_4">
             <property name="text">
@@ -78,14 +75,43 @@
             </property>
            </widget>
           </item>
+          <item row="3" column="1">
+           <widget class="QComboBox" name="curvePenStyle"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>Curve Type</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout_4">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_8">
+            <property name="text">
+             <string>After selecting the curve type, you will be able to configure the data associated</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_9">
+            <property name="text">
+             <string>Select a curve type</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="curveType"/>
+          </item>
          </layout>
         </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="QWidget" name="experimentalDataTab">
       <attribute name="title">
-       <string>Data</string>
+       <string>Experimental Data</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
@@ -100,6 +126,9 @@
           <string>Data File</string>
          </property>
          <layout class="QFormLayout" name="formLayout">
+          <item row="2" column="0" colspan="2">
+           <widget class="QTableWidget" name="dataTable"/>
+          </item>
           <item row="1" column="1">
            <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
@@ -116,9 +145,6 @@
              </widget>
             </item>
            </layout>
-          </item>
-          <item row="2" column="0" colspan="2">
-           <widget class="QTableWidget" name="dataTable"/>
           </item>
           <item row="0" column="1">
            <widget class="QLabel" name="label_5">
@@ -157,6 +183,20 @@
            <widget class="QComboBox" name="dataOrdinate"/>
           </item>
          </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="functionTab">
+      <attribute name="title">
+       <string>Functions</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout_5">
+       <item row="0" column="0">
+        <widget class="QPushButton" name="newFunctionButton">
+         <property name="text">
+          <string>New Function</string>
+         </property>
         </widget>
        </item>
       </layout>

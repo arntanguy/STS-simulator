@@ -11,5 +11,5 @@ Data::Data()
 void Data::save()
 {
     qDebug() << "Saving data "<<getId();
-    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    //QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
 }
