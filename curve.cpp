@@ -48,7 +48,7 @@ void Curve::setExperimentalData(const QString &experimentId, const QString &absc
     mExperimentalAbscissia = abscissiaColumnName;
     mExperimentalOrdinate = ordinateColumnName;
     if(mData != 0) {
-        setSamples(mData->getColumn(abscissiaColumnName, mResolution).getData(), mData->getColumn(ordinateColumnName, mResolution).getData());
+        setSamples(mData->getColumn(abscissiaColumnName).getData(), mData->getColumn(ordinateColumnName).getData());
     }
 }
 

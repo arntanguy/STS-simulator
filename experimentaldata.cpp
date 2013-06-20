@@ -20,8 +20,7 @@ void ExperimentalData::loadFromFile(const QString &file)
     mId = file;
 }
 
-DataColumn<double> ExperimentalData::getColumn(const QString &column, int precision)
+DataColumn<double> ExperimentalData::getColumn(const QString &column)
 {
-    // XXX: take care of precision
     return mData[column];
 }

@@ -15,7 +15,7 @@ public:
 
     void loadFromFile(const QString &file);
 
-    virtual DataColumn<double> getColumn(const QString &column, int precision);
+    virtual DataColumn<double> getColumn(const QString &column);
 
     QStringList getAvailableColumns() const {
         return mData.keys();

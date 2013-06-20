@@ -17,7 +17,7 @@ public:
     virtual void setData(const QMap<QString, DataColumn<double>> &) {
     }
     virtual QStringList getAvailableColumns() const = 0;
-    virtual DataColumn<double> getColumn(const QString &column, int precision) = 0;
+    virtual DataColumn<double> getColumn(const QString &column) = 0;
     virtual QString getId() const = 0;
 
     void save();

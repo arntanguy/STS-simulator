@@ -330,7 +330,7 @@ void PlotControlDialog::newCurveAvailable()
         QStandardItem *Item = new QStandardItem();
         Item->setCheckable( true );
         // XXX: doesn't work, check if attached to plot
-        if(i.value()->plot() != 0)
+        if(i.value()->plot() == mPlot)
             Item->setCheckState( Qt::Checked );
         else
             Item->setCheckState( Qt::Unchecked );

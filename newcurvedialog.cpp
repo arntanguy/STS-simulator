@@ -10,6 +10,7 @@
 #include <QSettings>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QStandardItemModel>
 
 NewCurveDialog::NewCurveDialog(QWidget *parent) :
     QDialog(parent),
@@ -59,10 +60,13 @@ void NewCurveDialog::init()
     ui->curveType->addItem(tr("Experimental"), Data::Experimental);
     ui->curveType->addItem(tr("Function"), Data::Function);
 
+    ui->dataTable->setEditTriggers(QTableView::NoEditTriggers);
+
     int index = ui->curveType->findData(Data::Experimental);
     if(index != -1) {
         curveTypeChanged(index);
     }
+
 }
 
 void NewCurveDialog::loadFromCurve(Curve *curve)
@@ -177,11 +181,29 @@ void NewCurveDialog::dataFileChanged(int index)
             ui->dataAbscissia->addItem(column, column);
             ui->dataOrdinate->addItem(column, column);
         }
+        // Autoset abscissia to V column
+        int ind = ui->dataAbscissia->findData("V");
+        if(ind != -1) {
+            ui->dataAbscissia->setCurrentIndex(ind);
+        }
+
+        // ========= Fill in the values in the tablewidget
+        if(columns.length() > 0) {
+            QStandardItemModel *model = new QStandardItemModel(this);
+            model->setColumnCount(columns.length());
+            for(int i=0; i<columns.length(); i++) {
+                model->setHorizontalHeaderItem(i, new QStandardItem(columns[i]));
+                DataColumn<double> col = data->getColumn(columns[i]);
+                QVector<double> val = col.getData();
+                for(int j=0; j<val.size(); j++) {
+                    model->setItem(j, i, new QStandardItem(QString::number(val[j])));
+                }
+            }
+            ui->dataTable->setModel(model);
+        }
     }
-    int ind = ui->dataAbscissia->findData("V");
-    if(ind != -1) {
-        ui->dataAbscissia->setCurrentIndex(index);
-    }
+
+
 }
 
 void NewCurveDialog::curveTypeChanged(int index)
