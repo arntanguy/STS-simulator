@@ -31,6 +31,7 @@ public slots:
     void loadDataFile();
     void dataFileChanged(int);
     void curveTypeChanged(int);
+    void newFunction();
 };
 
 #endif // NEWCURVEDIALOG_H

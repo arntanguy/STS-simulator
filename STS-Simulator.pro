@@ -11,6 +11,24 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = STS-Simulator
 TEMPLATE = app
+#SUBDIRS = libs/muparser
+
+# Set path to qwt on linux
+unix {
+    INCLUDEPATH += /usr/local/qwt-6.1.0-rc3/include
+    LIBS +=  -L/usr/local/qwt-6.1.0-rc3/lib -lqwt
+}
+
+
+## To build muparser from included sources
+include(libs/muparser/muparser.pri)
+## To build muparser with pkgconfig
+#unix {
+#    CONFIG += link_pkgconfig
+#    #PKGCONFIG file without extension
+#    PKGCONFIG += /usr/local/lib/pkgconfig/muparser.pc
+#}
+
 
 
 SOURCES += main.cpp\
@@ -30,7 +48,9 @@ SOURCES += main.cpp\
     curvesingleton.cpp \
     datasingleton.cpp \
     data.cpp \
-    experimentaldata.cpp
+    experimentaldata.cpp \
+    functionselectiondialog.cpp \
+    newfunctiondialog.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -50,16 +70,18 @@ HEADERS  += mainwindow.h \
     curvesingleton.h \
     datasingleton.h \
     data.h \
-    experimentaldata.h
+    experimentaldata.h \
+    functionselectiondialog.h \
+    newfunctiondialog.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
     plotwidget.ui \
     plotarea.ui \
     plotcontroldialog.ui \
-    newcurvedialog.ui
-
-INCLUDEPATH += /usr/local/qwt-6.1.0-rc3/include
-LIBS +=  -L/usr/local/qwt-6.1.0-rc3/lib -lqwt
+    newcurvedialog.ui \
+    functionselectiondialog.ui \
+    newfunctiondialog.ui
 
 QMAKE_CXXFLAGS += -std=c++0x
+

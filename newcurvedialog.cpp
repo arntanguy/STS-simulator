@@ -5,6 +5,7 @@
 #include "datasingleton.h"
 #include "projectsingleton.h"
 #include "experimentaldata.h"
+#include "newfunctiondialog.h"
 
 #include <QSettings>
 #include <QFileDialog>
@@ -26,6 +27,9 @@ NewCurveDialog::NewCurveDialog(QWidget *parent) :
     // Data page
     connect(ui->dataLoadButton, SIGNAL(clicked()), this, SLOT(loadDataFile()));
     connect(ui->dataLoaded, SIGNAL(currentIndexChanged(int)), this, SLOT(dataFileChanged(int)));
+
+    // Function page
+    connect(ui->newFunctionButton, SIGNAL(clicked()), this, SLOT(newFunction()));
 }
 
 NewCurveDialog::~NewCurveDialog()
@@ -187,4 +191,10 @@ void NewCurveDialog::curveTypeChanged(int index)
         index = ui->tabWidget->indexOf(ui->functionTab);
         ui->tabWidget->setTabEnabled(index, true);
     }
+}
+
+void NewCurveDialog::newFunction()
+{
+    NewFunctionDialog dialog(this);
+    dialog.exec();
 }
