@@ -50,7 +50,10 @@ SOURCES += main.cpp\
     data.cpp \
     experimentaldata.cpp \
     functionselectiondialog.cpp \
-    newfunctiondialog.cpp
+    newfunctiondialog.cpp \
+    functionssingleton.cpp \
+    function.cpp \
+    variablefactory.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -72,7 +75,10 @@ HEADERS  += mainwindow.h \
     data.h \
     experimentaldata.h \
     functionselectiondialog.h \
-    newfunctiondialog.h
+    newfunctiondialog.h \
+    functionssingleton.h \
+    function.h \
+    variablefactory.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \

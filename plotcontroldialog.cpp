@@ -259,7 +259,8 @@ void PlotControlDialog::accept()
                 curve->attach(mPlot);
                 enabledCurveIds << QString::number(curve->getId());
             } else {
-                curve->detach();
+                // XXXX: IMPORTANT: curve can only be linked to one plot!!!
+                if(curve->plot() == mPlot) curve->detach();
             }
         } else {
             qDebug() << "NULL curve";
