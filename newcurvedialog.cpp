@@ -5,6 +5,7 @@
 #include "datasingleton.h"
 #include "projectsingleton.h"
 #include "experimentaldata.h"
+#include "functionselectiondialog.h"
 #include "newfunctiondialog.h"
 
 #include <QSettings>
@@ -31,6 +32,7 @@ NewCurveDialog::NewCurveDialog(QWidget *parent) :
 
     // Function page
     connect(ui->newFunctionButton, SIGNAL(clicked()), this, SLOT(newFunction()));
+    connect(ui->functionSelection, SIGNAL(clicked()), this, SLOT(selectFunction()));
 }
 
 NewCurveDialog::~NewCurveDialog()
@@ -225,5 +227,11 @@ void NewCurveDialog::curveTypeChanged(int index)
 void NewCurveDialog::newFunction()
 {
     NewFunctionDialog dialog(this);
+    dialog.exec();
+}
+
+void NewCurveDialog::selectFunction()
+{
+    FunctionSelectionDialog dialog(this);
     dialog.exec();
 }

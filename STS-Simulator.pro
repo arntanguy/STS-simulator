@@ -53,7 +53,8 @@ SOURCES += main.cpp\
     newfunctiondialog.cpp \
     functionssingleton.cpp \
     function.cpp \
-    variablefactory.cpp
+    variablefactory.cpp \
+    valueselector.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -78,7 +79,8 @@ HEADERS  += mainwindow.h \
     newfunctiondialog.h \
     functionssingleton.h \
     function.h \
-    variablefactory.h
+    variablefactory.h \
+    valueselector.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
@@ -87,7 +89,8 @@ FORMS    += mainwindow.ui \
     plotcontroldialog.ui \
     newcurvedialog.ui \
     functionselectiondialog.ui \
-    newfunctiondialog.ui
+    newfunctiondialog.ui \
+    valueselector.ui
 
 QMAKE_CXXFLAGS += -std=c++0x
 

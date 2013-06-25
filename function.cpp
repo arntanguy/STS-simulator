@@ -1,5 +1,7 @@
 #include "function.h"
 
+#include <QDebug>
+
 /*!
  * \brief addVariable
  *  This function is meant to be used by muParser for implicit declaration of variables.
@@ -25,19 +27,35 @@ double* addVariable(const char *a_szName, void *pUserVariableFactory)
     return varFactory->getVariableAddress(a_szName);
 }
 
+Function::~Function()
+{
+    delete mImplicitVarFactory;
+}
 
 Function::Function(QObject *parent) : QObject(parent)
 {
+    init();
+}
+
+void Function::init()
+{
+    mImplicitVarFactory = new VariableFactory();
     mVariable = "V";
 
     // Defines the variable factory used for implicit variable declaration.
-    mParser.SetVarFactory(addVariable, &mImplicitVarFactory);
+    mParser.SetVarFactory(addVariable, mImplicitVarFactory);
 }
-
 
 void Function::setImplicitVariable(const QString &varName, double value)
 {
-    if(mImplicitVarFactory.hasVariable(varName)) {
-        mImplicitVarFactory.setValue(varName, value);
+    if(mImplicitVarFactory->hasVariable(varName)) {
+        qDebug() << "Warning: redining variable "+varName;
     }
+    mImplicitVarFactory->setValue(varName, value);
+}
+
+double Function::compute(double x)
+{
+    mParser.DefineVar(mVariable.toStdString(), &x);
+    return mParser.Eval();
 }

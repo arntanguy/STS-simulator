@@ -5,6 +5,8 @@
 #include <map>
 #include <QObject>
 #include <QString>
+#include <QStringList>
+#include <QMap>
 
 class VariableFactory : public QObject
 {
@@ -23,12 +25,16 @@ public:
         return (mVariables.find(name) != mVariables.end());
     }
 
+    QStringList getVariableNames() const {
+        return mVariables.keys();
+    }
+
 private:
     /**
      * Careful, encapsulation will be broken by myParser: the values will be directly manipulated.
      * When manually using this struct, you should rather use the provided functions
      **/
-    std::map<QString, double> mVariables;
+    QMap<QString, double> mVariables;
 
 signals:
     void variableChanged(const QString& name);

@@ -17,6 +17,9 @@ public:
     
 private:
     Ui::NewFunctionDialog *ui;
+
+public slots:
+    void accept();
 };
 
 #endif // NEWFUNCTIONDIALOG_H
