@@ -54,7 +54,9 @@ SOURCES += main.cpp\
     functionssingleton.cpp \
     function.cpp \
     variablefactory.cpp \
-    valueselector.cpp
+    valueselector.cpp \
+    hierarchicalfunction.cpp \
+    abstractfunction.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -80,7 +82,9 @@ HEADERS  += mainwindow.h \
     functionssingleton.h \
     function.h \
     variablefactory.h \
-    valueselector.h
+    valueselector.h \
+    hierarchicalfunction.h \
+    abstractfunction.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \

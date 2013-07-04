@@ -3,6 +3,7 @@
 
 #include "muParser.h"
 #include "variablefactory.h"
+#include "abstractfunction.h"
 
 #include <QObject>
 #include <QString>
@@ -10,11 +11,10 @@
 
 double* addVariable(const char *a_szName, void *pUserVariableFactory);
 
-class Function : public QObject
+class Function : public AbstractFunction
 {
-    Q_OBJECT
 public:
-    Function(QObject *parent = 0);
+    Function();
     ~Function();
 
     void setExpression(const QString &exp) {
@@ -30,15 +30,6 @@ public:
         return mImplicitVarFactory;
     }
 
-    void setName(const QString &name) {
-        mName = name;
-    }
-    QString getName() const {
-        return mName;
-    }
-    QString getVariable() const {
-        return mVariable;
-    }
 
     bool isValidExpression() const {
         try {
@@ -63,9 +54,6 @@ private:
 
     // Implicit variables factory
     VariableFactory *mImplicitVarFactory;
-
-    QString mVariable;
-    QString mName;
 };
 
 Q_DECLARE_METATYPE(Function*);

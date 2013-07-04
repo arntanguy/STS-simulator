@@ -32,7 +32,7 @@ Function::~Function()
     delete mImplicitVarFactory;
 }
 
-Function::Function(QObject *parent) : QObject(parent)
+Function::Function()
 {
     init();
 }
