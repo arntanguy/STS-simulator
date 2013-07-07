@@ -29,6 +29,7 @@ private:
     PlotWidget *mPlot;
 
     QList<QStandardItem *> mCurveItems;
+    QList<QStandardItem *> mFunctionItems;
 
 private:
     void init();
@@ -40,6 +41,9 @@ public slots:
     void newCurve();
     void editCurve(const QModelIndex &);
     void newCurveAvailable();
+
+    void newFunction();
+    void newFunctionAvailable();
 };
 
 #endif // PLOTCONTROLDIALOG_H

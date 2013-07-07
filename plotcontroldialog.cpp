@@ -3,8 +3,13 @@
 #include "plotcontroldialog.h"
 #include "ui_plotcontroldialog.h"
 #include "projectsingleton.h"
+#include "functionssingleton.h"
+#include "hierarchicalfunction.h"
+#include "function.h"
+#include "helperfunctions.h"
 #include "curvesingleton.h"
 #include "newcurvedialog.h"
+#include "newfunctiondialog.h"
 #include "curve.h"
 #include "plotarea.h"
 #include "plotwidget.h"
@@ -36,6 +41,10 @@ PlotControlDialog::PlotControlDialog(const QString &plotName, PlotArea *parent) 
     // Curve page
     connect(ui->newCurveButton, SIGNAL(clicked()), this, SLOT(newCurve()));
     connect(ui->curveSelection, SIGNAL(doubleClicked ( const QModelIndex &)), this, SLOT(editCurve(const QModelIndex &)));
+
+    // Function page
+    connect(ui->functionNew, SIGNAL(clicked()), this, SLOT(newFunction()));
+    connect(ui->functionView, SIGNAL(clicked()), this, SLOT(selectFunction()));
 }
 
 PlotControlDialog::~PlotControlDialog()
@@ -80,10 +89,13 @@ void PlotControlDialog::init()
     ui->minorGridPenStyle->addItem(tr("Dash and Dot Line"), Qt::DashDotLine);
     ui->minorGridPenStyle->addItem(tr("Dash Dot Dot Dash Line"), Qt::DashDotDotLine);
 
-    QStandardItemModel *model = new QStandardItemModel();
-    ui->curveSelection->setModel( model );
+    ui->curveSelection->setModel( new QStandardItemModel());
+    ui->functionView->setModel( new QStandardItemModel());
+    ui->functionView->setHeaderHidden(true);
+
     // TODO: load from config
     newCurveAvailable();
+    newFunctionAvailable();
 }
 
 /*!
@@ -340,5 +352,63 @@ void PlotControlDialog::newCurveAvailable()
         Item->setData(QVariant::fromValue(i.value()), Qt::UserRole);
         mCurveItems.append(Item);
         model->setItem( j++, Item );
+    }
+}
+
+void PlotControlDialog::newFunction()
+{
+    NewFunctionDialog dialog(this);
+    dialog.exec();
+    newFunctionAvailable();
+}
+
+void PlotControlDialog::newFunctionAvailable()
+{
+    QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
+    model->clear();
+    mFunctionItems.clear();
+
+    // XXX : just for test, remove this section
+    // ==============================================
+    Function f1;
+    f1.setName("f1");
+    f1.setExpression("1*V*f1");
+    Function f2;
+    f2.setName("f2");
+    f2.setExpression("2*V*f2");
+    HierarchicalFunction *hhf = new HierarchicalFunction();
+    hhf->setName("Hierarchical Test");
+    hhf->addFunction(&f1);
+    hhf->addFunction(&f2);
+    Singleton<FunctionsSingleton>::Instance().addFunction(hhf);
+    // ================================================
+
+    int itemIndex=0;
+    FunctionsSingleton *fSingleton = &Singleton<FunctionsSingleton>::Instance();
+    QStringList fNames = fSingleton->getFunctionNames();
+    foreach(QString fName, fNames) {
+        AbstractFunction *f = fSingleton->getFunction(fName);
+        HierarchicalFunction *hf = dynamic_cast<HierarchicalFunction*>(f);
+        if(hf != 0) {
+            qDebug() << "add hierachical function to view";
+            QStandardItem *parentItem = HelperFunctions::createFunctionItem(f);
+            model->setItem(itemIndex++, parentItem);
+            mFunctionItems.append(parentItem);
+
+            int subItemIndex = 0;
+            foreach(AbstractFunction *af, hf->getFunctions()) {
+                QStandardItem * item = HelperFunctions::createFunctionItem(af);
+                parentItem->setChild(subItemIndex++,item);
+            }
+        } else {
+            Function *ff = dynamic_cast<Function*>(f);
+            if(ff != 0) {
+                qDebug() << "Add normal function to view";
+                QStandardItem *Item = HelperFunctions::createFunctionItem(f);
+                mFunctionItems.append(Item);
+                model->setItem( itemIndex++, Item );
+            }
+        }
+
     }
 }

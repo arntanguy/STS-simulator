@@ -2,6 +2,7 @@
 #define ABSTRACTFUNCTION_H
 
 #include <QString>
+#include <QMetaType>
 
 class AbstractFunction
 {
@@ -23,5 +24,7 @@ protected:
     QString mName;
     QString mVariable;
 };
+
+Q_DECLARE_METATYPE(AbstractFunction*);
 
 #endif // ABSTRACTFUNCTION_H

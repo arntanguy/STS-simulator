@@ -56,7 +56,8 @@ SOURCES += main.cpp\
     variablefactory.cpp \
     valueselector.cpp \
     hierarchicalfunction.cpp \
-    abstractfunction.cpp
+    abstractfunction.cpp \
+    helperfunctions.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -84,7 +85,8 @@ HEADERS  += mainwindow.h \
     variablefactory.h \
     valueselector.h \
     hierarchicalfunction.h \
-    abstractfunction.h
+    abstractfunction.h \
+    helperfunctions.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \

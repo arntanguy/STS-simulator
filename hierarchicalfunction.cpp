@@ -10,6 +10,11 @@ void HierarchicalFunction::addFunction(AbstractFunction *function)
     mFunctions.append(function);
 }
 
+QList<AbstractFunction *> HierarchicalFunction::getFunctions()
+{
+    return mFunctions;
+}
+
 // =========  Pure virtual functions =====================
 /*!
  * \brief HierarchicalFunction::compute

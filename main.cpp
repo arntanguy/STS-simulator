@@ -42,8 +42,8 @@ int main(int argc, char *argv[])
     {
         std::cout << e.GetMsg() << std::endl;
     }
-    //MainWindow w;
-    //w.show();
+    MainWindow w;
+    w.show();
 
     return a.exec();
 }

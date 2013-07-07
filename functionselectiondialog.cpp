@@ -35,7 +35,7 @@ void FunctionSelectionDialog::init()
         foreach(QString name, fNames) {
             QStandardItem *item = new QStandardItem();
             item->setText(name);
-            item->setData(QVariant::fromValue<Function *>(singleton->getFunction(name)), Qt::UserRole);
+            item->setData(QVariant::fromValue<AbstractFunction *>(singleton->getFunction(name)), Qt::UserRole);
             model->setItem(row++, item);
         }
     } else {

@@ -9,12 +9,12 @@ FunctionsSingleton::~FunctionsSingleton()
 {
 }
 
-void FunctionsSingleton::addFunction(Function *f)
+void FunctionsSingleton::addFunction(AbstractFunction *f)
 {
     mFunctions[f->getName()] = f;
 }
 
-Function *FunctionsSingleton::getFunction(const QString &name)
+AbstractFunction *FunctionsSingleton::getFunction(const QString &name)
 {
     return mFunctions[name];
 }

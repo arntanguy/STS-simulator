@@ -3,7 +3,7 @@
 
 #include <QMap>
 #include "singleton.h"
-#include "function.h"
+#include "abstractfunction.h"
 //class Function;
 
 class FunctionsSingleton
@@ -12,8 +12,8 @@ public:
     FunctionsSingleton();
     ~FunctionsSingleton();
 
-    void addFunction(Function *f);
-    Function* getFunction(const QString &name);
+    void addFunction(AbstractFunction *f);
+    AbstractFunction* getFunction(const QString &name);
     QStringList getFunctionNames() const;
 
     bool hasFunction(const QString& name) const {
@@ -22,7 +22,7 @@ public:
 
 private:
     // Function name, function
-    QMap<QString, Function *> mFunctions;
+    QMap<QString, AbstractFunction *> mFunctions;
 };
 
 #endif // FUNCTIONSSINGLETON_H

@@ -11,6 +11,7 @@ public:
     HierarchicalFunction();
 
     void addFunction(AbstractFunction *function);
+    QList<AbstractFunction *> getFunctions();
 
     /**
      * Pure virtual functions
