@@ -21,9 +21,6 @@ void DataSingleton::save()
     QStringList keys = mData.keys();
     settings->setValue("paths", keys);
     settings->endGroup();
-
-
-
 }
 
 void DataSingleton::loadFromSettings()

@@ -46,6 +46,9 @@ public:
         return compute(x);
     }
 
+    virtual void save(const QString &group);
+    void loadFromConfig(const QString &group);
+
 private:
     void init();
 

@@ -1,4 +1,5 @@
 #include "hierarchicalfunction.h"
+#include <QDebug>
 
 HierarchicalFunction::HierarchicalFunction()
 {
@@ -45,4 +46,27 @@ QString HierarchicalFunction::getExpression() const
         exp += f->getExpression() + separator;
     }
     return exp.left(exp.length() - separator.length());
+}
+
+void HierarchicalFunction::save(const QString &group)
+{
+    qDebug() << "HierarchicalFunction::save - saving function " << mName;
+    abstractsave(group);
+
+    QString groupName = group+"/"+mName;
+    qDebug() << "HierarchicalFunction::save - group name: " << groupName;
+    qDebug() << "HierarchicalFunction::save - " << mFunctions.size() << " sub-functions to save";
+    AbstractFunction *f;
+    for(int i = 0; i<mFunctions.length(); i++) {
+        qDebug() << "HierarchicalFunction::save - saving subfunction " << i;
+        f = 0;
+        f = mFunctions[i];
+        if(f != 0) {
+            qDebug() << "non null function: " << f;
+            qDebug() << "HierarchicalFunction::save - saving subfunction " << f->getName();
+            f->save(groupName);
+        } else {
+            qDebug() << "Error saving HierarchicalFunction "<< mName << ": NULL SUBFUNCTION";
+        }
+    }
 }

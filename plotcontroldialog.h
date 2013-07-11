@@ -43,7 +43,9 @@ public slots:
     void newCurveAvailable();
 
     void newFunction();
+    void newHierarachicalFunction();
     void newFunctionAvailable();
+    void editFunction(const QModelIndex &);
 };
 
 #endif // PLOTCONTROLDIALOG_H

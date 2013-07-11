@@ -57,7 +57,8 @@ SOURCES += main.cpp\
     valueselector.cpp \
     hierarchicalfunction.cpp \
     abstractfunction.cpp \
-    helperfunctions.cpp
+    helperfunctions.cpp \
+    hierarchicalfunctiondialog.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -86,7 +87,8 @@ HEADERS  += mainwindow.h \
     valueselector.h \
     hierarchicalfunction.h \
     abstractfunction.h \
-    helperfunctions.h
+    helperfunctions.h \
+    hierarchicalfunctiondialog.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
@@ -96,7 +98,8 @@ FORMS    += mainwindow.ui \
     newcurvedialog.ui \
     functionselectiondialog.ui \
     newfunctiondialog.ui \
-    valueselector.ui
+    valueselector.ui \
+    hierarchicalfunctiondialog.ui
 
 QMAKE_CXXFLAGS += -std=c++0x
 

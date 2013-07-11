@@ -19,6 +19,10 @@ public:
     virtual double compute(double) = 0;
     virtual double operator() (double x) = 0;
     virtual QString getExpression() const = 0;
+    virtual void save(const QString &group);
+
+protected:
+    void abstractsave(const QString &group);
 
 protected:
     QString mName;

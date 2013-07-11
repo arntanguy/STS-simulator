@@ -1,4 +1,5 @@
 #include "function.h"
+#include "projectsingleton.h"
 
 #include <QDebug>
 
@@ -58,4 +59,31 @@ double Function::compute(double x)
 {
     mParser.DefineVar(mVariable.toStdString(), &x);
     return mParser.Eval();
+}
+
+
+// ============================= VIRTUAL =================================
+void Function::loadFromConfig(const QString &group)
+{
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup(group);
+    setName(settings->value("name", "Unkown").toString());
+    setExpression(settings->value("expression", "").toString());
+    settings->endGroup();
+}
+
+void Function::save(const QString &group)
+{
+    qDebug() << "Function::save - Saving function "; //<<mName;
+    abstractsave(group);
+    qDebug() << "Function::save - there" <<mName;
+
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    if(settings != 0)
+        qDebug() << "Function::save - valid settings" <<mName;
+    else
+        qDebug() << "Function::save - invalid settings" <<mName;
+    settings->beginGroup(group+"/"+mName+"/");
+    settings->setValue("expression", getExpression());
+    settings->endGroup();
 }

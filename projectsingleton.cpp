@@ -1,6 +1,7 @@
 #include "projectsingleton.h"
 #include "curvesingleton.h"
 #include "datasingleton.h"
+#include "functionssingleton.h"
 #include <QDebug>
 #include <QStringList>
 
@@ -65,6 +66,7 @@ void ProjectSingleton::save()
         // Save all curves
         Singleton<CurveSingleton>::Instance().save();
         Singleton<DataSingleton>::Instance().save();
+        Singleton<FunctionsSingleton>::Instance().save();
 
         mSettings->sync();
         if(mSettings->status() != QSettings::NoError) {

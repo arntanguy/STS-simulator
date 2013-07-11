@@ -23,6 +23,8 @@ public:
         return compute(x);
     }
 
+    virtual void save(const QString &group);
+
 private:
     QList<AbstractFunction *> mFunctions;
 };

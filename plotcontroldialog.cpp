@@ -10,6 +10,7 @@
 #include "curvesingleton.h"
 #include "newcurvedialog.h"
 #include "newfunctiondialog.h"
+#include "hierarchicalfunctiondialog.h"
 #include "curve.h"
 #include "plotarea.h"
 #include "plotwidget.h"
@@ -44,7 +45,8 @@ PlotControlDialog::PlotControlDialog(const QString &plotName, PlotArea *parent) 
 
     // Function page
     connect(ui->functionNew, SIGNAL(clicked()), this, SLOT(newFunction()));
-    connect(ui->functionView, SIGNAL(clicked()), this, SLOT(selectFunction()));
+    connect(ui->functionHierarchicalNew, SIGNAL(clicked()), this, SLOT(newHierarachicalFunction()));
+    connect(ui->functionView, SIGNAL(doubleClicked ( const QModelIndex &)), this, SLOT(editFunction(const QModelIndex &)));
 }
 
 PlotControlDialog::~PlotControlDialog()
@@ -358,8 +360,17 @@ void PlotControlDialog::newCurveAvailable()
 void PlotControlDialog::newFunction()
 {
     NewFunctionDialog dialog(this);
-    dialog.exec();
-    newFunctionAvailable();
+    if(dialog.exec() == QDialog::Accepted)	{
+        newFunctionAvailable();
+    }
+}
+
+void PlotControlDialog::newHierarachicalFunction()
+{
+    HierarchicalFunctionDialog dialog(this);
+    if(dialog.exec() == QDialog::Accepted)	{
+        newFunctionAvailable();
+    }
 }
 
 void PlotControlDialog::newFunctionAvailable()
@@ -370,17 +381,17 @@ void PlotControlDialog::newFunctionAvailable()
 
     // XXX : just for test, remove this section
     // ==============================================
-    Function f1;
-    f1.setName("f1");
-    f1.setExpression("1*V*f1");
-    Function f2;
-    f2.setName("f2");
-    f2.setExpression("2*V*f2");
-    HierarchicalFunction *hhf = new HierarchicalFunction();
-    hhf->setName("Hierarchical Test");
-    hhf->addFunction(&f1);
-    hhf->addFunction(&f2);
-    Singleton<FunctionsSingleton>::Instance().addFunction(hhf);
+    //Function f1;
+    //f1.setName("f1");
+    //f1.setExpression("1*V*f1");
+    //Function f2;
+    //f2.setName("f2");
+    //f2.setExpression("2*V*f2");
+    //HierarchicalFunction *hhf = new HierarchicalFunction();
+    //hhf->setName("Hierarchical Test");
+    //hhf->addFunction(&f1);
+    //hhf->addFunction(&f2);
+    //Singleton<FunctionsSingleton>::Instance().addFunction(hhf);
     // ================================================
 
     int itemIndex=0;
@@ -410,5 +421,20 @@ void PlotControlDialog::newFunctionAvailable()
             }
         }
 
+    }
+}
+
+void PlotControlDialog::editFunction(const QModelIndex &index)
+{
+    QStandardItemModel *model = dynamic_cast<QStandardItemModel *>(ui->functionView->model());
+    if(model != 0) {
+        QVariant item = model->data(index, Qt::UserRole);
+        if(item.isValid()) {
+            qDebug() << item;
+            AbstractFunction *f = static_cast<AbstractFunction *>(item.value<AbstractFunction *>());
+            if(f != 0) {
+                qDebug() << "Editing function " << f->getName();
+            }
+        }
     }
 }

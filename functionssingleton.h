@@ -20,6 +20,8 @@ public:
         return mFunctions.find(name) != mFunctions.end();
     }
 
+    void save();
+
 private:
     // Function name, function
     QMap<QString, AbstractFunction *> mFunctions;

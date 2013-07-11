@@ -27,8 +27,10 @@ void NewFunctionDialog::accept()
     if(f->isValidExpression()) {
         qDebug() << "Valid expression, accept";
         Singleton<FunctionsSingleton>::Instance().addFunction(f);
+        mFunction = f;
         QDialog::accept();
     } else {
+        QDialog::reject();
         qDebug() << "Invalid expression, ask";
     }
 
