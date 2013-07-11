@@ -11,6 +11,7 @@ public:
     HierarchicalFunction();
 
     void addFunction(AbstractFunction *function);
+    void removeFunction(AbstractFunction *f);
     QList<AbstractFunction *> getFunctions();
 
     /**
@@ -23,7 +24,11 @@ public:
         return compute(x);
     }
 
+    void loadFromConfig(const QString &group);
     virtual void save(const QString &group);
+
+private:
+    void init();
 
 private:
     QList<AbstractFunction *> mFunctions;

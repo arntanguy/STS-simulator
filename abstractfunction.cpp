@@ -17,6 +17,15 @@ QString AbstractFunction::getName() const
     return mName;
 }
 
+void AbstractFunction::setType(AbstractFunction::FunctionType type)
+{
+    mType = type;
+}
+AbstractFunction::FunctionType AbstractFunction::getType() const
+{
+    return mType;
+}
+
 QString AbstractFunction::getVariable() const
 {
     return mVariable;

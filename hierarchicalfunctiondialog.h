@@ -28,7 +28,12 @@ private:
 
 public Q_SLOTS:
     void addFunction();
+    void removeFunction();
     void accept();
+    void updateExpression();
+
+Q_SIGNALS:
+    void expressionChanged();
 
 private:
     Ui::HierarchicalFunctionDialog *ui;

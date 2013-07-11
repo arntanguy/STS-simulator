@@ -3,12 +3,22 @@
 
 HierarchicalFunction::HierarchicalFunction()
 {
+    init();
 }
 
+void HierarchicalFunction::init()
+{
+    setType(AbstractFunction::HierarchicalFunction);
+}
 
 void HierarchicalFunction::addFunction(AbstractFunction *function)
 {
     mFunctions.append(function);
+}
+
+void HierarchicalFunction::removeFunction(AbstractFunction *f)
+{
+    mFunctions.removeAll(f);
 }
 
 QList<AbstractFunction *> HierarchicalFunction::getFunctions()
@@ -48,21 +58,21 @@ QString HierarchicalFunction::getExpression() const
     return exp.left(exp.length() - separator.length());
 }
 
+void HierarchicalFunction::loadFromConfig(const QString &group)
+{
+    qDebug() << "HierarchicalFunction::loadFromConfig("<<group<<")";
+}
+
 void HierarchicalFunction::save(const QString &group)
 {
     qDebug() << "HierarchicalFunction::save - saving function " << mName;
     abstractsave(group);
 
-    QString groupName = group+"/"+mName;
+    QString groupName = group+"/HierarchicalFunction/"+mName;
     qDebug() << "HierarchicalFunction::save - group name: " << groupName;
     qDebug() << "HierarchicalFunction::save - " << mFunctions.size() << " sub-functions to save";
-    AbstractFunction *f;
-    for(int i = 0; i<mFunctions.length(); i++) {
-        qDebug() << "HierarchicalFunction::save - saving subfunction " << i;
-        f = 0;
-        f = mFunctions[i];
+    foreach(AbstractFunction *f, mFunctions) {
         if(f != 0) {
-            qDebug() << "non null function: " << f;
             qDebug() << "HierarchicalFunction::save - saving subfunction " << f->getName();
             f->save(groupName);
         } else {

@@ -40,6 +40,8 @@ Function::Function()
 
 void Function::init()
 {
+    setType(AbstractFunction::Function);
+
     mImplicitVarFactory = new VariableFactory();
     mVariable = "V";
 
@@ -75,7 +77,7 @@ void Function::loadFromConfig(const QString &group)
 void Function::save(const QString &group)
 {
     qDebug() << "Function::save - Saving function "; //<<mName;
-    abstractsave(group);
+    abstractsave(group+"/Function");
     qDebug() << "Function::save - there" <<mName;
 
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
@@ -83,7 +85,7 @@ void Function::save(const QString &group)
         qDebug() << "Function::save - valid settings" <<mName;
     else
         qDebug() << "Function::save - invalid settings" <<mName;
-    settings->beginGroup(group+"/"+mName+"/");
+    settings->beginGroup(group+"/Function/"+mName+"/");
     settings->setValue("expression", getExpression());
     settings->endGroup();
 }

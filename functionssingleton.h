@@ -20,6 +20,7 @@ public:
         return mFunctions.find(name) != mFunctions.end();
     }
 
+    void loadFromSettings();
     void save();
 
 private:

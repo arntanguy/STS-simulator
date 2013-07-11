@@ -53,6 +53,7 @@ void ProjectSingleton::openProject(const QString& fileName)
     // Load all curves
     Singleton<DataSingleton>::Instance().loadFromSettings();
     Singleton<CurveSingleton>::Instance().loadFromSettings();
+    Singleton<FunctionsSingleton>::Instance().loadFromSettings();
 
     qDebug() << "ProjectSingleton:: opening configuration for project " << fileName << ", qsettings " << mSettings->fileName();
     emit projectChanged();

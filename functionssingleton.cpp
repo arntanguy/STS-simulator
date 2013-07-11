@@ -1,5 +1,7 @@
 #include "functionssingleton.h"
 #include "projectsingleton.h"
+#include "function.h"
+#include "hierarchicalfunction.h"
 
 #include <QStringList>
 #include <QDebug>
@@ -31,6 +33,37 @@ QStringList FunctionsSingleton::getFunctionNames() const
     return mFunctions.keys();
 }
 
+
+void FunctionsSingleton::loadFromSettings()
+{
+    qDebug() << "FunctionsSingleton::loadFromSettings()";
+	QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+
+    settings->beginGroup("Functions/Function/");
+    QStringList groups = settings->childGroups();
+    settings->endGroup();
+
+    foreach(QString functionId, groups) {
+        qDebug() << "FunctionsSingleton::loadFromSettings() - Current group " << settings->group();
+        Function *f = new Function();
+        f->loadFromConfig("Functions/Function/"+functionId);
+        addFunction(f);
+    }
+    settings->endGroup();
+
+
+    settings->beginGroup("Functions/HierarchichalFunction/");
+    QStringList hGroups = settings->childGroups();
+    settings->endGroup();
+
+    foreach(QString functionId, hGroups) {
+        qDebug() << "FunctionsSingleton::loadFromSettings() - Current group " << settings->group();
+        HierarchicalFunction *f = new HierarchicalFunction();
+        f->loadFromConfig("Functions/HierarchichalFunctions/"+functionId);
+        addFunction(f);
+    }
+    settings->endGroup();
+}
 
 void FunctionsSingleton::save()
 {
