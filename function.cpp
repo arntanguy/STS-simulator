@@ -67,6 +67,7 @@ double Function::compute(double x)
 // ============================= VIRTUAL =================================
 void Function::loadFromConfig(const QString &group)
 {
+    qDebug() << "Function::loadFromConfig("<<group<<")";
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
     settings->beginGroup(group);
     setName(settings->value("name", "Unkown").toString());

@@ -44,25 +44,21 @@ void FunctionsSingleton::loadFromSettings()
     settings->endGroup();
 
     foreach(QString functionId, groups) {
-        qDebug() << "FunctionsSingleton::loadFromSettings() - Current group " << settings->group();
         Function *f = new Function();
         f->loadFromConfig("Functions/Function/"+functionId);
         addFunction(f);
     }
-    settings->endGroup();
 
 
-    settings->beginGroup("Functions/HierarchichalFunction/");
+    settings->beginGroup("Functions/HierarchicalFunction/");
     QStringList hGroups = settings->childGroups();
     settings->endGroup();
 
     foreach(QString functionId, hGroups) {
-        qDebug() << "FunctionsSingleton::loadFromSettings() - Current group " << settings->group();
         HierarchicalFunction *f = new HierarchicalFunction();
-        f->loadFromConfig("Functions/HierarchichalFunctions/"+functionId);
+        f->loadFromConfig("Functions/HierarchicalFunction/"+functionId);
         addFunction(f);
     }
-    settings->endGroup();
 }
 
 void FunctionsSingleton::save()
