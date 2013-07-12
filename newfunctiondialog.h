@@ -15,6 +15,7 @@ class NewFunctionDialog : public QDialog
     
 public:
     explicit NewFunctionDialog(QWidget *parent = 0);
+    explicit NewFunctionDialog(Function *f, QWidget *parent = 0);
     ~NewFunctionDialog();
     
     Function *getFunction() {
@@ -22,11 +23,14 @@ public:
     }
 
 private:
-    Ui::NewFunctionDialog *ui;
-    Function *mFunction;
+    void init();
 
 public slots:
     void accept();
+
+private:
+    Ui::NewFunctionDialog *ui;
+    Function *mFunction;
 };
 
 #endif // NEWFUNCTIONDIALOG_H

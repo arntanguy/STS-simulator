@@ -6,21 +6,15 @@
 #include "hierarchicalfunction.h"
 
 #include <QStandardItemModel>
+#include <QDebug>
 
 HierarchicalFunctionDialog::HierarchicalFunctionDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::HierarchicalFunctionDialog)
 {
     ui->setupUi(this);
-    ui->functionView->setModel(new QStandardItemModel());
-    connect(ui->functionAdd, SIGNAL(clicked()), this, SLOT(addFunction()));
-    connect(ui->functionRemove, SIGNAL(clicked()), this, SLOT(removeFunction()));
-
-    connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-
-    connect(this, SIGNAL(expressionChanged()), this, SLOT(updateExpression()));
-
     mFunction =  new HierarchicalFunction();
+    init();
 }
 
 HierarchicalFunctionDialog::~HierarchicalFunctionDialog()
@@ -28,12 +22,28 @@ HierarchicalFunctionDialog::~HierarchicalFunctionDialog()
     delete ui;
 }
 
+void HierarchicalFunctionDialog::init()
+{
+    ui->functionView->setModel(new QStandardItemModel());
+    connect(ui->functionAdd, SIGNAL(clicked()), this, SLOT(addFunction()));
+    connect(ui->functionRemove, SIGNAL(clicked()), this, SLOT(removeFunction()));
+
+    connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+
+    connect(this, SIGNAL(expressionChanged()), this, SLOT(updateExpression()));
+}
+
 void HierarchicalFunctionDialog::setFunction(HierarchicalFunction *f)
 {
+    qDebug() << "HierarchicalFunctionDialog::setFunction("<<f->getName()<<")";
     mFunction = f;
+    ui->functionName->setText(f->getName());
+    setWindowTitle(tr("Edit Function ") + f->getName());
     if(f != 0) {
+        QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
+        model->clear();
         foreach(AbstractFunction* af, mFunction->getFunctions()) {
-            addFunction(af);
+            addFunctionItem(af);
         }
     }
 }
@@ -42,10 +52,19 @@ void HierarchicalFunctionDialog::setFunction(HierarchicalFunction *f)
 void HierarchicalFunctionDialog::addFunction(AbstractFunction *f)
 {
     if(f != 0) {
+        addFunctionItem(f);
+        mFunction->addFunction(f);
+
+        emit expressionChanged();
+    }
+}
+
+void HierarchicalFunctionDialog::addFunctionItem(AbstractFunction *f)
+{
+    if(f != 0) {
         QStandardItem *item = new QStandardItem();
         item->setText(f->getName());
         item->setData(QVariant::fromValue(f), Qt::UserRole);
-        mFunction->addFunction(f);
         QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
         model->setItem(model->rowCount(), item);
 

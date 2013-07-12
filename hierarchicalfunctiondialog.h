@@ -24,7 +24,10 @@ public:
     void setFunction(HierarchicalFunction *f);
 
 private:
+    void init();
+    void initFromFunction();
     void addFunction(AbstractFunction *f);
+    void addFunctionItem(AbstractFunction *f);
 
 public Q_SLOTS:
     void addFunction();
