@@ -58,7 +58,8 @@ SOURCES += main.cpp\
     hierarchicalfunction.cpp \
     abstractfunction.cpp \
     helperfunctions.cpp \
-    hierarchicalfunctiondialog.cpp
+    hierarchicalfunctiondialog.cpp \
+    functioncurve.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -88,7 +89,8 @@ HEADERS  += mainwindow.h \
     hierarchicalfunction.h \
     abstractfunction.h \
     helperfunctions.h \
-    hierarchicalfunctiondialog.h
+    hierarchicalfunctiondialog.h \
+    functioncurve.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \

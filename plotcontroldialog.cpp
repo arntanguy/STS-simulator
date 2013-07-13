@@ -12,6 +12,7 @@
 #include "newfunctiondialog.h"
 #include "hierarchicalfunctiondialog.h"
 #include "curve.h"
+#include "functioncurve.h"
 #include "plotarea.h"
 #include "plotwidget.h"
 #include <qwt_plot.h>
@@ -284,6 +285,28 @@ void PlotControlDialog::accept()
     mSettings->beginGroup("Plot/"+mPlotName+"/curves");
     mSettings->setValue("enabledCurveIds", enabledCurveIds);
     mSettings->endGroup();
+
+    AbstractFunction *function = 0;
+    foreach(QStandardItem *item, mFunctionItems) {
+        // Only show selected curves
+        function = static_cast<AbstractFunction *>(item->data(Qt::UserRole).value<AbstractFunction *>());
+        if(function != 0) {
+            if(item->checkState() == Qt::Checked) {
+                // XXX: create curves properly
+                FunctionCurve *fcurve = new FunctionCurve();
+                fcurve->setFunction(function);
+                fcurve->setComputeRange(ui->minAbscissaRange->value(), ui->maxAbscissaRange->value(), ui->plotResolution->value());
+                // TODO: save which curve is attached.
+                fcurve->attach(mPlot);
+                //enabledCurveIds << QString::number(curve->getId());
+            } else {
+                // XXXX: IMPORTANT: curve can only be linked to one plot!!!
+                //if(fcurve->plot() == mPlot) fcurve->detach();
+            }
+        } else {
+            qDebug() << "NULL curve";
+        }
+    }
 
     mSettings->sync();
     QDialog::accept();

@@ -13,6 +13,9 @@ public:
     Curve( const QString &name );
 
     void setResolution(int resolution);
+    int getResolution() const {
+        return mResolution;
+    }
 
     unsigned int getId() const {
         return mCurveId;
