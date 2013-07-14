@@ -4,6 +4,10 @@
 #include <QString>
 #include <QMetaType>
 #include <QObject>
+#include <QMap>
+
+class PlotWidget;
+class FunctionCurve;
 
 class AbstractFunction : public QObject
 {
@@ -29,6 +33,9 @@ public:
     virtual QString getExpression() const = 0;
     virtual void save(const QString &group);
 
+    void addCurve(PlotWidget *plot, FunctionCurve *curve);
+    FunctionCurve* getCurve(PlotWidget *plot);
+
 protected:
     void abstractsave(const QString &group);
 
@@ -41,6 +48,8 @@ protected:
     FunctionType mType;
 
     bool mNeedsUpdate;
+
+    QMap<PlotWidget *, FunctionCurve *> mLinkedCurves;
 
 };
 

@@ -2,6 +2,8 @@
 #include "projectsingleton.h"
 
 #include <QDebug>
+#include "plotwidget.h"
+#include "functioncurve.h"
 
 AbstractFunction::AbstractFunction(QObject *parent) : QObject(parent)
 {
@@ -32,6 +34,16 @@ AbstractFunction::FunctionType AbstractFunction::getType() const
 QString AbstractFunction::getVariable() const
 {
     return mVariable;
+}
+
+void AbstractFunction::addCurve(PlotWidget *plot, FunctionCurve *curve)
+{
+    mLinkedCurves[plot] = curve;
+}
+
+FunctionCurve* AbstractFunction::getCurve(PlotWidget *plot)
+{
+    return mLinkedCurves[plot];
 }
 
 // Virtual

@@ -293,13 +293,24 @@ void PlotControlDialog::accept()
         if(function != 0) {
             if(item->checkState() == Qt::Checked) {
                 // XXX: create curves properly
-                FunctionCurve *fcurve = new FunctionCurve();
-                fcurve->setFunction(function);
-                fcurve->setComputeRange(ui->minAbscissaRange->value(), ui->maxAbscissaRange->value(), ui->plotResolution->value());
-                // TODO: save which curve is attached.
-                fcurve->attach(mPlot);
+                FunctionCurve *c = function->getCurve(mPlot);
+                if(c != 0) {
+                    c->attach(mPlot);
+                } else {
+                    FunctionCurve *fcurve = new FunctionCurve();
+                    fcurve->setFunction(function);
+                    fcurve->setComputeRange(ui->minAbscissaRange->value(), ui->maxAbscissaRange->value(), ui->plotResolution->value());
+                    // TODO: save which curve is attached.
+                    fcurve->attach(mPlot);
+                    function->addCurve(mPlot, fcurve);
+                }
                 //enabledCurveIds << QString::number(curve->getId());
             } else {
+                FunctionCurve *c = function->getCurve(mPlot);
+                if(c != 0) {
+                    if(c->plot() == mPlot)
+                        c->detach();
+                }
                 // XXXX: IMPORTANT: curve can only be linked to one plot!!!
                 //if(fcurve->plot() == mPlot) fcurve->detach();
             }
@@ -401,21 +412,6 @@ void PlotControlDialog::newFunctionAvailable()
     QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
     model->clear();
     mFunctionItems.clear();
-
-    // XXX : just for test, remove this section
-    // ==============================================
-    //Function f1;
-    //f1.setName("f1");
-    //f1.setExpression("1*V*f1");
-    //Function f2;
-    //f2.setName("f2");
-    //f2.setExpression("2*V*f2");
-    //HierarchicalFunction *hhf = new HierarchicalFunction();
-    //hhf->setName("Hierarchical Test");
-    //hhf->addFunction(&f1);
-    //hhf->addFunction(&f2);
-    //Singleton<FunctionsSingleton>::Instance().addFunction(hhf);
-    // ================================================
 
     int itemIndex=0;
     FunctionsSingleton *fSingleton = &Singleton<FunctionsSingleton>::Instance();
