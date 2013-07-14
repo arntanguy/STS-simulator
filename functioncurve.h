@@ -7,13 +7,18 @@ class AbstractFunction;
 
 class FunctionCurve : public Curve
 {
+    Q_OBJECT
+
 public:
     FunctionCurve();
     void setFunction(AbstractFunction *f);
     void setComputeRange(double min, double max, int resolution);
 
-private:
+    virtual void update();
+
+public Q_SLOTS:
     void updateData();
+    void updateName(const QString &);
 
 private:
     AbstractFunction *mFunction;

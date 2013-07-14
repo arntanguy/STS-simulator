@@ -5,8 +5,9 @@
 #include "data.h"
 
 
-class Curve: public QwtPlotCurve
+class Curve: public QObject, public QwtPlotCurve
 {
+    Q_OBJECT
 public:
     Curve();
     Curve(int id);
@@ -30,6 +31,11 @@ public:
 
     void setExperimentalData(const QString &experimentId, const QString &abscissiaColumnName, const QString &ordinateColumnName);
 
+    virtual void update();
+    bool needsUpdate() const {
+        return mNeedsUpdate;
+    }
+
 private:
     void init();
     void setId(unsigned int id);
@@ -42,6 +48,9 @@ private:
     int mResolution;
     static unsigned int mCurveStaticId;
     unsigned int mCurveId;
+
+protected:
+    bool mNeedsUpdate;
 };
 
 Q_DECLARE_METATYPE(Curve*)

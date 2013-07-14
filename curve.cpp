@@ -121,3 +121,11 @@ void Curve::save()
     }
     settings->endGroup();
 }
+
+
+// =============================== VIRTUAL ======================================
+void Curve::update()
+{
+    //if(needsUpdate()) {
+    //}
+}

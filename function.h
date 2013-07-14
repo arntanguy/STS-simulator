@@ -13,14 +13,13 @@ double* addVariable(const char *a_szName, void *pUserVariableFactory);
 
 class Function : public AbstractFunction
 {
+    Q_OBJECT
+
 public:
-    Function();
+    Function(QObject *parent = 0);
     ~Function();
 
-    void setExpression(const QString &exp) {
-        mParser.SetExpr(exp.toStdString());
-    }
-
+    void setExpression(const QString &exp);
     QString getExpression() const {
         return mParser.GetExpr().c_str();
     }
@@ -48,6 +47,11 @@ public:
 
     virtual void save(const QString &group);
     void loadFromConfig(const QString &group);
+
+Q_SIGNALS:
+    void nameUpdated();
+    void expressionChanged();
+    void needsRecompute();
 
 private:
     void init();

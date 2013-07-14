@@ -459,13 +459,17 @@ void PlotControlDialog::editFunction(const QModelIndex &index)
                 Function *func = dynamic_cast<Function *>(f);
                 if(func != 0) {
                     NewFunctionDialog dialog(func, this);
-                    dialog.exec();
+                    if(dialog.exec() == QDialog::Accepted) {
+                        newFunctionAvailable();
+                    }
                 } else {
                     HierarchicalFunction *function = dynamic_cast<HierarchicalFunction *>(f);
                     if(function != 0) {
                         HierarchicalFunctionDialog dialog(this);
                         dialog.setFunction(function);
-                        dialog.exec();
+                        if(dialog.exec() == QDialog::Accepted) {
+                            newFunctionAvailable();
+                        }
                     }
                 }
                 qDebug() << "Editing function " << f->getName();

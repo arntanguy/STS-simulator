@@ -12,12 +12,12 @@ class Function;
 class NewFunctionDialog : public QDialog
 {
     Q_OBJECT
-    
+
 public:
     explicit NewFunctionDialog(QWidget *parent = 0);
     explicit NewFunctionDialog(Function *f, QWidget *parent = 0);
     ~NewFunctionDialog();
-    
+
     Function *getFunction() {
         return mFunction;
     }
@@ -31,6 +31,7 @@ public slots:
 private:
     Ui::NewFunctionDialog *ui;
     Function *mFunction;
+    bool mEditFunction;
 };
 
 #endif // NEWFUNCTIONDIALOG_H

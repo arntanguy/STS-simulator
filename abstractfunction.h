@@ -3,14 +3,17 @@
 
 #include <QString>
 #include <QMetaType>
+#include <QObject>
 
-class AbstractFunction
+class AbstractFunction : public QObject
 {
+    Q_OBJECT
+
 public:
     enum FunctionType { Function, HierarchicalFunction, Unknown};
 
 public:
-    AbstractFunction();
+    AbstractFunction(QObject *parent=0);
 
     void setName(const QString &name);
     QString getName() const;
@@ -29,10 +32,15 @@ public:
 protected:
     void abstractsave(const QString &group);
 
+Q_SIGNALS:
+    void nameUpdated(const QString &);
+
 protected:
     QString mName;
     QString mVariable;
     FunctionType mType;
+
+    bool mNeedsUpdate;
 
 };
 

@@ -3,13 +3,16 @@
 
 #include <QDebug>
 
-AbstractFunction::AbstractFunction()
+AbstractFunction::AbstractFunction(QObject *parent) : QObject(parent)
 {
 }
 
 void AbstractFunction::setName(const QString &name)
 {
-    mName = name;
+    if(name != mName) {
+        mName = name;
+        emit nameUpdated(mName);
+    }
 }
 
 QString AbstractFunction::getName() const

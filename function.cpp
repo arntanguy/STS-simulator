@@ -28,14 +28,14 @@ double* addVariable(const char *a_szName, void *pUserVariableFactory)
     return varFactory->getVariableAddress(a_szName);
 }
 
+Function::Function(QObject *parent) : AbstractFunction(parent)
+{
+    init();
+}
+
 Function::~Function()
 {
     delete mImplicitVarFactory;
-}
-
-Function::Function()
-{
-    init();
 }
 
 void Function::init()
@@ -49,12 +49,23 @@ void Function::init()
     mParser.SetVarFactory(addVariable, mImplicitVarFactory);
 }
 
+void Function::setExpression(const QString &exp)
+{
+    if(exp.toStdString() != mParser.GetExpr()) {
+        mParser.SetExpr(exp.toStdString());
+        emit expressionChanged();
+        emit needsRecompute();
+    }
+}
+
 void Function::setImplicitVariable(const QString &varName, double value)
 {
     if(mImplicitVarFactory->hasVariable(varName)) {
         qDebug() << "Warning: redining variable "+varName;
     }
     mImplicitVarFactory->setValue(varName, value);
+    // XXX: don't emit unless necessary
+    emit needsRecompute();
 }
 
 double Function::compute(double x)

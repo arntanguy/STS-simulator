@@ -34,6 +34,9 @@ void NewFunctionDialog::init()
     if(mFunction != 0) {
         ui->functionName->setText(mFunction->getName());
         ui->functionExpression->setText(mFunction->getExpression());
+        mEditFunction = true;
+    } else {
+        mEditFunction = false;
     }
 }
 
@@ -46,7 +49,8 @@ void NewFunctionDialog::accept()
     mFunction->setExpression(ui->functionExpression->toPlainText());
     if(mFunction->isValidExpression()) {
         qDebug() << "Valid expression, accept";
-        Singleton<FunctionsSingleton>::Instance().addFunction(mFunction);
+        if(!mEditFunction)
+            Singleton<FunctionsSingleton>::Instance().addFunction(mFunction);
         QDialog::accept();
     } else {
         QDialog::reject();
