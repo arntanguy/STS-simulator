@@ -4,6 +4,7 @@
 #include "functionssingleton.h"
 #include "function.h"
 #include "hierarchicalfunction.h"
+#include "functionfactory.h"
 
 #include <QStandardItemModel>
 #include <QDebug>
@@ -78,7 +79,8 @@ void HierarchicalFunctionDialog::addFunction()
 {
     FunctionSelectionDialog dialog(this);
     if(dialog.exec() == QDialog::Accepted) {
-        addFunction(dialog.getSelectedFunction());
+        // XXX: check if copy is allright
+        addFunction(FunctionFactory::createFromFunction(dialog.getSelectedFunction()));
     }
 }
 

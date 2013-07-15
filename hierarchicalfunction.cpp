@@ -1,6 +1,8 @@
 #include "hierarchicalfunction.h"
 #include "projectsingleton.h"
 #include "functionssingleton.h"
+#include "functionfactory.h"
+#include "function.h"
 #include <QDebug>
 #include <QStringList>
 
@@ -76,12 +78,16 @@ void HierarchicalFunction::loadFromConfig(const QString &group)
 
     foreach(QString fName, groups) {
         qDebug() << "HierarchicalFunction::loadFromConfig() - adding function " << fName << " to " << mName;
-        AbstractFunction *f = Singleton<FunctionsSingleton>::Instance().getFunction(fName);
+        AbstractFunction* f = FunctionFactory::createFromSingleton(fName);
         if(f != 0) {
             addFunction(f);
         } else {
             qDebug() << "FATAL Error: function " << fName << " doesn't exist!";
         }
+        //AbstractFunction *f = Singleton<FunctionsSingleton>::Instance().getFunction(fName);
+        //if(f != 0) {
+        //} else {
+        //}
     }
 }
 

@@ -38,6 +38,7 @@ Function::Function(Function const& toCopy)
     // Creates a new variable factory and set default parameters
     init();
 
+    setName(toCopy.getName());
     setExpression(toCopy.getExpression());
     mVariable = toCopy.mVariable;
     mType = toCopy.mType;
