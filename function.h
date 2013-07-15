@@ -17,6 +17,7 @@ class Function : public AbstractFunction
 
 public:
     Function(QObject *parent = 0);
+    Function(Function const& toCopy);
     ~Function();
 
     void setExpression(const QString &exp);
@@ -47,6 +48,10 @@ public:
 
     virtual void save(const QString &group);
     void loadFromConfig(const QString &group);
+
+// ============ HELPER FUNCTIONS maily for debug ===========================
+public:
+    void listAllVariables() const;
 
 Q_SIGNALS:
     void nameUpdated();

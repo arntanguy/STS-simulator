@@ -33,6 +33,16 @@ Function::Function(QObject *parent) : AbstractFunction(parent)
     init();
 }
 
+Function::Function(Function const& toCopy)
+{
+    // Creates a new variable factory and set default parameters
+    init();
+
+    setExpression(toCopy.getExpression());
+    mVariable = toCopy.mVariable;
+    mType = toCopy.mType;
+}
+
 Function::~Function()
 {
     delete mImplicitVarFactory;
@@ -53,6 +63,7 @@ void Function::setExpression(const QString &exp)
 {
     if(exp.toStdString() != mParser.GetExpr()) {
         mParser.SetExpr(exp.toStdString());
+        mParser.Eval();
         emit expressionChanged();
         emit needsRecompute();
     }
@@ -100,4 +111,35 @@ void Function::save(const QString &group)
     settings->beginGroup(group+"/Function/"+mName+"/");
     settings->setValue("expression", getExpression());
     settings->endGroup();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ============ HELPER FUNCTIONS maily for debug ===========================
+void Function::listAllVariables() const
+{
+    qDebug() << "Listing all  variables for function " << mName;
+    qDebug() << "Function variable " << mVariable;
+    qDebug() << "Implicit variables:";
+    foreach(QString name, mImplicitVarFactory->getVariableNames()) {
+        qDebug() << "\t" << name << " (" << mImplicitVarFactory->getVariableAddress(name) << ") = " << *(mImplicitVarFactory->getVariableAddress(name));
+    }
 }
