@@ -295,16 +295,19 @@ void PlotControlDialog::accept()
                 // XXX: create curves properly
                 FunctionCurve *c = function->getCurve(mPlot);
                 if(c != 0) {
+                    qDebug() << "PlotControlDialog::accept() - Function already has a curve, use it";
+                    c->update();
                     c->attach(mPlot);
                 } else {
+                    qDebug() << "PlotControlDialog::accept() - Function doesn't have a curve, use it";
                     FunctionCurve *fcurve = new FunctionCurve();
                     fcurve->setFunction(function);
                     fcurve->setComputeRange(ui->minAbscissaRange->value(), ui->maxAbscissaRange->value(), ui->plotResolution->value());
                     // TODO: save which curve is attached.
                     fcurve->attach(mPlot);
+                    fcurve->update();
                     function->addCurve(mPlot, fcurve);
                 }
-                //enabledCurveIds << QString::number(curve->getId());
             } else {
                 FunctionCurve *c = function->getCurve(mPlot);
                 if(c != 0) {

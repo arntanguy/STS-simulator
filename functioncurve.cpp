@@ -1,5 +1,6 @@
 #include "functioncurve.h"
 #include "abstractfunction.h"
+#include "muParser.h"
 
 #include <QDebug>
 #include <QVector>
@@ -39,19 +40,34 @@ void FunctionCurve::update()
 }
 
 /// =============== SLOTS ==========================
+// XXX: FIXME: Huge value make program crash (std::bad_alloc)
 void FunctionCurve::updateData()
 {
     if(mFunction != 0) {
-        qDebug() << "FunctionCurve::updateData() - updating data of " << mFunction->getName();
         int resolution = getResolution();
         QVector<double> x(resolution), y(resolution);
         double stepSize = (mMax-mMin)/resolution;
+        qDebug() << "FunctionCurve::updateData() - updating data of " << mFunction->getName()
+                 << " with resolution: "<<resolution<<", stepsize: "<<stepSize<<", min: "<<mMin<<", max: "<<mMax;
+        double xval = mMin;
         for(int i=0; i<resolution; i++) {
-            double xval = mMin+i*stepSize;
+            double yval = 0;
+            try {
+                yval = mFunction->compute(xval);
+            } catch(mu::Parser::exception_type &e) {
+                qDebug() << "FunctionCurve::updateData() - ERROR computing function " << mFunction->getName();
+                qDebug() << "Message:  " << e.GetMsg().c_str() << "\n";
+                qDebug() << "Formula:  " << e.GetExpr().c_str() << "\n";
+                qDebug() << "Token:    " << e.GetToken().c_str() << "\n";
+                qDebug() << "Position: " << e.GetPos() << "\n";
+                qDebug() << "Errc:     " << e.GetCode() << "\n";
+                break;
+            }
             x.append(xval);
-            y.append(mFunction->compute(xval));
-            setSamples(x, y);
+            y.append(yval);
+            xval += stepSize;
         }
+        setSamples(x, y);
     } else {
         qDebug() << "FunctionCurve::updateData() - error, null function";
     }
