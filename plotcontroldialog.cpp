@@ -55,6 +55,9 @@ PlotControlDialog::~PlotControlDialog()
     delete ui;
 }
 
+// ================================================================================
+// ================================= PRIVATE ======================================
+// ================================================================================
 /*!
  * \brief PlotControlDialog::init
  *  Init config dialog (combobox...)
@@ -199,6 +202,45 @@ void PlotControlDialog::initFromConfig()
 
 }
 
+void PlotControlDialog::manageFunctionCurveFromItem(QStandardItem *item)
+{
+    AbstractFunction* function = static_cast<AbstractFunction *>(item->data(Qt::UserRole).value<AbstractFunction *>());
+    if(function != 0) {
+        if(item->checkState() == Qt::Checked) {
+            // XXX: create curves properly
+            FunctionCurve *c = function->getCurve(mPlot);
+            if(c != 0) {
+                qDebug() << "PlotControlDialog::manageFunctionCurveFromItem() - Function already has a curve, use it";
+                c->update();
+                c->attach(mPlot);
+            } else {
+                qDebug() << "PlotControlDialog::manageFunctionCurveFromItem() - Function doesn't have a curve, use it";
+                FunctionCurve *fcurve = new FunctionCurve();
+                fcurve->setFunction(function);
+                fcurve->setComputeRange(ui->minAbscissaRange->value(), ui->maxAbscissaRange->value(), ui->plotResolution->value());
+                // TODO: save which curve is attached.
+                fcurve->attach(mPlot);
+                fcurve->update();
+                function->addCurve(mPlot, fcurve);
+            }
+        } else {
+            FunctionCurve *c = function->getCurve(mPlot);
+            if(c != 0) {
+                if(c->plot() == mPlot)
+                    c->detach();
+            }
+            // XXXX: IMPORTANT: curve can only be linked to one plot!!!
+            //if(fcurve->plot() == mPlot) fcurve->detach();
+        }
+    } else {
+        qDebug() << "PlotControlDialog::manageFunctionCurveFromItem() - NULL Curve";
+    }
+}
+
+
+// ================================================================================
+// ============================== PUBLIC ==========================================
+// ================================================================================
 /*!
  * \brief PlotControlDialog::accept
  *  Saves all the parameters set within the config dialog (QSettings)
@@ -288,37 +330,13 @@ void PlotControlDialog::accept()
 
     AbstractFunction *function = 0;
     foreach(QStandardItem *item, mFunctionItems) {
-        // Only show selected curves
-        function = static_cast<AbstractFunction *>(item->data(Qt::UserRole).value<AbstractFunction *>());
-        if(function != 0) {
-            if(item->checkState() == Qt::Checked) {
-                // XXX: create curves properly
-                FunctionCurve *c = function->getCurve(mPlot);
-                if(c != 0) {
-                    qDebug() << "PlotControlDialog::accept() - Function already has a curve, use it";
-                    c->update();
-                    c->attach(mPlot);
-                } else {
-                    qDebug() << "PlotControlDialog::accept() - Function doesn't have a curve, use it";
-                    FunctionCurve *fcurve = new FunctionCurve();
-                    fcurve->setFunction(function);
-                    fcurve->setComputeRange(ui->minAbscissaRange->value(), ui->maxAbscissaRange->value(), ui->plotResolution->value());
-                    // TODO: save which curve is attached.
-                    fcurve->attach(mPlot);
-                    fcurve->update();
-                    function->addCurve(mPlot, fcurve);
-                }
-            } else {
-                FunctionCurve *c = function->getCurve(mPlot);
-                if(c != 0) {
-                    if(c->plot() == mPlot)
-                        c->detach();
-                }
-                // XXXX: IMPORTANT: curve can only be linked to one plot!!!
-                //if(fcurve->plot() == mPlot) fcurve->detach();
-            }
-        } else {
-            qDebug() << "NULL curve";
+        manageFunctionCurveFromItem(item);
+
+        // Handle item children (subfunctions)
+        QStandardItem *child = 0;
+        int i = 0;
+        while ((child = item->child(i++)) != 0) {
+            manageFunctionCurveFromItem(child);
         }
     }
 

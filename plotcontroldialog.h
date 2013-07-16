@@ -16,13 +16,13 @@ class PlotControlDialog;
 class PlotControlDialog : public QDialog
 {
     Q_OBJECT
-    
+
 public:
     explicit PlotControlDialog(const QString &plotName, PlotArea *parent = 0);
     ~PlotControlDialog();
 
     virtual void accept();
-    
+
 private:
     Ui::PlotControlDialog *ui;
     QString mPlotName;
@@ -34,6 +34,7 @@ private:
 private:
     void init();
     void initFromConfig();
+    void manageFunctionCurveFromItem(QStandardItem *item);
 
 public slots:
     void autoAbscissaChecked(bool checked);
