@@ -2,6 +2,7 @@
 #include "ui_newfunctiondialog.h"
 #include "function.h"
 #include "functionssingleton.h"
+#include "functionvariableswidget.h"
 
 #include <QDebug>
 
@@ -32,12 +33,18 @@ NewFunctionDialog::~NewFunctionDialog()
 void NewFunctionDialog::init()
 {
     if(mFunction != 0) {
-        ui->functionName->setText(mFunction->getName());
-        ui->functionExpression->setText(mFunction->getExpression());
+        setFunction(mFunction);
         mEditFunction = true;
     } else {
         mEditFunction = false;
     }
+}
+
+void NewFunctionDialog::setFunction(Function *f)
+{
+    ui->functionName->setText(mFunction->getName());
+    ui->functionExpression->setText(mFunction->getExpression());
+    ui->variablesWidget->setFunction(mFunction);
 }
 
 // =============================== SLOTS ==================================

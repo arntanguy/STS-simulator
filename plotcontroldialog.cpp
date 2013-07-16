@@ -328,7 +328,6 @@ void PlotControlDialog::accept()
     mSettings->setValue("enabledCurveIds", enabledCurveIds);
     mSettings->endGroup();
 
-    AbstractFunction *function = 0;
     foreach(QStandardItem *item, mFunctionItems) {
         manageFunctionCurveFromItem(item);
 

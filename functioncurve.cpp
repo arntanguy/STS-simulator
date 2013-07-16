@@ -44,6 +44,7 @@ void FunctionCurve::update()
 void FunctionCurve::updateData()
 {
     if(mFunction != 0) {
+        qDebug() << "FunctionCurve::updateData()";
         int resolution = getResolution();
         QVector<double> x(resolution), y(resolution);
         double stepSize = (mMax-mMin)/resolution;

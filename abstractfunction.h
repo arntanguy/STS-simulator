@@ -42,6 +42,9 @@ protected:
 Q_SIGNALS:
     void nameUpdated(const QString &);
 
+public Q_SLOTS:
+    void updateLinkedCurve(QString var, double val);
+
 protected:
     QString mName;
     QString mVariable;

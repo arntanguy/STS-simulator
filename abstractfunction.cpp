@@ -52,6 +52,24 @@ void AbstractFunction::save(const QString &group)
     qDebug() << "AbstractFunction::save("<<group<<")";
 }
 
+// ========================== SLOTS =========================
+void AbstractFunction::updateLinkedCurve(QString var, double val)
+{
+    // XXX: don't update all curves
+    // XXX: don't update all plots
+
+    qDebug() << "XXX: updating all curves";
+
+    foreach(PlotWidget *plot, mLinkedCurves.keys()) {
+        qDebug() << "XXX: updating curve " << mLinkedCurves[plot]->title().text();
+        mLinkedCurves[plot]->updateData();
+        plot->replot();
+    }
+    //if(mLinkedCurves[var] != 0) {
+    //    mLinkedCurves->updateData();
+    //}
+}
+
 // ========================== PROTECTED =====================
 void AbstractFunction::abstractsave(const QString &group)
 {

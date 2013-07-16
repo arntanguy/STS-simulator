@@ -61,7 +61,8 @@ SOURCES += main.cpp\
     hierarchicalfunctiondialog.cpp \
     functioncurve.cpp \
     functionfactory.cpp \
-    unittest.cpp
+    unittest.cpp \
+    functionvariableswidget.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -94,7 +95,8 @@ HEADERS  += mainwindow.h \
     hierarchicalfunctiondialog.h \
     functioncurve.h \
     functionfactory.h \
-    unittest.h
+    unittest.h \
+    functionvariableswidget.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
@@ -104,6 +106,7 @@ FORMS    += mainwindow.ui \
     newcurvedialog.ui \
     functionselectiondialog.ui \
     newfunctiondialog.ui \
+        functionvariableswidget.ui \
     valueselector.ui \
     hierarchicalfunctiondialog.ui
 

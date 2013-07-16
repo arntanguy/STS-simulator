@@ -21,6 +21,7 @@ public:
     Function *getFunction() {
         return mFunction;
     }
+    void setFunction(Function *f);
 
 private:
     void init();
