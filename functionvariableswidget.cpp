@@ -3,6 +3,7 @@
 
 #include "function.h"
 #include "valueselector.h"
+#include "helperfunctions.h"
 
 #include <QDebug>
 #include <QLabel>
@@ -27,13 +28,23 @@ void FunctionVariablesWidget::setFunction(Function *f)
 void FunctionVariablesWidget::useFunction(Function *f)
 {
     mFunction = f;
-    QStringList variables = f->getVariableFactory()->getVariableNames();
+    connect(f, SIGNAL(expressionChanged()), this, SLOT(updateVariables()));
+    updateVariables();
+}
+
+
+
+// =============================== SLOTS ==================================
+void FunctionVariablesWidget::updateVariables()
+{
+    HelperFunctions::clearLayout(mVariabesLayout);
+    QStringList variables = mFunction->getVariableFactory()->getVariableNames();
     qDebug() << "Function variables: " << variables;
     foreach(QString var, variables) {
         // If it's not the function variable
-        if(var != f->getVariable()) {
+        if(var != mFunction->getVariable()) {
             qDebug() << "FunctionVariablesWidget::useFunction() - varible " << var << " detected";
-            ValueSelector *valueSelector = new ValueSelector(var, f->getVariableFactory()->getVariableAddress(var), this);
+            ValueSelector *valueSelector = new ValueSelector(var, mFunction->getVariableFactory()->getVariableAddress(var), this);
             connect(valueSelector, SIGNAL(valueChanged(QString,double)), this, SLOT(variableValueChanged(QString, double)));
             // Creates a widget to control it
             mVariabesLayout->addWidget(valueSelector);
@@ -41,9 +52,6 @@ void FunctionVariablesWidget::useFunction(Function *f)
     }
 }
 
-
-
-// =============================== SLOTS ==================================
 void FunctionVariablesWidget::variableValueChanged(QString var, double val)
 {
     qDebug() << "Variable value changed: " << var << ": " << val;

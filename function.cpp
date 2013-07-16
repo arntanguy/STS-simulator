@@ -2,6 +2,9 @@
 #include "projectsingleton.h"
 
 #include <QDebug>
+#include <iostream>
+#include "muParser.h"
+using namespace mu;
 
 /*!
  * \brief addVariable
@@ -49,6 +52,7 @@ Function::~Function()
     delete mImplicitVarFactory;
 }
 
+// ================================= PRIVATE =================================
 void Function::init()
 {
     setType(AbstractFunction::Function);
@@ -60,11 +64,45 @@ void Function::init()
     mParser.SetVarFactory(addVariable, mImplicitVarFactory);
 }
 
+/**
+ * @brief: Remove unused variables
+ * Variables are automatically defined by the parser through the variablefactory, but there is no way to delete
+ * them automatically. We need to only delete the variables that are now useless,
+ * for the sake of keeping all the other values intact.
+ **/
+void Function::cleanupVariables()
+{
+    // Cleanup parser vars (values will be retained by the variablefactory)
+    mParser.ClearVar();
+    // Evaluate new expressions
+    mParser.Eval();
+
+    /**
+     * Queries all used variable in expression
+     **/
+    // Get the map with the variables
+    varmap_type variables = mParser.GetVar();
+
+    varmap_type::const_iterator item = variables.begin();
+    QStringList used;
+    for (; item!=variables.end(); ++item)
+    {
+        used << QString(item->first.c_str());
+    }
+    qDebug() << "Function::cleanupVariables() - keeping " << used;
+    // Remove all unused variables from the factory
+    mImplicitVarFactory->deleteOthers(used);
+}
+
+// ===================================== PUBLIC =========================================
 void Function::setExpression(const QString &exp)
 {
     if(exp.toStdString() != mParser.GetExpr()) {
+
         mParser.SetExpr(exp.toStdString());
-        mParser.Eval();
+
+        cleanupVariables();
+
         emit expressionChanged();
         emit needsRecompute();
     }
@@ -113,14 +151,6 @@ void Function::save(const QString &group)
     settings->setValue("expression", getExpression());
     settings->endGroup();
 }
-
-
-
-
-
-
-
-
 
 
 

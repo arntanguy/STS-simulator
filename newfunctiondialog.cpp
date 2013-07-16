@@ -30,16 +30,38 @@ NewFunctionDialog::~NewFunctionDialog()
     delete ui;
 }
 
+// =============================== PRIVATE =================================
 void NewFunctionDialog::init()
 {
+    connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(pageChanged(int)));
+
     if(mFunction != 0) {
         setFunction(mFunction);
+
         mEditFunction = true;
     } else {
         mEditFunction = false;
     }
 }
 
+bool NewFunctionDialog::setupFunction()
+{
+    if(mFunction == 0)
+        mFunction = new Function();
+    mFunction->setName(ui->functionName->text());
+    mFunction->setExpression(ui->functionExpression->toPlainText());
+    if(mFunction->isValidExpression()) {
+        qDebug() << "Valid expression, accept";
+        if(!mEditFunction)
+            Singleton<FunctionsSingleton>::Instance().addFunction(mFunction);
+        return true;
+        setFunction(mFunction);
+    } else {
+        return false;
+    }
+}
+
+// =============================== PUBLIC =================================
 void NewFunctionDialog::setFunction(Function *f)
 {
     ui->functionName->setText(mFunction->getName());
@@ -50,18 +72,15 @@ void NewFunctionDialog::setFunction(Function *f)
 // =============================== SLOTS ==================================
 void NewFunctionDialog::accept()
 {
-    if(mFunction == 0)
-        mFunction = new Function();
-    mFunction->setName(ui->functionName->text());
-    mFunction->setExpression(ui->functionExpression->toPlainText());
-    if(mFunction->isValidExpression()) {
-        qDebug() << "Valid expression, accept";
-        if(!mEditFunction)
-            Singleton<FunctionsSingleton>::Instance().addFunction(mFunction);
+    if(setupFunction()) {
         QDialog::accept();
     } else {
         QDialog::reject();
         qDebug() << "Invalid expression, ask";
     }
+}
 
+void NewFunctionDialog::pageChanged(int)
+{
+    setupFunction();
 }

@@ -29,6 +29,8 @@ public:
         return mVariables.keys();
     }
 
+    void deleteOthers(const QStringList& varsInUse);
+
 private:
     /**
      * Careful, encapsulation will be broken by myParser: the values will be directly manipulated.

@@ -68,7 +68,6 @@ void NewCurveDialog::init()
     if(index != -1) {
         curveTypeChanged(index);
     }
-
 }
 
 void NewCurveDialog::loadFromCurve(Curve *curve)

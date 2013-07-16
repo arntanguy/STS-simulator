@@ -25,9 +25,11 @@ public:
 
 private:
     void init();
+    bool setupFunction();
 
 public slots:
     void accept();
+    void pageChanged(int);
 
 private:
     Ui::NewFunctionDialog *ui;

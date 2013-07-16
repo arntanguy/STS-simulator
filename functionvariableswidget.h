@@ -23,6 +23,7 @@ signals:
 
 public slots:
     void variableValueChanged(QString var, double val);
+    void updateVariables();
 
 private:
     void useFunction(Function *f);

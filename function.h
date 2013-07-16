@@ -60,6 +60,7 @@ Q_SIGNALS:
 
 private:
     void init();
+    void cleanupVariables();
 
 private:
     mu::Parser mParser;
