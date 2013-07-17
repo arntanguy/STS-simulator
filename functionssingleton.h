@@ -13,6 +13,7 @@ public:
     ~FunctionsSingleton();
 
     void addFunction(AbstractFunction *f);
+    void removeFunction(AbstractFunction *f);
     AbstractFunction* getFunction(const QString &name);
     QStringList getFunctionNames() const;
 

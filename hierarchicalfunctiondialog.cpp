@@ -91,6 +91,7 @@ void HierarchicalFunctionDialog::removeFunction()
     AbstractFunction *f = index.data(Qt::UserRole).value<AbstractFunction *>();
     mFunction->removeFunction(f);
     model->removeRow(index.row());
+    delete f;
     emit expressionChanged();
 }
 

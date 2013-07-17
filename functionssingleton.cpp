@@ -23,6 +23,18 @@ void FunctionsSingleton::addFunction(AbstractFunction *f)
     }
 }
 
+void FunctionsSingleton::removeFunction(AbstractFunction *f)
+{
+    if(f != 0) {
+        QMap<QString, AbstractFunction *>::iterator it = mFunctions.find(f->getName());
+        if(it != mFunctions.end()) {
+            qDebug() << "FunctionsSingleton::removeFunction() - deleting " << it.value()->getName();
+            mFunctions.erase(it);
+            delete f;
+        }
+    }
+}
+
 AbstractFunction *FunctionsSingleton::getFunction(const QString &name)
 {
     return mFunctions[name];

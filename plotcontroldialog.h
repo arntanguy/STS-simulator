@@ -47,6 +47,7 @@ public slots:
     void newHierarachicalFunction();
     void newFunctionAvailable();
     void editFunction(const QModelIndex &);
+    void deleteFunction();
 };
 
 #endif // PLOTCONTROLDIALOG_H

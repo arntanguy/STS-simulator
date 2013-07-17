@@ -48,6 +48,7 @@ PlotControlDialog::PlotControlDialog(const QString &plotName, PlotArea *parent) 
     connect(ui->functionNew, SIGNAL(clicked()), this, SLOT(newFunction()));
     connect(ui->functionHierarchicalNew, SIGNAL(clicked()), this, SLOT(newHierarachicalFunction()));
     connect(ui->functionView, SIGNAL(doubleClicked ( const QModelIndex &)), this, SLOT(editFunction(const QModelIndex &)));
+    connect(ui->functionDelete, SIGNAL(clicked()), this, SLOT(deleteFunction()));
 }
 
 PlotControlDialog::~PlotControlDialog()
@@ -461,6 +462,17 @@ void PlotControlDialog::newFunctionAvailable()
         }
 
     }
+}
+
+void PlotControlDialog::deleteFunction()
+{
+    qDebug() << "PlotControlDialog::deleteFunction()";
+    QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
+    QModelIndex index = ui->functionView->currentIndex();
+    AbstractFunction *f = index.data(Qt::UserRole).value<AbstractFunction *>();
+    mFunctionItems.removeOne(model->itemFromIndex(index));
+    Singleton<FunctionsSingleton>::Instance().removeFunction(f);
+    model->removeRow(index.row());
 }
 
 void PlotControlDialog::editFunction(const QModelIndex &index)
