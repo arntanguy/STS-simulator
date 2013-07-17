@@ -6,6 +6,13 @@ FunctionFactory::FunctionFactory()
 }
 
 // ============================ STATIC PUBLIC ===============================
+Function* FunctionFactory::createFromConfig(const QString &functionGroup)
+{
+    Function *function = new Function();
+    function->loadFromConfig(functionGroup);
+    return function;
+}
+
 Function* FunctionFactory::createFromFunction(Function *f)
 {
     return new Function(*f);

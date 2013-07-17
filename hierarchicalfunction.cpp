@@ -3,6 +3,7 @@
 #include "functionssingleton.h"
 #include "functionfactory.h"
 #include "function.h"
+
 #include <QDebug>
 #include <QStringList>
 
@@ -70,7 +71,7 @@ void HierarchicalFunction::loadFromConfig(const QString &group)
     settings->beginGroup(group);
 
     setName(settings->value("name", "Unknown").toString());
-    settings->beginGroup("subfunction");
+    settings->beginGroup("Function/");
     QStringList groups = settings->childGroups();
     settings->endGroup();
 
@@ -78,16 +79,12 @@ void HierarchicalFunction::loadFromConfig(const QString &group)
 
     foreach(QString fName, groups) {
         qDebug() << "HierarchicalFunction::loadFromConfig() - adding function " << fName << " to " << mName;
-        AbstractFunction* f = FunctionFactory::createFromSingleton(fName);
+        AbstractFunction *f = FunctionFactory::createFromConfig(group+"/Function/"+fName);
         if(f != 0) {
             addFunction(f);
         } else {
             qDebug() << "FATAL Error: function " << fName << " doesn't exist!";
         }
-        //AbstractFunction *f = Singleton<FunctionsSingleton>::Instance().getFunction(fName);
-        //if(f != 0) {
-        //} else {
-        //}
     }
 }
 
@@ -104,7 +101,7 @@ void HierarchicalFunction::save(const QString &group)
     foreach(AbstractFunction *f, mFunctions) {
         if(f != 0) {
             qDebug() << "HierarchicalFunction::save - saving subfunction " << f->getName();
-            settings->setValue("subfunction/"+f->getName()+"/name", f->getName());
+            f->save("");
         } else {
             qDebug() << "Error saving HierarchicalFunction "<< mName << ": NULL SUBFUNCTION";
         }
