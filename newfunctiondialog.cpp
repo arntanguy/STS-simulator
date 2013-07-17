@@ -4,6 +4,7 @@
 #include "functionssingleton.h"
 #include "functionvariableswidget.h"
 
+#include <QMessageBox>
 #include <QDebug>
 
 NewFunctionDialog::NewFunctionDialog(QWidget *parent) :
@@ -46,14 +47,21 @@ void NewFunctionDialog::init()
 
 bool NewFunctionDialog::setupFunction()
 {
+    FunctionsSingleton *singleton = &Singleton<FunctionsSingleton>::Instance();
     if(mFunction == 0)
         mFunction = new Function();
+    if(singleton->hasFunction(ui->functionName->text())) {
+        QMessageBox::information(this, tr("Function name already exists"),
+                tr("You can't have two base functions with the same name!"),
+                QMessageBox::Critical);
+        return false;
+    }
     mFunction->setName(ui->functionName->text());
     mFunction->setExpression(ui->functionExpression->toPlainText());
     if(mFunction->isValidExpression()) {
         qDebug() << "Valid expression, accept";
         if(!mEditFunction)
-            Singleton<FunctionsSingleton>::Instance().addFunction(mFunction);
+            singleton->addFunction(mFunction);
         setFunction(mFunction);
         return true;
     } else {
@@ -76,7 +84,7 @@ void NewFunctionDialog::accept()
         ui->variablesWidget->save();
         QDialog::accept();
     } else {
-        QDialog::reject();
+        //QDialog::reject();
         qDebug() << "Invalid expression, ask";
     }
 }
