@@ -22,6 +22,8 @@ void HierarchicalFunction::addFunction(AbstractFunction *function)
 {
     function->setGroup(mBaseGroup+mName+"/Function/");
     mFunctions.append(function);
+    connect(function, SIGNAL(needsRecompute()), this, SLOT(updateData()));
+    connect(function, SIGNAL(curveUpdated(AbstractFunction *)), this, SLOT(update(AbstractFunction *)));
 }
 
 void HierarchicalFunction::removeFunction(AbstractFunction *f)
@@ -109,4 +111,11 @@ void HierarchicalFunction::save(const QString &group)
         }
     }
     settings->endGroup();
+}
+
+
+// =============================== SLOTS ========================================
+void HierarchicalFunction::update(AbstractFunction *f)
+{
+    updateLinkedCurve();
 }

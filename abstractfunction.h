@@ -40,11 +40,14 @@ public:
     void addCurve(PlotWidget *plot, FunctionCurve *curve);
     FunctionCurve* getCurve(PlotWidget *plot);
 
+    void updateLinkedCurve();
+
 protected:
     void abstractsave(const QString &group);
 
 Q_SIGNALS:
     void nameUpdated(const QString &);
+    void curveUpdated(AbstractFunction *);
 
 public Q_SLOTS:
     void updateLinkedCurve(QString var, double val);

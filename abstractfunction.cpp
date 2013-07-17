@@ -47,6 +47,26 @@ FunctionCurve* AbstractFunction::getCurve(PlotWidget *plot)
     return mLinkedCurves[plot];
 }
 
+void AbstractFunction::updateLinkedCurve()
+{
+    // XXX: don't update all curves
+    // XXX: don't update all plots
+
+    qDebug() << "XXX: updating all curves: " << mLinkedCurves.keys().length();
+
+    foreach(PlotWidget *plot, mLinkedCurves.keys()) {
+        qDebug() << "XXX: updating curve " << mLinkedCurves[plot]->title().text();
+        FunctionCurve *curve = 0;
+        curve = mLinkedCurves[plot];
+        if(curve != 0) {
+            curve->updateData();
+            plot->replot();
+        }
+    }
+    //if(mLinkedCurves[var] != 0) {
+    //    mLinkedCurves->updateData();
+    //}
+}
 // ========================= VIRTUAL =========================
 void AbstractFunction::save(const QString &group)
 {
@@ -61,19 +81,8 @@ QString AbstractFunction::getGroup() const
 // ========================== SLOTS =========================
 void AbstractFunction::updateLinkedCurve(QString var, double val)
 {
-    // XXX: don't update all curves
-    // XXX: don't update all plots
-
-    qDebug() << "XXX: updating all curves";
-
-    foreach(PlotWidget *plot, mLinkedCurves.keys()) {
-        qDebug() << "XXX: updating curve " << mLinkedCurves[plot]->title().text();
-        mLinkedCurves[plot]->updateData();
-        plot->replot();
-    }
-    //if(mLinkedCurves[var] != 0) {
-    //    mLinkedCurves->updateData();
-    //}
+    updateLinkedCurve();
+    emit curveUpdated(this);
 }
 
 // ========================== PROTECTED =====================

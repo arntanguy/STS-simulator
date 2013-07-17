@@ -7,6 +7,7 @@
 
 class HierarchicalFunction : public AbstractFunction
 {
+Q_OBJECT
 public:
     HierarchicalFunction();
 
@@ -26,6 +27,9 @@ public:
 
     void loadFromConfig(const QString &group);
     virtual void save(const QString &group);
+
+public Q_SLOTS:
+    void update(AbstractFunction *);
 
 private:
     void init();
