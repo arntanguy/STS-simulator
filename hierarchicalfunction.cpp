@@ -15,11 +15,12 @@ HierarchicalFunction::HierarchicalFunction()
 void HierarchicalFunction::init()
 {
     setType(AbstractFunction::HierarchicalFunction);
+    mBaseGroup = "Functions/HierarchicalFunction/";
 }
 
 void HierarchicalFunction::addFunction(AbstractFunction *function)
 {
-    function->setGroup(mBaseGroup+mName+"/"+function->getGroup());
+    function->setGroup(mBaseGroup+mName+"/Function/");
     mFunctions.append(function);
 }
 

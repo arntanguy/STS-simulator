@@ -1,5 +1,6 @@
 #include "valueselector.h"
 #include "ui_valueselector.h"
+#include "projectsingleton.h"
 
 #include <qwt_slider.h>
 #include <QDebug>
@@ -21,7 +22,6 @@ ValueSelector::ValueSelector(const QString &name, double *variable, QWidget *par
 
     ui->variableName->setText(name + " = ");
 
-
     connect(ui->variableMin, SIGNAL(valueChanged(double)), this, SLOT(minValueChanged(double)));
     connect(ui->variableMax, SIGNAL(valueChanged(double)), this, SLOT(maxValueChanged(double)));
     connect(ui->variableValue, SIGNAL(valueChanged(double)), this, SLOT(variableValueChanged(double)));
@@ -33,8 +33,9 @@ ValueSelector::~ValueSelector()
     delete ui;
 }
 
-void ValueSelector::save(QSettings *settings)
+void ValueSelector::save()
 {
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
     settings->beginGroup(mName);
     settings->setValue("name", mName);
     settings->setValue("value", ui->variableValue->value());
@@ -43,8 +44,15 @@ void ValueSelector::save(QSettings *settings)
     settings->endGroup();
 }
 
-void ValueSelector::loadFromConfig()
+void ValueSelector::loadFromConfig(const QString &baseGroup)
 {
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup("Variables/"+baseGroup+"/"+mName);
+    qDebug() << "ValueSelector::loadFromConfig() - loading from " << settings->group();
+    ui->variableValue->setValue(settings->value("value", 0).toDouble());
+    ui->variableMin->setValue(settings->value("min", 0).toDouble());
+    ui->variableMax->setValue(settings->value("max", 100).toDouble());
+    settings->endGroup();
 }
 
 // ===================== SLOTS ===========================

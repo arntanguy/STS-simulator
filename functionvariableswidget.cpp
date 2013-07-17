@@ -45,9 +45,10 @@ void FunctionVariablesWidget::updateVariables()
     foreach(QString var, variables) {
         // If it's not the function variable
         if(var != mFunction->getVariable()) {
-            qDebug() << "FunctionVariablesWidget::useFunction() - varible " << var << " detected";
+            qDebug() << "FunctionVariablesWidget::useFunction() - variable " << var << " detected";
             ValueSelector *valueSelector = new ValueSelector(var, mFunction->getVariableFactory()->getVariableAddress(var), this);
             connect(valueSelector, SIGNAL(valueChanged(QString,double)), this, SLOT(variableValueChanged(QString, double)));
+            valueSelector->loadFromConfig(mFunction->getGroup());
             // Creates a widget to control it
             mVariabesLayout->addWidget(valueSelector);
             mValueSelectors.append(valueSelector);
@@ -65,18 +66,17 @@ void FunctionVariablesWidget::variableValueChanged(QString var, double val)
     }
 }
 
-void FunctionVariablesWidget::save(const QString &group)
+void FunctionVariablesWidget::save()
 {
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
-    settings->beginGroup(group);
+    settings->beginGroup("Variables/"+mFunction->getGroup());
 
-    settings->beginGroup("Variables");
     settings->remove("");
     qDebug() << "Saving variables for function "<<mFunction->getName() << " in " << settings->group();
     foreach(ValueSelector *vSelector, mValueSelectors) {
-        vSelector->save(settings);
+        vSelector->save();
     }
-    settings->endGroup();
 
     settings->endGroup();
+    settings->sync();
 }

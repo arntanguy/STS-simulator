@@ -16,8 +16,8 @@ public:
     explicit ValueSelector(const QString &name, double *variable, QWidget *parent = 0);
     ~ValueSelector();
 
-    void save(QSettings *);
-    void loadFromConfig();
+    void save();
+    void loadFromConfig(const QString &group);
 
 public Q_SLOTS:
     void minValueChanged(double);

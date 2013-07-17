@@ -18,7 +18,7 @@ public:
     explicit FunctionVariablesWidget(QWidget *parent = 0);
 
     void setFunction(Function *f);
-    void save(const QString &group);
+    void save();
 
 signals:
     void valueChanged(QString var, double val);
