@@ -40,6 +40,15 @@ public:
         return true;
     }
 
+    QString getError() const {
+        try {
+            mParser.Eval();
+        } catch(mu::ParserError &e) {
+            return e.GetMsg().c_str();
+        } catch(...) {
+        }
+    }
+
     double compute(double x);
 
     double operator() (double x) {

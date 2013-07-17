@@ -40,18 +40,20 @@ void FunctionVariablesWidget::updateVariables()
 {
     HelperFunctions::clearLayout(mVariabesLayout);
     mValueSelectors.clear();
-    QStringList variables = mFunction->getVariableFactory()->getVariableNames();
-    qDebug() << "Function variables: " << variables;
-    foreach(QString var, variables) {
-        // If it's not the function variable
-        if(var != mFunction->getVariable()) {
-            qDebug() << "FunctionVariablesWidget::useFunction() - variable " << var << " detected";
-            ValueSelector *valueSelector = new ValueSelector(var, mFunction->getVariableFactory()->getVariableAddress(var), this);
-            connect(valueSelector, SIGNAL(valueChanged(QString,double)), this, SLOT(variableValueChanged(QString, double)));
-            valueSelector->loadFromConfig(mFunction->getGroup());
-            // Creates a widget to control it
-            mVariabesLayout->addWidget(valueSelector);
-            mValueSelectors.append(valueSelector);
+    if(mFunction != 0) {
+        QStringList variables = mFunction->getVariableFactory()->getVariableNames();
+        qDebug() << "Function variables: " << variables;
+        foreach(QString var, variables) {
+            // If it's not the function variable
+            if(var != mFunction->getVariable()) {
+                qDebug() << "FunctionVariablesWidget::useFunction() - variable " << var << " detected";
+                ValueSelector *valueSelector = new ValueSelector(var, mFunction->getVariableFactory()->getVariableAddress(var), this);
+                connect(valueSelector, SIGNAL(valueChanged(QString,double)), this, SLOT(variableValueChanged(QString, double)));
+                valueSelector->loadFromConfig(mFunction->getGroup());
+                // Creates a widget to control it
+                mVariabesLayout->addWidget(valueSelector);
+                mValueSelectors.append(valueSelector);
+            }
         }
     }
 }

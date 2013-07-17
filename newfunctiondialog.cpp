@@ -50,21 +50,23 @@ bool NewFunctionDialog::setupFunction()
     FunctionsSingleton *singleton = &Singleton<FunctionsSingleton>::Instance();
     if(mFunction == 0)
         mFunction = new Function();
-    if(singleton->hasFunction(ui->functionName->text())) {
-        QMessageBox::information(this, tr("Function name already exists"),
-                tr("You can't have two base functions with the same name!"),
-                QMessageBox::Critical);
-        return false;
-    }
     mFunction->setName(ui->functionName->text());
     mFunction->setExpression(ui->functionExpression->toPlainText());
     if(mFunction->isValidExpression()) {
         qDebug() << "Valid expression, accept";
-        if(!mEditFunction)
+        if(!mEditFunction) {
+            if(singleton->hasFunction(ui->functionName->text())) {
+                QMessageBox::critical(this, tr("Function name already exists"),
+                        tr("You can't have two base functions with the same name!"));
+                return false;
+            }
             singleton->addFunction(mFunction);
-        setFunction(mFunction);
+            setFunction(mFunction);
+        }
         return true;
     } else {
+        QMessageBox::critical(this, tr("Function expression is invalid"),
+                tr("The function entered contains the following error:\n\n")+mFunction->getError());
         return false;
     }
 }
@@ -75,6 +77,7 @@ void NewFunctionDialog::setFunction(Function *f)
     ui->functionName->setText(mFunction->getName());
     ui->functionExpression->setText(mFunction->getExpression());
     ui->variablesWidget->setFunction(mFunction);
+    mEditFunction = true;
 }
 
 // =============================== SLOTS ==================================
@@ -85,11 +88,12 @@ void NewFunctionDialog::accept()
         QDialog::accept();
     } else {
         //QDialog::reject();
-        qDebug() << "Invalid expression, ask";
     }
 }
 
-void NewFunctionDialog::pageChanged(int)
+void NewFunctionDialog::pageChanged(int index)
 {
-    setupFunction();
+    if(index == 1) {
+        setupFunction();
+    }
 }

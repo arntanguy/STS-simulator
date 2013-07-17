@@ -21,7 +21,7 @@ using namespace mu;
 double* addVariable(const char *a_szName, void *pUserVariableFactory)
 {
     std::cout << "Generating new variable \""
-              << a_szName << std::endl;
+              << a_szName << "\"" << std::endl;
 
     // Use the variable factory passed as user data to create a new variable
     VariableFactory *varFactory= static_cast<VariableFactory*>(pUserVariableFactory);
@@ -104,7 +104,9 @@ void Function::setExpression(const QString &exp)
 
         mParser.SetExpr(exp.toStdString());
 
-        cleanupVariables();
+        if(isValidExpression()) {
+            cleanupVariables();
+        }
 
         emit expressionChanged();
         emit needsRecompute();
