@@ -54,8 +54,8 @@ bool NewFunctionDialog::setupFunction()
         qDebug() << "Valid expression, accept";
         if(!mEditFunction)
             Singleton<FunctionsSingleton>::Instance().addFunction(mFunction);
-        return true;
         setFunction(mFunction);
+        return true;
     } else {
         return false;
     }
