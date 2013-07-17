@@ -9,6 +9,7 @@ namespace Ui {
 class FunctionVariablesWidget;
 }
 class Function;
+class ValueSelector;
 
 class FunctionVariablesWidget : public QWidget
 {
@@ -17,6 +18,7 @@ public:
     explicit FunctionVariablesWidget(QWidget *parent = 0);
 
     void setFunction(Function *f);
+    void save(const QString &group);
 
 signals:
     void valueChanged(QString var, double val);
@@ -33,6 +35,7 @@ private:
     Ui::FunctionVariablesWidget *ui;
 
     QVBoxLayout *mVariabesLayout;
+    QList<ValueSelector *> mValueSelectors;
 
 };
 

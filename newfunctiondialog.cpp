@@ -73,6 +73,7 @@ void NewFunctionDialog::setFunction(Function *f)
 void NewFunctionDialog::accept()
 {
     if(setupFunction()) {
+        ui->variablesWidget->save(mFunction->getGroup());
         QDialog::accept();
     } else {
         QDialog::reject();

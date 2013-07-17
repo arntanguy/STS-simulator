@@ -45,6 +45,7 @@ Function::Function(Function const& toCopy)
     setExpression(toCopy.getExpression());
     mVariable = toCopy.mVariable;
     mType = toCopy.mType;
+    mBaseGroup = "Functions/Function/";
 }
 
 Function::~Function()
@@ -62,6 +63,8 @@ void Function::init()
 
     // Defines the variable factory used for implicit variable declaration.
     mParser.SetVarFactory(addVariable, mImplicitVarFactory);
+
+    mBaseGroup = "Functions/Function/";
 }
 
 /**
@@ -123,7 +126,6 @@ double Function::compute(double x)
     mParser.DefineVar(mVariable.toStdString(), &x);
     return mParser.Eval();
 }
-
 
 // ============================= VIRTUAL =================================
 void Function::loadFromConfig(const QString &group)

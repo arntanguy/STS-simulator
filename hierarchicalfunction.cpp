@@ -19,6 +19,7 @@ void HierarchicalFunction::init()
 
 void HierarchicalFunction::addFunction(AbstractFunction *function)
 {
+    function->setGroup(mBaseGroup+mName+"/"+function->getGroup());
     mFunctions.append(function);
 }
 

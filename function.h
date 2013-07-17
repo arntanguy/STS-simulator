@@ -47,7 +47,11 @@ public:
     }
 
     virtual void save(const QString &group);
-    void loadFromConfig(const QString &group);
+    virtual void loadFromConfig(const QString &group);
+
+    void setBaseGroup(const QString &baseGroup) {
+        mBaseGroup = baseGroup;
+    }
 
 // ============ HELPER FUNCTIONS maily for debug ===========================
 public:

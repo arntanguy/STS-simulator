@@ -7,6 +7,7 @@
 
 AbstractFunction::AbstractFunction(QObject *parent) : QObject(parent)
 {
+    mBaseGroup = "Functions/AbstractFunction/";
 }
 
 void AbstractFunction::setName(const QString &name)
@@ -46,10 +47,15 @@ FunctionCurve* AbstractFunction::getCurve(PlotWidget *plot)
     return mLinkedCurves[plot];
 }
 
-// Virtual
+// ========================= VIRTUAL =========================
 void AbstractFunction::save(const QString &group)
 {
     qDebug() << "AbstractFunction::save("<<group<<")";
+}
+
+QString AbstractFunction::getGroup() const
+{
+    return mBaseGroup + mName;
 }
 
 // ========================== SLOTS =========================

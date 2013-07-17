@@ -3,6 +3,7 @@
 
 #include <qwt_slider.h>
 #include <QDebug>
+#include <QSettings>
 
 ValueSelector::ValueSelector(const QString &name, double *variable, QWidget *parent) :
     QWidget(parent),
@@ -30,6 +31,20 @@ ValueSelector::ValueSelector(const QString &name, double *variable, QWidget *par
 ValueSelector::~ValueSelector()
 {
     delete ui;
+}
+
+void ValueSelector::save(QSettings *settings)
+{
+    settings->beginGroup(mName);
+    settings->setValue("name", mName);
+    settings->setValue("value", ui->variableValue->value());
+    settings->setValue("min", ui->variableMin->value());
+    settings->setValue("max", ui->variableMax->value());
+    settings->endGroup();
+}
+
+void ValueSelector::loadFromConfig()
+{
 }
 
 // ===================== SLOTS ===========================

@@ -32,6 +32,10 @@ public:
     virtual double operator() (double x) = 0;
     virtual QString getExpression() const = 0;
     virtual void save(const QString &group);
+    virtual void setGroup(const QString &group) {
+        mBaseGroup = group;
+    }
+    virtual QString getGroup() const;
 
     void addCurve(PlotWidget *plot, FunctionCurve *curve);
     FunctionCurve* getCurve(PlotWidget *plot);
@@ -48,6 +52,7 @@ public Q_SLOTS:
 protected:
     QString mName;
     QString mVariable;
+    QString mBaseGroup;
     FunctionType mType;
 
     bool mNeedsUpdate;

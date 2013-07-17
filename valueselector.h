@@ -6,15 +6,19 @@
 namespace Ui {
 class ValueSelector;
 }
+class QSettings;
 
 class ValueSelector : public QWidget
 {
     Q_OBJECT
-    
+
 public:
     explicit ValueSelector(const QString &name, double *variable, QWidget *parent = 0);
     ~ValueSelector();
-    
+
+    void save(QSettings *);
+    void loadFromConfig();
+
 public Q_SLOTS:
     void minValueChanged(double);
     void maxValueChanged(double);

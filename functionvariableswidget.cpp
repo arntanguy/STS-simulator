@@ -1,6 +1,7 @@
 #include "functionvariableswidget.h"
 #include "ui_functionvariableswidget.h"
 
+#include "projectsingleton.h"
 #include "function.h"
 #include "valueselector.h"
 #include "helperfunctions.h"
@@ -38,6 +39,7 @@ void FunctionVariablesWidget::useFunction(Function *f)
 void FunctionVariablesWidget::updateVariables()
 {
     HelperFunctions::clearLayout(mVariabesLayout);
+    mValueSelectors.clear();
     QStringList variables = mFunction->getVariableFactory()->getVariableNames();
     qDebug() << "Function variables: " << variables;
     foreach(QString var, variables) {
@@ -48,6 +50,7 @@ void FunctionVariablesWidget::updateVariables()
             connect(valueSelector, SIGNAL(valueChanged(QString,double)), this, SLOT(variableValueChanged(QString, double)));
             // Creates a widget to control it
             mVariabesLayout->addWidget(valueSelector);
+            mValueSelectors.append(valueSelector);
         }
     }
 }
@@ -60,4 +63,20 @@ void FunctionVariablesWidget::variableValueChanged(QString var, double val)
         mFunction->updateLinkedCurve(var, val);
         emit valueChanged(var, val);
     }
+}
+
+void FunctionVariablesWidget::save(const QString &group)
+{
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup(group);
+
+    settings->beginGroup("Variables");
+    settings->remove("");
+    qDebug() << "Saving variables for function "<<mFunction->getName() << " in " << settings->group();
+    foreach(ValueSelector *vSelector, mValueSelectors) {
+        vSelector->save(settings);
+    }
+    settings->endGroup();
+
+    settings->endGroup();
 }
