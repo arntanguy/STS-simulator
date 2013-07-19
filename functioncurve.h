@@ -23,6 +23,7 @@ public Q_SLOTS:
 private:
     AbstractFunction *mFunction;
     float mMin, mMax;
+    QVector<double> mXData, mYData;
 };
 
 #endif // FUNCTIONCURVE_H

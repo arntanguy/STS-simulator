@@ -1,6 +1,7 @@
 #include "functioncurve.h"
 #include "abstractfunction.h"
 #include "muParser.h"
+#include "plotwidget.h"
 
 #include <QDebug>
 #include <QVector>
@@ -18,6 +19,7 @@ void FunctionCurve::setFunction(AbstractFunction *f)
         connect(mFunction, SIGNAL(needsRecompute()), this, SLOT(updateData()));
         connect(mFunction, SIGNAL(nameUpdated(const QString &)), this, SLOT(updateName(const QString &)));
         mNeedsUpdate = true;
+        update();
     }
 }
 
@@ -35,7 +37,17 @@ void FunctionCurve::setComputeRange(double min, double max, int resolution)
 void FunctionCurve::update()
 {
     if(needsUpdate()) {
+        qDebug() << "FunctionCurve::update()";
         updateData();
+    }
+    foreach(PlotWidget *plot, mPlots.keys()) {
+        qDebug() << "Updating " << plot->getName();
+        Curve *curve = mPlots[plot];
+        if(curve != 0) {
+            qDebug() << "Updating " << curve->title().text();
+            curve->setSamples(mXData, mYData);
+        }
+        plot->replot();
     }
 }
 
@@ -46,7 +58,8 @@ void FunctionCurve::updateData()
     if(mFunction != 0) {
         qDebug() << "FunctionCurve::updateData()";
         int resolution = getResolution();
-        QVector<double> x(resolution), y(resolution);
+        mXData.clear();
+        mYData.clear();
         double stepSize = (mMax-mMin)/resolution;
         qDebug() << "FunctionCurve::updateData() - updating data of " << mFunction->getName()
                  << " with resolution: "<<resolution<<", stepsize: "<<stepSize<<", min: "<<mMin<<", max: "<<mMax;
@@ -64,11 +77,11 @@ void FunctionCurve::updateData()
                 qDebug() << "Errc:     " << e.GetCode() << "\n";
                 break;
             }
-            x.append(xval);
-            y.append(yval);
+            mXData.append(xval);
+            mYData.append(yval);
             xval += stepSize;
         }
-        setSamples(x, y);
+        //setSamples(x, y);
     } else {
         qDebug() << "FunctionCurve::updateData() - error, null function";
     }

@@ -37,9 +37,11 @@ public:
     }
     virtual QString getGroup() const;
 
-    void addCurve(PlotWidget *plot, FunctionCurve *curve);
-    FunctionCurve* getCurve(PlotWidget *plot);
+    FunctionCurve* createCurve();
+    void setCurve(FunctionCurve *curve);
+    FunctionCurve* getCurve();
 
+    unsigned int getCurveId() const;
     void updateLinkedCurve();
 
 protected:
@@ -60,8 +62,7 @@ protected:
 
     bool mNeedsUpdate;
 
-    QMap<PlotWidget *, FunctionCurve *> mLinkedCurves;
-
+    FunctionCurve *mLinkedCurve;
 };
 
 Q_DECLARE_METATYPE(AbstractFunction*);

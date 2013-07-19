@@ -68,10 +68,9 @@ private:
     static unsigned int mCurveStaticId;
     unsigned int mCurveId;
 
-    QMap<PlotWidget *, Curve *> mPlots;
-
 protected:
     bool mNeedsUpdate;
+    QMap<PlotWidget *, Curve *> mPlots;
 };
 
 Q_DECLARE_METATYPE(Curve*)

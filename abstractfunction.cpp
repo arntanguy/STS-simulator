@@ -8,6 +8,7 @@
 AbstractFunction::AbstractFunction(QObject *parent) : QObject(parent)
 {
     mBaseGroup = "Functions/AbstractFunction/";
+    mLinkedCurve = 0;
 }
 
 void AbstractFunction::setName(const QString &name)
@@ -37,35 +38,36 @@ QString AbstractFunction::getVariable() const
     return mVariable;
 }
 
-void AbstractFunction::addCurve(PlotWidget *plot, FunctionCurve *curve)
+void AbstractFunction::setCurve(FunctionCurve *curve)
 {
-    mLinkedCurves[plot] = curve;
+    mLinkedCurve = curve;
 }
 
-FunctionCurve* AbstractFunction::getCurve(PlotWidget *plot)
+FunctionCurve* AbstractFunction::createCurve()
 {
-    return mLinkedCurves[plot];
+    if(mLinkedCurve == 0) {
+        mLinkedCurve = new FunctionCurve();
+        mLinkedCurve->setTitle(mName);
+        mLinkedCurve->setFunction(this);
+    }
+    return mLinkedCurve;
+}
+
+FunctionCurve* AbstractFunction::getCurve()
+{
+    return mLinkedCurve;
+}
+
+unsigned int AbstractFunction::getCurveId() const
+{
+    if(mLinkedCurve != 0) {
+        return mLinkedCurve->getId();
+    }
 }
 
 void AbstractFunction::updateLinkedCurve()
 {
-    // XXX: don't update all curves
-    // XXX: don't update all plots
-
-    qDebug() << "XXX: updating all curves: " << mLinkedCurves.keys().length();
-
-    foreach(PlotWidget *plot, mLinkedCurves.keys()) {
-        qDebug() << "XXX: updating curve " << mLinkedCurves[plot]->title().text();
-        FunctionCurve *curve = 0;
-        curve = mLinkedCurves[plot];
-        if(curve != 0) {
-            curve->updateData();
-            plot->replot();
-        }
-    }
-    //if(mLinkedCurves[var] != 0) {
-    //    mLinkedCurves->updateData();
-    //}
+    mLinkedCurve->update();
 }
 // ========================= VIRTUAL =========================
 void AbstractFunction::save(const QString &group)
