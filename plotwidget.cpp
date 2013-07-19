@@ -9,6 +9,7 @@
 #include "curvesingleton.h"
 #include "legenditem.h"
 #include "projectsingleton.h"
+#include "curve.h"
 
 #include <QPushButton>
 #include <qwt_widget_overlay.h>
@@ -273,13 +274,6 @@ void PlotWidget::applySettings( const QString &plotName)
 
 void PlotWidget::replot()
 {
- /*   if ( autoReplot() )
-    {
-        mIsDirty = true;
-        return;
-    }
-*/
-
     QwtPlot::replot();
 }
 

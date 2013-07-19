@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "projectsingleton.h"
 #include "datasingleton.h"
+#include "plotwidget.h"
 
 unsigned int Curve::mCurveStaticId = 0;
 
@@ -25,6 +26,14 @@ Curve::Curve(const QString &name)
     setId(mCurveStaticId);
 }
 
+void Curve::copyFromCurve(Curve *curve)
+{
+    qDebug() << "Curve::copyFromCurve() - name " << curve->title().text();
+    setExperimentalData(mExperimentalId, mExperimentalAbscissia, mExperimentalOrdinate);
+    setTitle(curve->title());
+    setPen(curve->pen());
+}
+
 void Curve::init()
 {
     setRenderHint( QwtPlotItem::RenderAntialiased );
@@ -45,10 +54,14 @@ void Curve::setId(unsigned int id)
 void Curve::setExperimentalData(const QString &experimentId, const QString &abscissiaColumnName, const QString &ordinateColumnName)
 {
     mData = Singleton<DataSingleton>::Instance().getData(experimentId);
+    mExperimentalId = experimentId;
     mExperimentalAbscissia = abscissiaColumnName;
     mExperimentalOrdinate = ordinateColumnName;
     if(mData != 0) {
         setSamples(mData->getColumn(abscissiaColumnName).getData(), mData->getColumn(ordinateColumnName).getData());
+        foreach(Curve *curve, mPlots) {
+            curve->setExperimentalData(experimentId, abscissiaColumnName, ordinateColumnName);
+        }
     }
 }
 
@@ -129,3 +142,34 @@ void Curve::update()
     //if(needsUpdate()) {
     //}
 }
+
+// =============================== SURDEFINE ====================================
+void Curve::attach(PlotWidget *plot)
+{
+    qDebug() << "Cuve::attach() - attach curve " << title().text() << " to plot " << plot->getName();
+    Curve *curve = 0;
+    if(mPlots.contains(plot)) {
+        qDebug() << "Curve already attached, update copies";
+        curve = mPlots[plot];
+        if(curve != 0) {
+            curve->copyFromCurve(this);
+        }
+    } else {
+        curve = new Curve(getId());
+        curve->copyFromCurve(this);
+        curve->QwtPlotItem::attach(plot);
+        curve->setExperimentalData(mExperimentalId, mExperimentalAbscissia, mExperimentalOrdinate);
+    }
+    mPlots[plot] = curve;
+}
+
+void Curve::detach(PlotWidget *plot)
+{
+    Curve *curve = mPlots[plot];
+    if(curve != 0) {
+        curve->QwtPlotItem::detach();
+        delete curve;
+        mPlots.remove(plot);
+    }
+}
+

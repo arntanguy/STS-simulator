@@ -227,8 +227,7 @@ void PlotControlDialog::manageFunctionCurveFromItem(QStandardItem *item)
         } else {
             FunctionCurve *c = function->getCurve(mPlot);
             if(c != 0) {
-                if(c->plot() == mPlot)
-                    c->detach();
+                c->detach(mPlot);
             }
             // XXXX: IMPORTANT: curve can only be linked to one plot!!!
             //if(fcurve->plot() == mPlot) fcurve->detach();
@@ -313,12 +312,10 @@ void PlotControlDialog::accept()
         curve = static_cast<Curve *>(item->data(Qt::UserRole).value<Curve *>());
         if(curve != 0) {
             if(item->checkState() == Qt::Checked) {
-                // TODO: save which curve is attached.
                 curve->attach(mPlot);
                 enabledCurveIds << QString::number(curve->getId());
             } else {
-                // XXXX: IMPORTANT: curve can only be linked to one plot!!!
-                if(curve->plot() == mPlot) curve->detach();
+                curve->detach(mPlot);
             }
         } else {
             qDebug() << "NULL curve";
