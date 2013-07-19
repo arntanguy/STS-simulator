@@ -67,8 +67,11 @@ unsigned int AbstractFunction::getCurveId() const
 
 void AbstractFunction::updateLinkedCurve()
 {
-    mLinkedCurve->update();
+    if(mLinkedCurve != 0) {
+        mLinkedCurve->update();
+    }
 }
+
 // ========================= VIRTUAL =========================
 void AbstractFunction::save(const QString &group)
 {
