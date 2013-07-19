@@ -36,6 +36,7 @@ void Curve::copyFromCurve(Curve *curve)
 
 void Curve::init()
 {
+    mType = Experimental;
     setRenderHint( QwtPlotItem::RenderAntialiased );
 }
 

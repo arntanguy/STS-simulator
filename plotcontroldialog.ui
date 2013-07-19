@@ -487,13 +487,6 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="0" colspan="2">
-        <widget class="QLabel" name="label_14">
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Selectect the functions you wish to display.&lt;/p&gt;&lt;p&gt;Double click on any function to view or change its expression.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="2">
         <widget class="QPushButton" name="functionDelete">
          <property name="text">
@@ -501,8 +494,22 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0" colspan="3">
+       <item row="2" column="3">
+        <widget class="QPushButton" name="functionEditCurve">
+         <property name="text">
+          <string>Edit Curve</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="4">
         <widget class="QTreeView" name="functionView"/>
+       </item>
+       <item row="0" column="0" colspan="4">
+        <widget class="QLabel" name="label_14">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Selectect the functions you wish to display.&lt;/p&gt;&lt;p&gt;Double click on any function to view or change its expression.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

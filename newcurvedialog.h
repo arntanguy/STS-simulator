@@ -30,9 +30,6 @@ public slots:
     void accept();
     void loadDataFile();
     void dataFileChanged(int);
-    void curveTypeChanged(int);
-    void newFunction();
-    void selectFunction();
 };
 
 #endif // NEWCURVEDIALOG_H

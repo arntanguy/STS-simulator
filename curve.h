@@ -14,6 +14,7 @@ class Curve: public QObject, public QwtPlotCurve
 {
     Q_OBJECT
 public:
+    enum Type { Experimental, Function };
     Curve();
     Curve(int id);
     Curve( const QString &name );
@@ -33,8 +34,8 @@ public:
         return mData;
     }
 
-    Data::Type getType() const {
-        return mData->getType();
+    Type getType() const {
+        return mType;
     }
 
     void save();
@@ -71,6 +72,7 @@ private:
 protected:
     bool mNeedsUpdate;
     QMap<PlotWidget *, Curve *> mPlots;
+    Type mType;
 };
 
 Q_DECLARE_METATYPE(Curve*)

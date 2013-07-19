@@ -23,16 +23,9 @@ NewCurveDialog::NewCurveDialog(QWidget *parent) :
 
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
 
-    // Curve page
-    connect(ui->curveType, SIGNAL(currentIndexChanged(int)), this, SLOT(curveTypeChanged(int)));
-
     // Data page
     connect(ui->dataLoadButton, SIGNAL(clicked()), this, SLOT(loadDataFile()));
     connect(ui->dataLoaded, SIGNAL(currentIndexChanged(int)), this, SLOT(dataFileChanged(int)));
-
-    // Function page
-    connect(ui->newFunctionButton, SIGNAL(clicked()), this, SLOT(newFunction()));
-    connect(ui->functionSelection, SIGNAL(clicked()), this, SLOT(selectFunction()));
 }
 
 NewCurveDialog::~NewCurveDialog()
@@ -42,7 +35,6 @@ NewCurveDialog::~NewCurveDialog()
 
 void NewCurveDialog::init()
 {
-    qDebug() <<"1";
     //Loads the data first
     QStringList dataPaths = Singleton<DataSingleton>::Instance().getExperimentalDataPaths();
     ui->dataLoaded->clear();
@@ -60,38 +52,23 @@ void NewCurveDialog::init()
     ui->curvePenStyle->addItem(tr("Dash Dot Dot Dash Line"), Qt::DashDotDotLine);
 
 
-    ui->curveType->addItem(tr("Experimental"), Data::Experimental);
-    ui->curveType->addItem(tr("Function"), Data::Function);
-
     ui->dataTable->setEditTriggers(QTableView::NoEditTriggers);
-
-    int index = ui->curveType->findData(Data::Experimental);
-    if(index != -1) {
-        curveTypeChanged(index);
-    }
 }
 
 void NewCurveDialog::loadFromCurve(Curve *curve)
 {
-
     mCurve = curve;
     if(mCurve != 0) {
         ui->curveName->setText(mCurve->title().text());
         ui->curveColor->setCurrentColor(mCurve->pen().color());
         ui->curveThickness->setValue(mCurve->pen().width());
-
-        int index = ui->curveType->findData(mCurve->getType());
-        if(index != -1) {
-            ui->curveType->setCurrentIndex(index);
-            curveTypeChanged(index);
-        }
     }
 
-    // XXX: load settings outside of curve, not very clean, but works
-    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
-    settings->beginGroup("Curves/"+QString::number(curve->getId()));
-    Data::Type type = static_cast<Data::Type>(settings->value("type", Data::Experimental).toInt());
-    if(type == Data::Experimental) {
+    if(mCurve->getType() == Curve::Experimental) {
+        // XXX: load settings outside of curve, not very clean, but works
+        QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+        settings->beginGroup("Curves/"+QString::number(curve->getId()));
+        Data::Type type = static_cast<Data::Type>(settings->value("type", Data::Experimental).toInt());
         QString abscissia = settings->value("abscissia", "").toString();
         QString ordinate = settings->value("ordinate", "").toString();
         int index = ui->dataAbscissia->findData(abscissia);
@@ -102,9 +79,10 @@ void NewCurveDialog::loadFromCurve(Curve *curve)
         if(index != -1) {
             ui->dataOrdinate->setCurrentIndex(index);
         }
+        settings->endGroup();
+    } else {
+        ui->tabWidget->removeTab(1);
     }
-    settings->endGroup();
-
 }
 
 // ========================= SLOTS ============================
@@ -131,7 +109,8 @@ void NewCurveDialog::accept()
             }
     }
 
-    Singleton<CurveSingleton>::Instance().addCurve(mCurve);
+    if(mCurve->getType() == Curve::Experimental)
+        Singleton<CurveSingleton>::Instance().addCurve(mCurve);
 
     // Save the curve
     mCurve->save();
@@ -208,34 +187,4 @@ void NewCurveDialog::dataFileChanged(int index)
             ui->dataTable->setModel(model);
         }
     }
-
-
-}
-
-void NewCurveDialog::curveTypeChanged(int index)
-{
-    Data::Type type = static_cast<Data::Type>(ui->curveType->itemData(index).toUInt());
-    if(type == Data::Experimental) {
-        int index = ui->tabWidget->indexOf(ui->functionTab);
-        ui->tabWidget->setTabEnabled(index, false);
-        index = ui->tabWidget->indexOf(ui->experimentalDataTab);
-        ui->tabWidget->setTabEnabled(index, true);
-    } else {
-        int index = ui->tabWidget->indexOf(ui->experimentalDataTab);
-        ui->tabWidget->setTabEnabled(index, false);
-        index = ui->tabWidget->indexOf(ui->functionTab);
-        ui->tabWidget->setTabEnabled(index, true);
-    }
-}
-
-void NewCurveDialog::newFunction()
-{
-    NewFunctionDialog dialog(this);
-    dialog.exec();
-}
-
-void NewCurveDialog::selectFunction()
-{
-    FunctionSelectionDialog dialog(this);
-    dialog.exec();
 }

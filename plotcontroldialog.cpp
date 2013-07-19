@@ -49,6 +49,7 @@ PlotControlDialog::PlotControlDialog(const QString &plotName, PlotArea *parent) 
     connect(ui->functionHierarchicalNew, SIGNAL(clicked()), this, SLOT(newHierarachicalFunction()));
     connect(ui->functionView, SIGNAL(doubleClicked ( const QModelIndex &)), this, SLOT(editFunction(const QModelIndex &)));
     connect(ui->functionDelete, SIGNAL(clicked()), this, SLOT(deleteFunction()));
+    connect(ui->functionEditCurve, SIGNAL(clicked()), this, SLOT(editFunctionCurve()));
 }
 
 PlotControlDialog::~PlotControlDialog()
@@ -495,5 +496,22 @@ void PlotControlDialog::editFunction(const QModelIndex &index)
                 qDebug() << "Editing function " << f->getName();
             }
         }
+    }
+}
+
+void PlotControlDialog::editFunctionCurve()
+{
+    QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
+    QModelIndex index = ui->functionView->currentIndex();
+    AbstractFunction *f = index.data(Qt::UserRole).value<AbstractFunction *>();
+    FunctionCurve *curve = f->getCurve();
+    if(curve == 0) {
+        curve = f->createCurve();
+        curve->setComputeRange(ui->minAbscissaRange->value(), ui->maxAbscissaRange->value(), ui->plotResolution->value());
+    }
+    NewCurveDialog dialog;
+    dialog.loadFromCurve(curve);
+    if(dialog.exec() == QDialog::Accepted) {
+        f->setCurve(curve);
     }
 }

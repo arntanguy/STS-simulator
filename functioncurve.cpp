@@ -9,6 +9,7 @@
 
 FunctionCurve::FunctionCurve() : Curve()
 {
+    mType = Curve::Function;
 }
 
 void FunctionCurve::setFunction(AbstractFunction *f)

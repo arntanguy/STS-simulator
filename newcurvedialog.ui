@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="curveParametersTab">
       <attribute name="title">
@@ -77,32 +77,6 @@
           </item>
           <item row="3" column="1">
            <widget class="QComboBox" name="curvePenStyle"/>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_4">
-         <property name="title">
-          <string>Curve Type</string>
-         </property>
-         <layout class="QFormLayout" name="formLayout_4">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_8">
-            <property name="text">
-             <string>After selecting the curve type, you will be able to configure the data associated</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_9">
-            <property name="text">
-             <string>Select a curve type</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QComboBox" name="curveType"/>
           </item>
          </layout>
         </widget>
@@ -183,27 +157,6 @@
            <widget class="QComboBox" name="dataOrdinate"/>
           </item>
          </layout>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="functionTab">
-      <attribute name="title">
-       <string>Functions</string>
-      </attribute>
-      <layout class="QFormLayout" name="formLayout_5">
-       <item row="0" column="0">
-        <widget class="QPushButton" name="newFunctionButton">
-         <property name="text">
-          <string>New Function</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QPushButton" name="functionSelection">
-         <property name="text">
-          <string>Function selection</string>
-         </property>
         </widget>
        </item>
       </layout>
