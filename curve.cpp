@@ -30,7 +30,7 @@ void Curve::copyFromCurve(Curve *curve)
 {
     qDebug() << "Curve::copyFromCurve() - name " << curve->title().text();
     setExperimentalData(mExperimentalId, mExperimentalAbscissia, mExperimentalOrdinate);
-    setTitle(curve->title());
+    setTitle(curve->title().text());
     setPen(curve->pen());
 }
 
@@ -136,11 +136,27 @@ void Curve::save()
 }
 
 
+void Curve::setTitle(const QString& title)
+{
+    QwtPlotItem::setTitle(title);
+    foreach(Curve *curve, mPlots) {
+        curve->setTitle(title);
+    }
+}
+void Curve::setPen(const QPen& pen)
+{
+    QwtPlotCurve::setPen(pen);
+    foreach(Curve *curve, mPlots) {
+        curve->setPen(pen);
+    }
+    update();
+}
 // =============================== VIRTUAL ======================================
 void Curve::update()
 {
-    //if(needsUpdate()) {
-    //}
+    foreach(PlotWidget *plot, mPlots.keys()) {
+        plot->replot();
+    }
 }
 
 // =============================== SURDEFINE ====================================
@@ -173,3 +189,7 @@ void Curve::detach(PlotWidget *plot)
     }
 }
 
+bool Curve::isAttached(PlotWidget *plot) const
+{
+    return mPlots.contains(plot) && mPlots[plot] != 0;
+}

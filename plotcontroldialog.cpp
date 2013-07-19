@@ -385,6 +385,7 @@ void PlotControlDialog::editCurve(const QModelIndex &index)
 
 void PlotControlDialog::newCurveAvailable()
 {
+    qDebug() << "PlotControlDialog::newCurveAvailable()";
     QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->curveSelection->model());
     model->clear();
     mCurveItems.clear();
@@ -396,8 +397,7 @@ void PlotControlDialog::newCurveAvailable()
         i.next();
         QStandardItem *Item = new QStandardItem();
         Item->setCheckable( true );
-        // XXX: doesn't work, check if attached to plot
-        if(i.value()->plot() == mPlot)
+        if(i.value()->isAttached(mPlot))
             Item->setCheckState( Qt::Checked );
         else
             Item->setCheckState( Qt::Unchecked );

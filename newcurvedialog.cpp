@@ -42,6 +42,7 @@ NewCurveDialog::~NewCurveDialog()
 
 void NewCurveDialog::init()
 {
+    qDebug() <<"1";
     //Loads the data first
     QStringList dataPaths = Singleton<DataSingleton>::Instance().getExperimentalDataPaths();
     ui->dataLoaded->clear();
@@ -77,6 +78,7 @@ void NewCurveDialog::loadFromCurve(Curve *curve)
     if(mCurve != 0) {
         ui->curveName->setText(mCurve->title().text());
         ui->curveColor->setCurrentColor(mCurve->pen().color());
+        ui->curveThickness->setValue(mCurve->pen().width());
 
         int index = ui->curveType->findData(mCurve->getType());
         if(index != -1) {
@@ -110,8 +112,11 @@ void NewCurveDialog::accept()
 {
     if(mCurve == 0)  mCurve = new Curve();
     mCurve->setTitle(ui->curveName->text());
-    Qt::PenStyle pen = static_cast<Qt::PenStyle>(ui->curvePenStyle->itemData(ui->curvePenStyle->currentIndex()).toInt());
-    mCurve->setPen(ui->curveColor->currentColor(), ui->curveThickness->value(), pen);
+    Qt::PenStyle penStyle = static_cast<Qt::PenStyle>(ui->curvePenStyle->itemData(ui->curvePenStyle->currentIndex()).toInt());
+    QPen pen(ui->curveColor->currentColor());
+    pen.setStyle(penStyle);
+    pen.setWidth(ui->curveThickness->value());
+    mCurve->setPen(pen);
 
     // Set curve data
 

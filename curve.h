@@ -47,8 +47,12 @@ public:
         return mNeedsUpdate;
     }
 
+    void setTitle(const QString& title);
+    void setPen(const QPen& pen);
+
     void attach(PlotWidget *plot);
     void detach(PlotWidget *plot);
+    bool isAttached(PlotWidget *plot) const;
 
 private:
     void init();
