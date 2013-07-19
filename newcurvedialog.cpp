@@ -68,17 +68,26 @@ void NewCurveDialog::loadFromCurve(Curve *curve)
         // XXX: load settings outside of curve, not very clean, but works
         QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
         settings->beginGroup("Curves/"+QString::number(curve->getId()));
-        Data::Type type = static_cast<Data::Type>(settings->value("type", Data::Experimental).toInt());
+
+        QString experimentPath = settings->value("data", "").toString();
+        int index = ui->dataLoaded->findData(experimentPath);
+        if(index != -1) {
+            ui->dataLoaded->setCurrentIndex(index);
+        }
+
         QString abscissia = settings->value("abscissia", "").toString();
         QString ordinate = settings->value("ordinate", "").toString();
-        int index = ui->dataAbscissia->findData(abscissia);
+        index = ui->dataAbscissia->findData(abscissia, Qt::UserRole);
+        qDebug() << "abscissia: "<< abscissia << " at index " << index;
         if(index != -1) {
             ui->dataAbscissia->setCurrentIndex(index);
         }
         index = ui->dataOrdinate->findData(ordinate);
+        qDebug() << "ordinate: "<< ordinate << " at index " << index;
         if(index != -1) {
             ui->dataOrdinate->setCurrentIndex(index);
         }
+
         settings->endGroup();
     } else {
         ui->tabWidget->removeTab(1);

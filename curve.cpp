@@ -93,12 +93,9 @@ void Curve::loadFromSettings()
 
     // Load data
     QString path = settings->value("data", "").toString();;
-    Data::Type type = static_cast<Data::Type>(settings->value("type", Data::Experimental).toInt());
-    if(type == Data::Experimental) {
-        QString abscissia = settings->value("abscissia", "").toString();
-        QString ordinate = settings->value("ordinate", "").toString();
-        setExperimentalData(path, abscissia, ordinate);
-    }
+    QString abscissia = settings->value("abscissia", "").toString();
+    QString ordinate = settings->value("ordinate", "").toString();
+    setExperimentalData(path, abscissia, ordinate);
 
     // Load pen
     QPen pen;
