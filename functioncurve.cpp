@@ -9,7 +9,20 @@
 
 FunctionCurve::FunctionCurve() : Curve()
 {
+    mFunction = 0;
     mType = Curve::Function;
+    mMin = 0;
+    mMax = 1000;
+//    setResolution(1000);
+}
+
+FunctionCurve::FunctionCurve(unsigned int id) : Curve(id)
+{
+    mFunction = 0;
+    mType = Curve::Function;
+    mMin = 0;
+    mMax = 1000;
+//    setResolution(1000);
 }
 
 void FunctionCurve::setFunction(AbstractFunction *f)
@@ -61,7 +74,13 @@ void FunctionCurve::updateData()
         int resolution = getResolution();
         mXData.clear();
         mYData.clear();
-        double stepSize = (mMax-mMin)/resolution;
+        double stepSize = 0;
+        if(resolution != 0) {
+            stepSize = (mMax-mMin)/resolution;
+        } else {
+            qDebug() << "FunctionCurve::updateData() - CRITICAL ERROR: Resolution is null, no data computed!";
+            return;
+        }
         qDebug() << "FunctionCurve::updateData() - updating data of " << mFunction->getName()
                  << " with resolution: "<<resolution<<", stepsize: "<<stepSize<<", min: "<<mMin<<", max: "<<mMax;
         double xval = mMin;
@@ -88,6 +107,7 @@ void FunctionCurve::updateData()
     }
 }
 
-void FunctionCurve::updateName(const QString &name) {
+void FunctionCurve::updateName(const QString &name)
+{
     setTitle(name);
 }

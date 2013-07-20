@@ -11,6 +11,7 @@ class FunctionCurve : public Curve
 
 public:
     FunctionCurve();
+    FunctionCurve(unsigned int id);
     void setFunction(AbstractFunction *f);
     void setComputeRange(double min, double max, int resolution);
 

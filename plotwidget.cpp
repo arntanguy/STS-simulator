@@ -220,7 +220,10 @@ void PlotWidget::applySettings( const QString &plotName)
     Curve *curve = 0;
     foreach(QString id, enabledCurveIds) {
         curve = curveSingleton->getCurve(id.toInt());
-        if(curve != 0) curve->attach(this);
+        if(curve != 0) {
+            curve->attach(this);
+            curve->update();
+        }
     }
 
     // Curves must be added before that call!

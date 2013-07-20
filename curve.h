@@ -38,7 +38,7 @@ public:
         return mType;
     }
 
-    void save();
+    virtual void save();
     void loadFromSettings();
 
     void setExperimentalData(const QString &experimentId, const QString &abscissiaColumnName, const QString &ordinateColumnName);

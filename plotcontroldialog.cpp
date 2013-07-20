@@ -170,6 +170,45 @@ void PlotControlDialog::initFromConfig()
             qDebug() << "null curve";
         }
     }
+    AbstractFunction *function = 0;
+    foreach(QStandardItem *item, mFunctionItems) {
+        // Only show selected curves
+        function = static_cast<AbstractFunction *>(item->data(Qt::UserRole).value<AbstractFunction *>());
+        if(function != 0) {
+            qDebug() << "VALID FUNCTION";
+            FunctionCurve *c = function->getCurve();
+            if(c != 0) {
+            qDebug() << "VALID CURVE " << c->getId();
+                if( enabledCurveIds.contains(QString::number(c->getId())) ) {
+                    qDebug() << "curve " << c->getId() << " enabled";
+                    item->setCheckState(Qt::Checked);
+                } else {
+                    item->setCheckState(Qt::Unchecked);
+                }
+            }
+        }
+
+        // Handle item children (subfunctions)
+        QStandardItem *child = 0;
+        int i = 0;
+        while ((child = item->child(i++)) != 0) {
+            function = 0;
+            function = static_cast<AbstractFunction *>(item->data(Qt::UserRole).value<AbstractFunction *>());
+            if(function != 0) {
+            qDebug() << "VALID FUNCTION";
+                FunctionCurve *c = function->getCurve();
+                if(c != 0) {
+            qDebug() << "VALID CURVE " << c->getId();
+                    if( enabledCurveIds.contains(QString::number(c->getId())) ) {
+                        qDebug() << "curve " << c->getId() << " enabled";
+                        item->setCheckState(Qt::Checked);
+                    } else {
+                        item->setCheckState(Qt::Unchecked);
+                    }
+                }
+            }
+        }
+    }
 
     // ========= Plot range ===========
     mSettings->beginGroup("Plot/"+mPlotName+"/range");
@@ -203,7 +242,12 @@ void PlotControlDialog::initFromConfig()
 
 }
 
-void PlotControlDialog::manageFunctionCurveFromItem(QStandardItem *item)
+/**
+ * Create/activate curve from function item
+ * return: the curve if exists and active
+ *         0 otherwise
+ **/
+FunctionCurve* PlotControlDialog::manageFunctionCurveFromItem(QStandardItem *item)
 {
     AbstractFunction* function = static_cast<AbstractFunction *>(item->data(Qt::UserRole).value<AbstractFunction *>());
     if(function != 0) {
@@ -213,6 +257,9 @@ void PlotControlDialog::manageFunctionCurveFromItem(QStandardItem *item)
                 qDebug() << "PlotControlDialog::manageFunctionCurveFromItem() - Function already has a curve, use it";
                 c->attach(mPlot);
                 c->update();
+                if(Singleton<CurveSingleton>::Instance().getCurve(c->getId()) == 0)
+                    Singleton<CurveSingleton>::Instance().addCurve(c);
+                return c;
             } else {
                 qDebug() << "PlotControlDialog::manageFunctionCurveFromItem() - Function doesn't have a curve, create it";
                 FunctionCurve *fcurve = function->createCurve();
@@ -221,15 +268,19 @@ void PlotControlDialog::manageFunctionCurveFromItem(QStandardItem *item)
                 function->setCurve(fcurve);
                 fcurve->attach(mPlot);
                 fcurve->update();
+                Singleton<CurveSingleton>::Instance().addCurve(fcurve);
+                return fcurve;
             }
         } else {
             if(c != 0) {
                 c->detach(mPlot);
             }
+            return 0;
         }
     } else {
         qDebug() << "PlotControlDialog::manageFunctionCurveFromItem() - NULL Curve";
     }
+    return 0;
 }
 
 
@@ -316,21 +367,24 @@ void PlotControlDialog::accept()
             qDebug() << "NULL curve";
         }
     }
-    qDebug() << "enabled curves " << enabledCurveIds;
-    mSettings->beginGroup("Plot/"+mPlotName+"/curves");
-    mSettings->setValue("enabledCurveIds", enabledCurveIds);
-    mSettings->endGroup();
 
     foreach(QStandardItem *item, mFunctionItems) {
-        manageFunctionCurveFromItem(item);
+        FunctionCurve *c = manageFunctionCurveFromItem(item);
+        if(c != 0) enabledCurveIds << QString::number(c->getId());
 
         // Handle item children (subfunctions)
         QStandardItem *child = 0;
         int i = 0;
         while ((child = item->child(i++)) != 0) {
-            manageFunctionCurveFromItem(child);
+            c = 0;
+            c = manageFunctionCurveFromItem(child);
+            if(c != 0) enabledCurveIds << QString::number(c->getId());
         }
     }
+    qDebug() << "enabled curves " << enabledCurveIds;
+    mSettings->beginGroup("Plot/"+mPlotName+"/curves");
+    mSettings->setValue("enabledCurveIds", enabledCurveIds);
+    mSettings->endGroup();
 
     mSettings->sync();
     QDialog::accept();

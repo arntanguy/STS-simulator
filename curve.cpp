@@ -91,11 +91,14 @@ void Curve::loadFromSettings()
     setTitle(settings->value("title", "Unknown").toString());
     setResolution(settings->value("resolution", 0).toInt());
 
-    // Load data
-    QString path = settings->value("data", "").toString();;
-    QString abscissia = settings->value("abscissia", "").toString();
-    QString ordinate = settings->value("ordinate", "").toString();
-    setExperimentalData(path, abscissia, ordinate);
+    Curve::Type type = static_cast<Curve::Type>(settings->value("type", Curve::Experimental).toUInt());
+    if(type == Curve::Experimental) {
+        // Load data
+        QString path = settings->value("data", "").toString();;
+        QString abscissia = settings->value("abscissia", "").toString();
+        QString ordinate = settings->value("ordinate", "").toString();
+        setExperimentalData(path, abscissia, ordinate);
+    }
 
     // Load pen
     QPen pen;
@@ -121,13 +124,13 @@ void Curve::save()
     settings->setValue("color", pen().color());
     settings->setValue("thickness", pen().width());
     settings->setValue("style", pen().style());
-    if(mData != 0) {
-        settings->setValue("type", mType);
-        if(mType == Curve::Experimental) {
+    settings->setValue("type", mType);
+    if(mType == Curve::Experimental) {
+        if(mData != 0) {
             settings->setValue("abscissia", mExperimentalAbscissia);
             settings->setValue("ordinate", mExperimentalOrdinate);
+            settings->setValue("data", mData->getId());
         }
-        settings->setValue("data", mData->getId());
     }
     settings->endGroup();
 }

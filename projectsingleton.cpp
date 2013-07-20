@@ -66,7 +66,9 @@ void ProjectSingleton::save()
     {
         // Save all curves
         Singleton<CurveSingleton>::Instance().save();
+        mSettings->sync();
         Singleton<DataSingleton>::Instance().save();
+        mSettings->sync();
         Singleton<FunctionsSingleton>::Instance().save();
 
         mSettings->sync();

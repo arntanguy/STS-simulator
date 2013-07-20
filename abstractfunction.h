@@ -32,6 +32,7 @@ public:
     virtual double operator() (double x) = 0;
     virtual QString getExpression() const = 0;
     virtual void save(const QString &group);
+    virtual void loadFromConfig(const QString &group);
     virtual void setGroup(const QString &group) {
         mBaseGroup = group;
     }

@@ -8,6 +8,7 @@ class QStandardItem;
 class PlotArea;
 class PlotWidget;
 class QModelIndex;
+class FunctionCurve;
 
 namespace Ui {
 class PlotControlDialog;
@@ -34,7 +35,7 @@ private:
 private:
     void init();
     void initFromConfig();
-    void manageFunctionCurveFromItem(QStandardItem *item);
+    FunctionCurve* manageFunctionCurveFromItem(QStandardItem *item);
 
 public slots:
     void autoAbscissaChecked(bool checked);

@@ -1,6 +1,7 @@
 #include "curvesingleton.h"
 #include "projectsingleton.h"
 #include "curve.h"
+#include "functioncurve.h"
 
 CurveSingleton::CurveSingleton()
 {
@@ -39,9 +40,18 @@ void CurveSingleton::loadFromSettings()
     foreach(QString curveId, groups) {
         qDebug() << "Current group " << settings->group();
         unsigned int id = settings->value("Curves/"+curveId+"/id", -1).toUInt();
-        Curve *curve = new Curve(id);
-        curve->loadFromSettings();
-        addCurve(curve);
+        Curve::Type type= static_cast<Curve::Type>(settings->value("Curves/"+curveId+"/type", Curve::Experimental).toUInt());
+        if(type == Curve::Experimental) {
+            Curve *curve = new Curve(id);
+            qDebug() << "Loading experimental curve " << curve->getId();
+            curve->loadFromSettings();
+            addCurve(curve);
+        } else {
+            FunctionCurve *curve = new FunctionCurve(id);
+            qDebug() << "Loading Function curve " << curve->getId();
+            curve->loadFromSettings();
+            addCurve(curve);
+        }
     }
 }
 
