@@ -159,10 +159,9 @@ void PlotControlDialog::initFromConfig()
     foreach(QStandardItem *item, mCurveItems) {
         // Only show selected curves
         curve = static_cast<Curve *>(item->data(Qt::UserRole).value<Curve *>());
-        if(curve != 0) {
+        if(curve != 0 && curve->getType() == Curve::Experimental) {
             if( enabledCurveIds.contains(QString::number(curve->getId())) ) {
                 qDebug() << "curve " << curve->getId() << " enabled";
-                // TODO: save which curve is attached.
                 item->setCheckState(Qt::Checked);
             } else {
                 item->setCheckState(Qt::Unchecked);
@@ -391,17 +390,19 @@ void PlotControlDialog::newCurveAvailable()
     int j=0;
     while (i.hasNext()) {
         i.next();
-        QStandardItem *Item = new QStandardItem();
-        Item->setCheckable( true );
-        if(i.value()->isAttached(mPlot))
-            Item->setCheckState( Qt::Checked );
-        else
-            Item->setCheckState( Qt::Unchecked );
-        Item->setEditable(false);
-        Item->setText(i.value()->title().text());
-        Item->setData(QVariant::fromValue(i.value()), Qt::UserRole);
-        mCurveItems.append(Item);
-        model->setItem( j++, Item );
+        if(i.value() != 0 && i.value()->getType() == Curve::Experimental) {
+            QStandardItem *Item = new QStandardItem();
+            Item->setCheckable( true );
+            if(i.value()->isAttached(mPlot))
+                Item->setCheckState( Qt::Checked );
+            else
+                Item->setCheckState( Qt::Unchecked );
+            Item->setEditable(false);
+            Item->setText(i.value()->title().text());
+            Item->setData(QVariant::fromValue(i.value()), Qt::UserRole);
+            mCurveItems.append(Item);
+            model->setItem( j++, Item );
+        }
     }
 }
 

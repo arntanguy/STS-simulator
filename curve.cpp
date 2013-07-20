@@ -122,9 +122,8 @@ void Curve::save()
     settings->setValue("thickness", pen().width());
     settings->setValue("style", pen().style());
     if(mData != 0) {
-        Data::Type type = mData->getType();
-        settings->setValue("type", type);
-        if(type == Data::Experimental) {
+        settings->setValue("type", mType);
+        if(mType == Curve::Experimental) {
             settings->setValue("abscissia", mExperimentalAbscissia);
             settings->setValue("ordinate", mExperimentalOrdinate);
         }
