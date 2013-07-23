@@ -23,8 +23,10 @@ public:
     QStringList getExperimentalDataPaths() {
         QStringList paths;
         foreach(QString key, mData.keys()) {
-            if(mData[key]->getType() == Data::Experimental) {
-                paths << mData[key]->getId();
+            if(mData[key] != 0) {
+                if(mData[key]->getType() == Data::Experimental) {
+                    paths << mData[key]->getId();
+                }
             }
         }
         return paths;

@@ -71,6 +71,7 @@ QString HierarchicalFunction::getExpression() const
 void HierarchicalFunction::loadFromConfig(const QString &group)
 {
     qDebug() << "HierarchicalFunction::loadFromConfig("<<group<<")";
+    AbstractFunction::loadFromConfig(group);
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
     settings->beginGroup(group);
 

@@ -16,6 +16,7 @@ public:
     void setComputeRange(double min, double max, int resolution);
 
     virtual void update();
+    virtual void save();
 
 public Q_SLOTS:
     void updateData();

@@ -11,6 +11,7 @@ FunctionCurve::FunctionCurve() : Curve()
 {
     mFunction = 0;
     mType = Curve::Function;
+    // XXX: manage resolution properly
     mMin = 0;
     mMax = 1000;
 //    setResolution(1000);
@@ -63,6 +64,32 @@ void FunctionCurve::update()
         }
         plot->replot();
     }
+}
+
+void FunctionCurve::save()
+{
+    Curve::save();
+    //if(mFunction->getType() == AbstractFunction::Function
+    //qDebug() << "Saving curve "<<mCurveId<<","<<title().text();
+    //QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    //settings->beginGroup("Curves/"+QString::number(mCurveId)+"/");
+    //qDebug() << "current group: " << settings->group();
+    //settings->setValue("id", mCurveId);
+    //settings->setValue("title", title().text());
+    //settings->setValue("resolution", mResolution);
+
+    //settings->setValue("color", pen().color());
+    //settings->setValue("thickness", pen().width());
+    //settings->setValue("style", pen().style());
+    //settings->setValue("type", mType);
+    //if(mType == Curve::Experimental) {
+    //    if(mData != 0) {
+    //        settings->setValue("abscissia", mExperimentalAbscissia);
+    //        settings->setValue("ordinate", mExperimentalOrdinate);
+    //        settings->setValue("data", mData->getId());
+    //    }
+    //}
+    //settings->endGroup();
 }
 
 /// =============== SLOTS ==========================
