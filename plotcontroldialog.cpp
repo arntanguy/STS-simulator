@@ -176,8 +176,8 @@ void PlotControlDialog::initFromConfig()
             qDebug() << "VALID FUNCTION";
             FunctionCurve *c = function->getCurve();
             if(c != 0) {
-            qDebug() << "VALID CURVE " << c->getId();
-                if( curve->isAttached(mPlotId) ) {
+                qDebug() << "VALID CURVE " << c->getId();
+                if( c->isAttached(mPlotId) ) {
                     qDebug() << "curve " << c->getId() << " enabled";
                     item->setCheckState(Qt::Checked);
                 } else {
@@ -191,17 +191,17 @@ void PlotControlDialog::initFromConfig()
         int i = 0;
         while ((child = item->child(i++)) != 0) {
             function = 0;
-            function = static_cast<AbstractFunction *>(item->data(Qt::UserRole).value<AbstractFunction *>());
+            function = static_cast<AbstractFunction *>(child->data(Qt::UserRole).value<AbstractFunction *>());
             if(function != 0) {
-            qDebug() << "VALID FUNCTION";
+            qDebug() << "VALID SUB FUNCTION";
                 FunctionCurve *c = function->getCurve();
                 if(c != 0) {
-            qDebug() << "VALID CURVE " << c->getId();
-                    if( curve->isAttached(mPlotId) ) {
+            qDebug() << "VALID SUB CURVE " << c->getId();
+                    if( c->isAttached(mPlotId) ) {
                         qDebug() << "curve " << c->getId() << " enabled";
-                        item->setCheckState(Qt::Checked);
+                        child->setCheckState(Qt::Checked);
                     } else {
-                        item->setCheckState(Qt::Unchecked);
+                        child->setCheckState(Qt::Unchecked);
                     }
                 }
             }
