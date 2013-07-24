@@ -139,6 +139,25 @@ void Function::loadFromConfig(const QString &group)
     setName(settings->value("name", "Unkown").toString());
     setExpression(settings->value("expression", "").toString());
     settings->endGroup();
+
+    loadVariables(group);
+}
+
+void Function::loadVariables(const QString &group)
+{
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup("Variables/"+group);
+    qDebug() << "Function::loadVariables() -- from group " << settings->group();
+
+    QStringList variables = getVariableFactory()->getVariableNames();
+    foreach(QString var, variables) {
+        // If it's not the function variable
+        if(var != getVariable()) {
+            getVariableFactory()->setValue(var, settings->value(var+"/value", -1).toDouble());
+        }
+    }
+    settings->endGroup();
+    updateLinkedCurve();
 }
 
 void Function::save(const QString &group)

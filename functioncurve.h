@@ -22,6 +22,10 @@ public Q_SLOTS:
     void updateData();
     void updateName(const QString &);
 
+Q_SIGNALS:
+    void functionUpdated(AbstractFunction *);
+    void functionDataUpdated(AbstractFunction *);
+
 private:
     AbstractFunction *mFunction;
     float mMin, mMax;

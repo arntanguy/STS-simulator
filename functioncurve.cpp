@@ -64,6 +64,7 @@ void FunctionCurve::update()
         }
         plot->replot();
     }
+//    emit functionUpdated();
 }
 
 void FunctionCurve::save()

@@ -61,7 +61,6 @@ void FunctionsSingleton::loadFromSettings()
         addFunction(f);
     }
 
-
     settings->beginGroup("Functions/HierarchicalFunction/");
     QStringList hGroups = settings->childGroups();
     settings->endGroup();
@@ -70,6 +69,12 @@ void FunctionsSingleton::loadFromSettings()
         HierarchicalFunction *f = new HierarchicalFunction();
         f->loadFromConfig("Functions/HierarchicalFunction/"+functionId);
         addFunction(f);
+    }
+
+    foreach(AbstractFunction *f, mFunctions) {
+        if(f->getType() == AbstractFunction::HierarchicalFunction) {
+            f->updateLinkedCurve();
+        }
     }
 }
 

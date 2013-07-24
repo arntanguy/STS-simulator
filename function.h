@@ -66,6 +66,8 @@ public:
 public:
     void listAllVariables() const;
 
+private:
+    void loadVariables(const QString &group);
 Q_SIGNALS:
     void nameUpdated();
     void expressionChanged();
