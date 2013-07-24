@@ -62,7 +62,8 @@ SOURCES += main.cpp\
     functioncurve.cpp \
     functionfactory.cpp \
     unittest.cpp \
-    functionvariableswidget.cpp
+    functionvariableswidget.cpp \
+    plotsingleton.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -96,7 +97,8 @@ HEADERS  += mainwindow.h \
     functioncurve.h \
     functionfactory.h \
     unittest.h \
-    functionvariableswidget.h
+    functionvariableswidget.h \
+    plotsingleton.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \

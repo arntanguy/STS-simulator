@@ -2,6 +2,7 @@
 #include "curvesingleton.h"
 #include "datasingleton.h"
 #include "functionssingleton.h"
+#include "plotsingleton.h"
 #include <QDebug>
 #include <QStringList>
 
@@ -51,6 +52,7 @@ void ProjectSingleton::openProject(const QString& fileName)
     mSettings = new QSettings(fileName, QSettings::IniFormat);
 
     // Load all curves
+    Singleton<PlotSingleton>::Instance().loadFromSettings();
     Singleton<DataSingleton>::Instance().loadFromSettings();
     Singleton<CurveSingleton>::Instance().loadFromSettings();
     Singleton<FunctionsSingleton>::Instance().loadFromSettings();

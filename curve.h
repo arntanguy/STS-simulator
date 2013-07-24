@@ -54,6 +54,7 @@ public:
     void attach(PlotWidget *plot);
     void detach(PlotWidget *plot);
     bool isAttached(PlotWidget *plot) const;
+    bool isAttached(unsigned int plotId) const;
 
 private:
     void init();

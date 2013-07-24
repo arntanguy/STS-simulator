@@ -6,6 +6,7 @@
 #include "csvexperimentaldatareader.h"
 #include "curve.h"
 #include "projectsingleton.h"
+#include "plotsingleton.h"
 
 #include <QMdiSubWindow>
 #include <QFileDialog>
@@ -22,10 +23,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
     singleton->loadDefaultConfig();
 
-    mPlotArea1 = new PlotArea("Plot1");
-    mPlotArea2 = new PlotArea("Plot2");
-    mPlotArea3 = new PlotArea("Plot3");
-    mPlotArea4 = new PlotArea("Plot4");
+    mPlotArea1 = new PlotArea("Plot1", 0);
+    mPlotArea2 = new PlotArea("Plot2", 1);
+    mPlotArea3 = new PlotArea("Plot3", 2);
+    mPlotArea4 = new PlotArea("Plot4", 3);
+    PlotSingleton *pSingleton = &Singleton<PlotSingleton>::Instance();
+    pSingleton->addPlot(mPlotArea1->getPlotWidget());
+    pSingleton->addPlot(mPlotArea2->getPlotWidget());
+    pSingleton->addPlot(mPlotArea3->getPlotWidget());
+    pSingleton->addPlot(mPlotArea4->getPlotWidget());
+    pSingleton->loadFromSettings();
 
     QVBoxLayout *l1 = new QVBoxLayout;
     l1->addWidget(mPlotArea1);
@@ -53,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionSave, SIGNAL(triggered(bool)), this, SLOT(actionSave(bool)));
     connect(ui->actionNew_Project, SIGNAL(triggered(bool)), this, SLOT(actionNewProject(bool)));
     connect(ui->actionLoad_Project, SIGNAL(triggered(bool)), this, SLOT(actionLoadProject(bool)));
+
 }
 
 MainWindow::~MainWindow()

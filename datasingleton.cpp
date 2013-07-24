@@ -19,7 +19,13 @@ void DataSingleton::save()
     settings->remove("");
     // Now save all the curves
     QStringList keys = mData.keys();
-    settings->setValue("paths", keys);
+    QStringList paths;
+    foreach(QString key, keys) {
+        if(!key.isEmpty()) {
+            paths << key;
+        }
+    }
+    settings->setValue("paths", paths);
     settings->endGroup();
 }
 

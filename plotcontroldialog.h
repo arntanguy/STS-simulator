@@ -19,14 +19,14 @@ class PlotControlDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PlotControlDialog(const QString &plotName, PlotArea *parent = 0);
+    explicit PlotControlDialog(unsigned int plotId, PlotArea *parent = 0);
     ~PlotControlDialog();
 
     virtual void accept();
 
 private:
     Ui::PlotControlDialog *ui;
-    QString mPlotName;
+    unsigned int mPlotId;
     PlotWidget *mPlot;
 
     QList<QStandardItem *> mCurveItems;

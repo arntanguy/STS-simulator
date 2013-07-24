@@ -19,13 +19,13 @@
 #include <QStandardItem>
 #include <QStandardItemModel>
 
-PlotControlDialog::PlotControlDialog(const QString &plotName, PlotArea *parent) :
+PlotControlDialog::PlotControlDialog(const unsigned int plotId, PlotArea *parent) :
     QDialog(parent),
     ui(new Ui::PlotControlDialog)
 {
     ui->setupUi(this);
     mPlot = parent->getPlotWidget();
-    mPlotName = plotName;
+    mPlotId = plotId;
 
     init();
     initFromConfig();
@@ -114,15 +114,15 @@ void PlotControlDialog::initFromConfig()
 {
     QSettings *mSettings = Singleton<ProjectSingleton>::Instance().getSettings();
 
-    qDebug() << "PlotControlDialog::initFromConfig()";
-    mSettings->beginGroup("Plot/"+mPlotName+"/legend");
+    qDebug() << "PlotControlDialog::initFromConfig() - plot id " << mPlotId;
+    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/legend");
     ui->legendCheckBox->setChecked(mSettings->value("isEnabled", false).toBool());
     int index = ui->legendPositionComboBox->findData(mSettings->value("position", Qt::AlignBottom).toInt());
     if(index != -1)
         ui->legendPositionComboBox->setCurrentIndex(index);
     mSettings->endGroup();
 
-    mSettings->beginGroup("Plot/"+mPlotName+"/legendItem");
+    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/legendItem");
     ui->legendItemCheckBox->setChecked(mSettings->value("isEnabled", true).toBool());
     QVariant align = static_cast<int>(Qt::AlignRight);
     index = ui->legendItemHorizontalPositionComboBox->findData(mSettings->value("horizontalPosition", align).toInt());
@@ -134,13 +134,13 @@ void PlotControlDialog::initFromConfig()
         ui->legendItemVerticalPositionComboBox->setCurrentIndex(index);
     mSettings->endGroup();
 
-    mSettings->beginGroup("Plot/"+mPlotName+"/info");
-    ui->titleLineEdit->setText(mSettings->value("title", mPlotName).toString());
+    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/info");
+    ui->titleLineEdit->setText(mSettings->value("title", QString::number(mPlotId)).toString());
     ui->horizontalAxisLineEdit->setText(mSettings->value("horizontalAxisName", "X Axis").toString());
     ui->verticalAxisLineEdit->setText(mSettings->value("verticalAxisName", "X Axis").toString());
     mSettings->endGroup();
 
-    mSettings->beginGroup("Plot/"+mPlotName+"/axisScale");
+    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/axisScale");
     index = ui->horizontalAxisScale->findData(mSettings->value("horizontalAxisScale", "linear").toString());
     if(index != -1)
         ui->horizontalAxisScale->setCurrentIndex(index);
@@ -149,18 +149,16 @@ void PlotControlDialog::initFromConfig()
         ui->verticalAxisScale->setCurrentIndex(index);
     mSettings->endGroup();
 
-    mSettings->beginGroup("Plot/"+mPlotName+"/precision");
+    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/precision");
     ui->plotResolution->setValue(mSettings->value("resolution", 1000).toDouble());
     mSettings->endGroup();
 
-    QStringList enabledCurveIds = mSettings->value("Plot/"+mPlotName+"/curves/enabledCurveIds", QStringList()).toStringList();
-    qDebug() << "loading enabled curve ids: "<<enabledCurveIds;
     Curve *curve = 0;
     foreach(QStandardItem *item, mCurveItems) {
         // Only show selected curves
         curve = static_cast<Curve *>(item->data(Qt::UserRole).value<Curve *>());
         if(curve != 0 && curve->getType() == Curve::Experimental) {
-            if( enabledCurveIds.contains(QString::number(curve->getId())) ) {
+            if( curve->isAttached(mPlotId) ) {
                 qDebug() << "curve " << curve->getId() << " enabled";
                 item->setCheckState(Qt::Checked);
             } else {
@@ -179,7 +177,7 @@ void PlotControlDialog::initFromConfig()
             FunctionCurve *c = function->getCurve();
             if(c != 0) {
             qDebug() << "VALID CURVE " << c->getId();
-                if( enabledCurveIds.contains(QString::number(c->getId())) ) {
+                if( curve->isAttached(mPlotId) ) {
                     qDebug() << "curve " << c->getId() << " enabled";
                     item->setCheckState(Qt::Checked);
                 } else {
@@ -199,7 +197,7 @@ void PlotControlDialog::initFromConfig()
                 FunctionCurve *c = function->getCurve();
                 if(c != 0) {
             qDebug() << "VALID CURVE " << c->getId();
-                    if( enabledCurveIds.contains(QString::number(c->getId())) ) {
+                    if( curve->isAttached(mPlotId) ) {
                         qDebug() << "curve " << c->getId() << " enabled";
                         item->setCheckState(Qt::Checked);
                     } else {
@@ -211,7 +209,7 @@ void PlotControlDialog::initFromConfig()
     }
 
     // ========= Plot range ===========
-    mSettings->beginGroup("Plot/"+mPlotName+"/range");
+    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/range");
     autoAbscissaChecked(mSettings->value("autoAbscissa", true).toBool());
     ui->minAbscissaRange->setValue(mSettings->value("minAbscissa", 0).toDouble());
     ui->maxAbscissaRange->setValue(mSettings->value("maxAbscissa", 1000).toDouble());
@@ -222,7 +220,7 @@ void PlotControlDialog::initFromConfig()
     mSettings->endGroup();
 
     // =============== Plot Grid ==================
-    mSettings->beginGroup("Plot/"+mPlotName+"/grid");
+    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/grid");
     ui->gridEnabled->setChecked(mSettings->value("isEnabled", true).toBool());
 
     index = ui->majorGridPenStyle->findData(mSettings->value("majorPen/style", Qt::SolidLine).toString());
@@ -296,12 +294,12 @@ void PlotControlDialog::accept()
 {
     QSettings *mSettings = Singleton<ProjectSingleton>::Instance().getSettings();
     qDebug() << "PlotControlDialog::accept()";
-    mSettings->beginGroup("Plot/"+mPlotName+"/legend");
+    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/legend");
     mSettings->setValue("isEnabled", ui->legendCheckBox->isChecked());
     mSettings->setValue("position", ui->legendPositionComboBox->itemData(ui->legendPositionComboBox->currentIndex()));
     mSettings->endGroup();
 
-    mSettings->beginGroup("Plot/"+mPlotName+"/legendItem");
+    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/legendItem");
     mSettings->setValue("isEnabled", ui->legendItemCheckBox->isChecked());
     int horizontalPos = ui->legendItemHorizontalPositionComboBox->itemData(ui->legendItemHorizontalPositionComboBox->currentIndex()).toInt();
     int verticalPos = ui->legendItemVerticalPositionComboBox->itemData(ui->legendItemVerticalPositionComboBox->currentIndex()).toInt();
@@ -313,7 +311,7 @@ void PlotControlDialog::accept()
     mSettings->setValue("numCurves", 3);
     mSettings->endGroup();
 
-    mSettings->beginGroup("Plot/"+mPlotName+"/range");
+    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/range");
     mSettings->setValue("autoAbscissa", ui->autoAbscissa->isChecked());
     mSettings->setValue("minAbscissa", ui->minAbscissaRange->value());
     mSettings->setValue("maxAbscissa", ui->maxAbscissaRange->value());
@@ -322,22 +320,22 @@ void PlotControlDialog::accept()
     mSettings->setValue("maxOrdinate", ui->maxOrdinateRange->value());
     mSettings->endGroup();
 
-    mSettings->beginGroup("Plot/"+mPlotName+"/info");
+    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/info");
     mSettings->setValue("title", ui->titleLineEdit->text());
     mSettings->setValue("horizontalAxisName", ui->horizontalAxisLineEdit->text());
     mSettings->setValue("verticalAxisName", ui->verticalAxisLineEdit->text());
     mSettings->endGroup();
 
-    mSettings->beginGroup("Plot/"+mPlotName+"/axisScale");
+    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/axisScale");
     mSettings->setValue("horizontalAxisScale", ui->horizontalAxisScale->itemData(ui->horizontalAxisScale->currentIndex()));
     mSettings->setValue("verticalAxisScale", ui->verticalAxisScale->itemData(ui->verticalAxisScale->currentIndex()));
     mSettings->endGroup();
 
-    mSettings->beginGroup("Plot/"+mPlotName+"/precision");
+    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/precision");
     mSettings->setValue("resolution", ui->plotResolution->value());
     mSettings->endGroup();
 
-    mSettings->beginGroup("Plot/"+mPlotName+"/grid");
+    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/grid");
     mSettings->setValue("isEnabled", ui->gridEnabled->isChecked());
     mSettings->setValue("majorPen/abscissiaIsEnabled", ui->majorGridAbscissiaPenEnabled->isChecked());
     mSettings->setValue("majorPen/ordinateIsEnabled", ui->majorGridOrdinatePenEnabled->isChecked());
@@ -351,7 +349,6 @@ void PlotControlDialog::accept()
     mSettings->endGroup();
 
     // Display selected curves
-    QStringList enabledCurveIds;
     Curve *curve = 0;
     foreach(QStandardItem *item, mCurveItems) {
         // Only show selected curves
@@ -359,7 +356,6 @@ void PlotControlDialog::accept()
         if(curve != 0) {
             if(item->checkState() == Qt::Checked) {
                 curve->attach(mPlot);
-                enabledCurveIds << QString::number(curve->getId());
             } else {
                 curve->detach(mPlot);
             }
@@ -369,22 +365,15 @@ void PlotControlDialog::accept()
     }
 
     foreach(QStandardItem *item, mFunctionItems) {
-        FunctionCurve *c = manageFunctionCurveFromItem(item);
-        if(c != 0) enabledCurveIds << QString::number(c->getId());
+        manageFunctionCurveFromItem(item);
 
         // Handle item children (subfunctions)
         QStandardItem *child = 0;
         int i = 0;
         while ((child = item->child(i++)) != 0) {
-            c = 0;
-            c = manageFunctionCurveFromItem(child);
-            if(c != 0) enabledCurveIds << QString::number(c->getId());
+            manageFunctionCurveFromItem(child);
         }
     }
-    qDebug() << "enabled curves " << enabledCurveIds;
-    mSettings->beginGroup("Plot/"+mPlotName+"/curves");
-    mSettings->setValue("enabledCurveIds", enabledCurveIds);
-    mSettings->endGroup();
 
     mSettings->sync();
     QDialog::accept();

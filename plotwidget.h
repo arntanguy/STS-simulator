@@ -33,6 +33,10 @@ public:
     QString getName() const {
         return mName;
     }
+
+    void setId(unsigned int id);
+    unsigned int getId() const;
+
 private:
     void initZoom();
     void initGrid();
@@ -45,7 +49,7 @@ private:
 
 
 public Q_SLOTS:
-    void applySettings(const QString &plotName );
+    void loadFromSettings();
     void configurationChanged();
 
 public:
@@ -63,6 +67,7 @@ private:
     QwtPlotGrid *mPlotGrid;
 
     QString mName;
+    unsigned int mId;
 };
 
 #endif // PLOTWIDGET_H

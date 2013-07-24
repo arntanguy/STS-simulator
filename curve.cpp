@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "projectsingleton.h"
 #include "datasingleton.h"
+#include "plotsingleton.h"
 #include "plotwidget.h"
 
 unsigned int Curve::mCurveStaticId = 0;
@@ -15,6 +16,7 @@ Curve::Curve()
 
 Curve::Curve(int id)
 {
+    init();
     setId(id);
 }
 
@@ -108,6 +110,11 @@ void Curve::loadFromSettings()
     // Apply pen
     setPen(pen);
 
+    QStringList attachedToPlots = settings->value("attachedToPlots", QStringList()).toStringList();
+    foreach(QString plotId, attachedToPlots) {
+        this->attach(Singleton<PlotSingleton>::Instance().getPlot(plotId.toUInt()));
+    }
+
     settings->endGroup();
 }
 
@@ -132,6 +139,15 @@ void Curve::save()
             settings->setValue("data", mData->getId());
         }
     }
+
+    // Save on which plot the curve is attached
+    QStringList plots;
+    foreach(PlotWidget *plot, mPlots.keys()) {
+        if(isAttached(plot)) plots << QString::number(plot->getId());
+    }
+    settings->setValue("attachedToPlots", plots);
+    qDebug() << "Curve::save() - curve is attached to plots: " << plots;
+
     settings->endGroup();
 }
 
@@ -191,5 +207,10 @@ void Curve::detach(PlotWidget *plot)
 
 bool Curve::isAttached(PlotWidget *plot) const
 {
-    return mPlots.contains(plot) && mPlots[plot] != 0;
+    return plot != 0 && mPlots.contains(plot) && mPlots[plot] != 0;
+}
+
+bool Curve::isAttached(unsigned int plotId) const
+{
+    return isAttached(Singleton<PlotSingleton>::Instance().getPlot(plotId));
 }

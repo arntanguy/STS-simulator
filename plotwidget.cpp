@@ -61,7 +61,8 @@ void PlotWidget::initZoom()
     mPlotZoomer->setTrackerPen(c);
 }
 
-void PlotWidget::setupPlot() {
+void PlotWidget::setupPlot()
+{
     this->setTitle("Qwt Tutorial");
     this->setCanvasBackground(QColor(Qt::white));
 
@@ -79,20 +80,17 @@ void PlotWidget::initGrid()
 void PlotWidget::configurationChanged()
 {
     qDebug() << "PlotWidget::configurationChanged()";
-    applySettings(mName);
+    loadFromSettings();
 }
 
 /**
- * @brief PlotWidget::applySettings
+ * @brief PlotWidget::loadFromSettings
  *      Apply graph mSettings->from the saved mSettings->(using QSettings)
- * @param plotName
- *      Name of the plot
  */
-void PlotWidget::applySettings( const QString &plotName)
+void PlotWidget::loadFromSettings()
 {
     QSettings *mSettings = Singleton<ProjectSingleton>::Instance().getSettings();
-    mSettings->beginGroup("Plot/"+plotName+"/legend");
-    qDebug() << "PlotWidget::applySettings, Plot title: " << mSettings->value("Plot/Plot1/info/title", "error");
+    mSettings->beginGroup("Plot/"+QString::number(mId)+"/legend");
 
     mIsDirty = false;
     setAutoReplot( true );
@@ -149,7 +147,7 @@ void PlotWidget::applySettings( const QString &plotName)
     }
     mSettings->endGroup();
 
-    mSettings->beginGroup("Plot/"+plotName+"/legendItem");
+    mSettings->beginGroup("Plot/"+QString::number(mId)+"/legendItem");
     if ( mSettings->value("isEnabled", true).toBool() )
     {
         if ( mLegendItem == NULL )
@@ -192,14 +190,14 @@ void PlotWidget::applySettings( const QString &plotName)
 
     mSettings->endGroup();
 
-    mSettings->beginGroup("Plot/"+plotName+"/info");
-    setTitle(mSettings->value("title", plotName).toString());
+    mSettings->beginGroup("Plot/"+QString::number(mId)+"/info");
+    setTitle(mSettings->value("title", QString::number(mId)).toString());
     // axis legends
     setAxisTitle(QwtPlot::xBottom, mSettings->value("horizontalAxisName", "X Axis").toString());
     setAxisTitle(QwtPlot::yLeft, mSettings->value("verticalAxisName", "X Axis").toString());
     mSettings->endGroup();
 
-    mSettings->beginGroup("Plot/"+plotName+"/axisScale");
+    mSettings->beginGroup("Plot/"+QString::number(mId)+"/axisScale");
     QString scale = mSettings->value("horizontalAxisScale", "linear").toString();
     if(scale == "log10") {
         setAxisScaleEngine(QwtPlot::xBottom, new QwtLogScaleEngine());
@@ -215,23 +213,12 @@ void PlotWidget::applySettings( const QString &plotName)
     mSettings->endGroup();
 
 
-    QStringList enabledCurveIds = mSettings->value("Plot/"+plotName+"/curves/enabledCurveIds", QStringList()).toStringList();
-    CurveSingleton *curveSingleton = &Singleton<CurveSingleton>::Instance();
-    Curve *curve = 0;
-    foreach(QString id, enabledCurveIds) {
-        curve = curveSingleton->getCurve(id.toInt());
-        if(curve != 0) {
-            curve->attach(this);
-            curve->update();
-        }
-    }
-
     // Curves must be added before that call!
-    mSettings->beginGroup("Plot/"+plotName+"/precision");
+    mSettings->beginGroup("Plot/"+QString::number(mId)+"/precision");
     setPrecision(mSettings->value("resolution", 1000).toDouble());
     mSettings->endGroup();
 
-    mSettings->beginGroup("Plot/"+plotName+"/range");
+    mSettings->beginGroup("Plot/"+QString::number(mId)+"/range");
     if(!mSettings->value("autoAbscissa", true).toBool()) {
         double min = mSettings->value("minAbscissa", -10.d).toDouble();
         double max = mSettings->value("maxAbscissa", 10.d).toDouble();
@@ -251,7 +238,7 @@ void PlotWidget::applySettings( const QString &plotName)
     mPlotZoomer->setZoomBase();
     mSettings->endGroup();
 
-    mSettings->beginGroup("Plot/"+plotName+"/grid");
+    mSettings->beginGroup("Plot/"+QString::number(mId)+"/grid");
     if(mSettings->value("isEnabled", true).toBool())
         mPlotGrid->attach(this);
     else
@@ -273,6 +260,15 @@ void PlotWidget::applySettings( const QString &plotName)
         mIsDirty = false;
         replot();
     }
+}
+
+void PlotWidget::setId(unsigned int id)
+{
+    mId = id;
+}
+unsigned int PlotWidget::getId() const
+{
+    return mId;
 }
 
 void PlotWidget::replot()

@@ -9,6 +9,7 @@ CurveSingleton::CurveSingleton()
 
 void CurveSingleton::addCurve(Curve *curve)
 {
+    qDebug() << "CurveSingleton::addCurve - Adding curve "<<curve->title().text();
     mCurves[curve->getId()] = curve;
     emit newCurveAvailable(curve);
 }
