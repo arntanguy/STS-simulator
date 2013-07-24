@@ -74,6 +74,14 @@ void AbstractFunction::updateLinkedCurve()
     }
 }
 
+bool AbstractFunction::isDisplayed(unsigned int plotId) const
+{
+    if(mLinkedCurve != 0)
+        return mLinkedCurve->isAttached(plotId);
+    else
+        return false;
+}
+
 // ========================= VIRTUAL =========================
 void AbstractFunction::save(const QString &group)
 {

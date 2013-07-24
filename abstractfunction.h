@@ -45,6 +45,8 @@ public:
     unsigned int getCurveId() const;
     void updateLinkedCurve();
 
+    bool isDisplayed(unsigned int plotId) const;
+
 protected:
     void abstractsave(const QString &group);
 

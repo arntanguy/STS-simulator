@@ -173,10 +173,8 @@ void PlotControlDialog::initFromConfig()
         // Only show selected curves
         function = static_cast<AbstractFunction *>(item->data(Qt::UserRole).value<AbstractFunction *>());
         if(function != 0) {
-            qDebug() << "VALID FUNCTION";
             FunctionCurve *c = function->getCurve();
             if(c != 0) {
-                qDebug() << "VALID CURVE " << c->getId();
                 if( c->isAttached(mPlotId) ) {
                     qDebug() << "curve " << c->getId() << " enabled";
                     item->setCheckState(Qt::Checked);
@@ -193,10 +191,8 @@ void PlotControlDialog::initFromConfig()
             function = 0;
             function = static_cast<AbstractFunction *>(child->data(Qt::UserRole).value<AbstractFunction *>());
             if(function != 0) {
-            qDebug() << "VALID SUB FUNCTION";
                 FunctionCurve *c = function->getCurve();
                 if(c != 0) {
-            qDebug() << "VALID SUB CURVE " << c->getId();
                     if( c->isAttached(mPlotId) ) {
                         qDebug() << "curve " << c->getId() << " enabled";
                         child->setCheckState(Qt::Checked);
@@ -481,11 +477,13 @@ void PlotControlDialog::newFunctionAvailable()
             qDebug() << "add hierachical function to view";
             QStandardItem *parentItem = HelperFunctions::createFunctionItem(f);
             model->setItem(itemIndex++, parentItem);
+            if(hf->isDisplayed(mPlotId)) parentItem->setCheckState(Qt::Checked);
             mFunctionItems.append(parentItem);
 
             int subItemIndex = 0;
             foreach(AbstractFunction *af, hf->getFunctions()) {
                 QStandardItem * item = HelperFunctions::createFunctionItem(af);
+                if(af->isDisplayed(mPlotId)) item->setCheckState(Qt::Checked);
                 parentItem->setChild(subItemIndex++,item);
             }
         } else {
@@ -493,6 +491,7 @@ void PlotControlDialog::newFunctionAvailable()
             if(ff != 0) {
                 qDebug() << "Add normal function to view";
                 QStandardItem *Item = HelperFunctions::createFunctionItem(f);
+                if(ff->isDisplayed(mPlotId)) Item->setCheckState(Qt::Checked);
                 mFunctionItems.append(Item);
                 model->setItem( itemIndex++, Item );
             }
