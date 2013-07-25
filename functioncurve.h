@@ -22,6 +22,9 @@ public:
     void setResolution(int resolution);
     int getResolution() const;
 
+private:
+    void init();
+
 public Q_SLOTS:
     void updateData();
     void updateName(const QString &);
@@ -32,7 +35,6 @@ Q_SIGNALS:
 
 private:
     AbstractFunction *mFunction;
-    float mMin, mMax;
     QVector<double> mXData, mYData;
 
     int mResolution;

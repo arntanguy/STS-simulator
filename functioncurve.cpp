@@ -10,21 +10,19 @@
 
 FunctionCurve::FunctionCurve() : Curve()
 {
-    mFunction = 0;
-    mType = Curve::Function;
-    // XXX: manage resolution properly
-    mMin = 0;
-    mMax = 1000;
-//    setResolution(1000);
+    init();
 }
 
 FunctionCurve::FunctionCurve(unsigned int id) : Curve(id)
 {
+    init();
+}
+
+void FunctionCurve::init()
+{
     mFunction = 0;
     mType = Curve::Function;
-    mMin = 0;
-    mMax = 1000;
-//    setResolution(1000);
+    setResolution(1000);
 }
 
 void FunctionCurve::setFunction(AbstractFunction *f)
@@ -41,9 +39,8 @@ void FunctionCurve::setFunction(AbstractFunction *f)
 
 void FunctionCurve::setComputeRange(double min, double max, int resolution)
 {
-    if(min != mMin || max != mMax || resolution != getResolution()) {
-        mMin = min;
-        mMax = max;
+    if(min != getMin() || max != getMax() || resolution != getResolution()) {
+        setMinMax(getMin(), getMax());
         setResolution(resolution);
         mNeedsUpdate = true;
     }
@@ -102,8 +99,9 @@ void FunctionCurve::loadFromSettings()
     Curve::loadFromSettings();
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
     settings->beginGroup("Curves/"+QString::number(getId())+"/");
-    settings->value("resolution", 10);
+    setResolution(settings->value("resolution", 10).toInt());
     settings->endGroup();
+    update();
 }
 
 /// =============== SLOTS ==========================
@@ -117,14 +115,14 @@ void FunctionCurve::updateData()
         mYData.clear();
         double stepSize = 0;
         if(resolution != 0) {
-            stepSize = (mMax-mMin)/resolution;
+            stepSize = (getMax()-getMin())/resolution;
         } else {
             qDebug() << "FunctionCurve::updateData() - CRITICAL ERROR: Resolution is null, no data computed!";
             return;
         }
         qDebug() << "FunctionCurve::updateData() - updating data of " << mFunction->getName()
-                 << " with resolution: "<<resolution<<", stepsize: "<<stepSize<<", min: "<<mMin<<", max: "<<mMax;
-        double xval = mMin;
+                 << " with resolution: "<<resolution<<", stepsize: "<<stepSize<<", min: "<<getMin()<<", max: "<<getMax();
+        double xval = getMin();
         for(int i=0; i<resolution; i++) {
             double yval = 0;
             try {
