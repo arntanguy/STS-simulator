@@ -213,11 +213,6 @@ void PlotWidget::loadFromSettings()
     mSettings->endGroup();
 
 
-    // Curves must be added before that call!
-    mSettings->beginGroup("Plot/"+QString::number(mId)+"/precision");
-    setPrecision(mSettings->value("resolution", 1000).toDouble());
-    mSettings->endGroup();
-
     mSettings->beginGroup("Plot/"+QString::number(mId)+"/range");
     if(!mSettings->value("autoAbscissa", true).toBool()) {
         double min = mSettings->value("minAbscissa", -10.d).toDouble();
@@ -274,27 +269,4 @@ unsigned int PlotWidget::getId() const
 void PlotWidget::replot()
 {
     QwtPlot::replot();
-}
-
-/*!
- * \brief PlotWidget::setPrecision
- *  Assign the precision to the curves.
- *  It the new precision is different from the current function,
- *  calling this function will cause all the curves to be update (new values computed),
- *  and the full plot will have to be redrawn.
- *  This operation might be quite expensive, use with caution.
- * \param precision
- *  The new precision to apply (number of points to be computed).
- */
-void PlotWidget::setPrecision(int precision)
-{
-    QwtPlotItemList items = QwtPlotDict::itemList();
-    for(auto it = items.begin(); it != items.end(); it++) {
-        Curve *curve = 0;
-        curve = dynamic_cast<Curve *>(*it);
-        if(curve != 0) {
-            qDebug() << "Curve " << curve->title().text() ;
-            curve->setResolution(precision);
-        }
-    }
 }

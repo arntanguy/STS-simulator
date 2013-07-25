@@ -7,6 +7,7 @@
 #include "experimentaldata.h"
 #include "functionselectiondialog.h"
 #include "newfunctiondialog.h"
+#include "functioncurve.h"
 
 #include <QSettings>
 #include <QFileDialog>
@@ -65,6 +66,10 @@ void NewCurveDialog::loadFromCurve(Curve *curve)
     }
 
     if(mCurve->getType() == Curve::Experimental) {
+        ui->curveMin->setValue(curve->getMin());
+        ui->curveMax->setValue(curve->getMax());
+        ui->curveResolutionWidget->hide();
+
         // XXX: load settings outside of curve, not very clean, but works
         QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
         settings->beginGroup("Curves/"+QString::number(curve->getId()));
@@ -88,9 +93,11 @@ void NewCurveDialog::loadFromCurve(Curve *curve)
             ui->dataOrdinate->setCurrentIndex(index);
         }
 
+
         settings->endGroup();
     } else {
         ui->tabWidget->removeTab(1);
+        ui->curveResolutionWidget->show();
     }
 }
 
@@ -114,12 +121,22 @@ void NewCurveDialog::accept()
             QString ordinate = ui->dataOrdinate->itemData(ui->dataOrdinate->currentIndex()).toString();
             if(!abscissia.isEmpty() && !ordinate.isEmpty()) {
                 qDebug() << "NewCurveDialog::accept(): setting experimental curve data ("<<abscissia<<", "<<ordinate<<")" << endl;
+                qDebug() << "NewCurveDialog::accept(): min, max ("<<ui->curveMin->value()<<", "<<ui->curveMax->value()<<")" << endl;
+                mCurve->setMinMax(ui->curveMin->value(), ui->curveMax->value());
                 mCurve->setExperimentalData(fileName, abscissia, ordinate);
             }
     }
 
-    if(mCurve->getType() == Curve::Experimental)
+
+    if(mCurve->getType() == Curve::Experimental) {
         Singleton<CurveSingleton>::Instance().addCurve(mCurve);
+    } else {
+        FunctionCurve *c = dynamic_cast<FunctionCurve *>(mCurve);
+        if(c != 0) {
+            c->setResolution(ui->curveResolution->value());
+        }
+    }
+
 
     // Save the curve
     mCurve->save();

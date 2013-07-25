@@ -17,6 +17,10 @@ public:
 
     virtual void update();
     virtual void save();
+    virtual void loadFromSettings();
+
+    void setResolution(int resolution);
+    int getResolution() const;
 
 public Q_SLOTS:
     void updateData();
@@ -30,6 +34,8 @@ private:
     AbstractFunction *mFunction;
     float mMin, mMax;
     QVector<double> mXData, mYData;
+
+    int mResolution;
 };
 
 #endif // FUNCTIONCURVE_H

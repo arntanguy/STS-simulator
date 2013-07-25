@@ -21,9 +21,12 @@ public:
 
     void copyFromCurve(Curve *curve);
 
-    void setResolution(int resolution);
-    int getResolution() const {
-        return mResolution;
+    void setMinMax(double min, double max);
+    double getMin() const {
+        return mMin;
+    }
+    double getMax() const {
+        return mMax;
     }
 
     unsigned int getId() const {
@@ -42,6 +45,7 @@ public:
     void loadFromSettings();
 
     void setExperimentalData(const QString &experimentId, const QString &abscissiaColumnName, const QString &ordinateColumnName);
+    void updateExperimentalData();
 
     virtual void update();
     bool needsUpdate() const {
@@ -66,7 +70,8 @@ private:
     QString mExperimentalAbscissia, mExperimentalOrdinate;
     QString mExperimentalId;
 
-    int mResolution;
+    double mMin, mMax;
+
     static unsigned int mCurveStaticId;
     unsigned int mCurveId;
 

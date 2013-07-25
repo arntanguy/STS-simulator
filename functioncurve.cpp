@@ -2,6 +2,7 @@
 #include "abstractfunction.h"
 #include "muParser.h"
 #include "plotwidget.h"
+#include "projectsingleton.h"
 
 #include <QDebug>
 #include <QVector>
@@ -48,6 +49,27 @@ void FunctionCurve::setComputeRange(double min, double max, int resolution)
     }
 }
 
+/*!
+ * \brief Curve::setResolution
+ *  Sets the number of points to be computed for the curve
+ *  Careful, changing this value could result in all the points being recomputed,
+ *  which could be quite an expensive operation!
+ * \param resolution
+ */
+void FunctionCurve::setResolution(int resolution)
+{
+    if(mResolution != resolution) {
+        mNeedsUpdate = true;
+        mResolution = resolution;
+    }
+    update();
+}
+
+int FunctionCurve::getResolution() const
+{
+    return mResolution;
+}
+
 /// =============== VIRTUAL =========================
 void FunctionCurve::update()
 {
@@ -64,33 +86,24 @@ void FunctionCurve::update()
         }
         plot->replot();
     }
-//    emit functionUpdated();
 }
 
 void FunctionCurve::save()
 {
     Curve::save();
-    //if(mFunction->getType() == AbstractFunction::Function
-    //qDebug() << "Saving curve "<<mCurveId<<","<<title().text();
-    //QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
-    //settings->beginGroup("Curves/"+QString::number(mCurveId)+"/");
-    //qDebug() << "current group: " << settings->group();
-    //settings->setValue("id", mCurveId);
-    //settings->setValue("title", title().text());
-    //settings->setValue("resolution", mResolution);
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup("Curves/"+QString::number(getId())+"/");
+    settings->setValue("resolution", mResolution);
+    settings->endGroup();
+}
 
-    //settings->setValue("color", pen().color());
-    //settings->setValue("thickness", pen().width());
-    //settings->setValue("style", pen().style());
-    //settings->setValue("type", mType);
-    //if(mType == Curve::Experimental) {
-    //    if(mData != 0) {
-    //        settings->setValue("abscissia", mExperimentalAbscissia);
-    //        settings->setValue("ordinate", mExperimentalOrdinate);
-    //        settings->setValue("data", mData->getId());
-    //    }
-    //}
-    //settings->endGroup();
+void FunctionCurve::loadFromSettings()
+{
+    Curve::loadFromSettings();
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup("Curves/"+QString::number(getId())+"/");
+    settings->value("resolution", 10);
+    settings->endGroup();
 }
 
 /// =============== SLOTS ==========================
