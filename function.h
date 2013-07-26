@@ -77,7 +77,7 @@ private:
     void init();
     void cleanupVariables();
 
-private:
+protected:
     mu::Parser mParser;
 
     // Implicit variables factory

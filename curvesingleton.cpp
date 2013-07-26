@@ -3,6 +3,9 @@
 #include "curve.h"
 #include "functioncurve.h"
 
+#include "integralfunction.h"
+#include "functionssingleton.h"
+
 CurveSingleton::CurveSingleton()
 {
 }
@@ -54,6 +57,19 @@ void CurveSingleton::loadFromSettings()
             addCurve(curve);
         }
     }
+
+    //XXX: remove, just test
+    // ==========================================================
+    IntegralFunction *f = new IntegralFunction();
+    f->setName("IntegralFunction");
+    f->setExpression("e");
+    Singleton<FunctionsSingleton>::Instance().addFunction(f);
+    FunctionCurve *curve = new FunctionCurve();
+    curve->setTitle("Integral");
+    curve->setFunction(f);
+    addCurve(curve);
+    // ============================================================
+
 }
 
 void CurveSingleton::save()
