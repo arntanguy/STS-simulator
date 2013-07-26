@@ -13,6 +13,7 @@
 #include "hierarchicalfunctiondialog.h"
 #include "curve.h"
 #include "functioncurve.h"
+#include "integralfunction.h"
 #include "plotarea.h"
 #include "plotwidget.h"
 #include <qwt_plot.h>
@@ -472,21 +473,23 @@ void PlotControlDialog::newFunctionAvailable()
     QStringList fNames = fSingleton->getFunctionNames();
     foreach(QString fName, fNames) {
         AbstractFunction *f = fSingleton->getFunction(fName);
-        HierarchicalFunction *hf = dynamic_cast<HierarchicalFunction*>(f);
-        if(hf != 0) {
-            qDebug() << "add hierachical function to view";
-            QStandardItem *parentItem = HelperFunctions::createFunctionItem(f);
-            model->setItem(itemIndex++, parentItem);
-            if(hf->isDisplayed(mPlotId)) parentItem->setCheckState(Qt::Checked);
-            mFunctionItems.append(parentItem);
+        if(f->getType() == AbstractFunction::HierarchicalFunction) {
+            HierarchicalFunction *hf = dynamic_cast<HierarchicalFunction*>(f);
+            if(hf != 0) {
+                qDebug() << "add hierachical function to view";
+                QStandardItem *parentItem = HelperFunctions::createFunctionItem(f);
+                model->setItem(itemIndex++, parentItem);
+                if(hf->isDisplayed(mPlotId)) parentItem->setCheckState(Qt::Checked);
+                mFunctionItems.append(parentItem);
 
-            int subItemIndex = 0;
-            foreach(AbstractFunction *af, hf->getFunctions()) {
-                QStandardItem * item = HelperFunctions::createFunctionItem(af);
-                if(af->isDisplayed(mPlotId)) item->setCheckState(Qt::Checked);
-                parentItem->setChild(subItemIndex++,item);
+                int subItemIndex = 0;
+                foreach(AbstractFunction *af, hf->getFunctions()) {
+                    QStandardItem * item = HelperFunctions::createFunctionItem(af);
+                    if(af->isDisplayed(mPlotId)) item->setCheckState(Qt::Checked);
+                    parentItem->setChild(subItemIndex++,item);
+                }
             }
-        } else {
+        } else if(f->getType() == AbstractFunction::Function || f->getType() == AbstractFunction::Integral) {
             Function *ff = dynamic_cast<Function*>(f);
             if(ff != 0) {
                 qDebug() << "Add normal function to view";
@@ -496,7 +499,6 @@ void PlotControlDialog::newFunctionAvailable()
                 model->setItem( itemIndex++, Item );
             }
         }
-
     }
 }
 

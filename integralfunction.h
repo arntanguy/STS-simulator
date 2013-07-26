@@ -3,19 +3,28 @@
 
 #include "function.h"
 
+#include <QVector>
+
+struct IntegralData
+{
+    QVector<double> x;
+    QVector<double> y;
+};
+
 class IntegralFunction : public Function
 {
 public:
     IntegralFunction();
 
-    virtual double compute(double);
 
     virtual void save(const QString &group);
     virtual void loadFromConfig(const QString &group);
 
+    virtual double compute(double);
+    virtual IntegralData integrate(double min, double max, double resolution, double stepNumber);
+
 private:
     void init();
-    double integrate(double x);
 
 private:
     double mStepNumber;

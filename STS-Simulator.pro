@@ -64,7 +64,8 @@ SOURCES += main.cpp\
     unittest.cpp \
     functionvariableswidget.cpp \
     plotsingleton.cpp \
-    integralfunction.cpp
+    integralfunction.cpp \
+    integralcurve.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -100,7 +101,8 @@ HEADERS  += mainwindow.h \
     unittest.h \
     functionvariableswidget.h \
     plotsingleton.h \
-    integralfunction.h
+    integralfunction.h \
+    integralcurve.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \

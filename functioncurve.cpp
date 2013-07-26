@@ -30,7 +30,7 @@ void FunctionCurve::setFunction(AbstractFunction *f)
     if(f != mFunction) {
         mFunction = f;
         setTitle(f->getName());
-        connect(mFunction, SIGNAL(needsRecompute()), this, SLOT(updateData()));
+        connect(mFunction, SIGNAL(needsRecompute()), this, SLOT(slotUpdateData()));
         connect(mFunction, SIGNAL(nameUpdated(const QString &)), this, SLOT(updateName(const QString &)));
         mNeedsUpdate = true;
         update();
@@ -67,6 +67,7 @@ int FunctionCurve::getResolution() const
     return mResolution;
 }
 
+
 /// =============== VIRTUAL =========================
 void FunctionCurve::update()
 {
@@ -85,26 +86,6 @@ void FunctionCurve::update()
     }
 }
 
-void FunctionCurve::save()
-{
-    Curve::save();
-    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
-    settings->beginGroup("Curves/"+QString::number(getId())+"/");
-    settings->setValue("resolution", mResolution);
-    settings->endGroup();
-}
-
-void FunctionCurve::loadFromSettings()
-{
-    Curve::loadFromSettings();
-    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
-    settings->beginGroup("Curves/"+QString::number(getId())+"/");
-    setResolution(settings->value("resolution", 10).toInt());
-    settings->endGroup();
-    update();
-}
-
-/// =============== SLOTS ==========================
 // XXX: FIXME: Huge value make program crash (std::bad_alloc)
 void FunctionCurve::updateData()
 {
@@ -144,6 +125,31 @@ void FunctionCurve::updateData()
     } else {
         qDebug() << "FunctionCurve::updateData() - error, null function";
     }
+}
+
+void FunctionCurve::save()
+{
+    Curve::save();
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup("Curves/"+QString::number(getId())+"/");
+    settings->setValue("resolution", mResolution);
+    settings->endGroup();
+}
+
+void FunctionCurve::loadFromSettings()
+{
+    Curve::loadFromSettings();
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup("Curves/"+QString::number(getId())+"/");
+    setResolution(settings->value("resolution", 10).toInt());
+    settings->endGroup();
+    update();
+}
+
+/// =============== SLOTS ==========================
+void FunctionCurve::slotUpdateData()
+{
+    updateData();
 }
 
 void FunctionCurve::updateName(const QString &name)

@@ -10,6 +10,7 @@ IntegralFunction::IntegralFunction() : Function()
 
 void IntegralFunction::init()
 {
+    setType(mType = AbstractFunction::Integral);
     mBaseGroup = "Functions/IntegralFunction/";
     mStepNumber = 100;
     mLowerVal = 0;
@@ -17,37 +18,55 @@ void IntegralFunction::init()
 }
 
 /**
- * Integrate by using midpoint method
- * XXX: Works but slow
+ * Integrate by using optimized midpoint method
+ * @param min
+ *  Min x value
+ * @param max
+ *  Max x value
+ * @param resolution
+ *  Number of points to calculate I(V=min), .... , I(V=max)
+ * @param stepNumber
+ *  Number of step for each integral computation (i.e, there will be stepNumber steps
+ *  between min, and min + (max-min)/resolution
  **/
-double IntegralFunction::integrate(double x)
+IntegralData IntegralFunction::integrate(double min, double max, double resolution, double stepNumber)
 {
-    qDebug() << "IntegralFunction::integrate("<<x<<")";
-    if(mStepNumber == 0) {
+    qDebug() << "IntegralFunction::integrate(min: "<<min<<", max: "<<max<<", resolution: "<<resolution<<", stepNumber: "<<stepNumber<<")";
+
+    if(resolution == 0 || stepNumber == 0) {
         qDebug() << "FATAL ERROR: NULL STEP NUMBER";
         exit(1);
     }
 
-    double deltaX = (double)(std::abs(x-mLowerVal))/(double)mStepNumber;
+    double step = std::abs(max-min)/resolution;
+    double deltaX = (double)(std::abs(max-min)/resolution)/(double)stepNumber;
     qDebug() << "IntegralFunction::integrate() -- step size deltaX="<<deltaX;
 
-    mParser.DefineVar(mVariable.toStdString(), &x);
+    IntegralData data;
 
     double result = 0;
-    double e = mLowerVal;
-    while(e < x) {
-        mParser.DefineVar(mIntegrationVariable.toStdString(), &e);
-        double h0 = mParser.Eval();
-        e += deltaX;
-        double h1 = mParser.Eval();
-        result += deltaX * (h0 + h1)/2.d;
+    double x = min;
+    double e = min;
+    mParser.DefineVar(mVariable.toStdString(), &x);
+    mParser.DefineVar(mIntegrationVariable.toStdString(), &e);
+
+    for(; x<max; x += step) {
+        while(e < x) {
+            double h0 = mParser.Eval();
+            e += deltaX;
+            double h1 = mParser.Eval();
+            result += deltaX * (h0 + h1)/2.d;
+        }
+        data.x.append(x);
+        data.y.append(result);
     }
-    return result;
+    return data;
 }
 
 double IntegralFunction::compute(double x)
 {
-    return integrate(x);
+    qDebug() << "XXX: compute individual integral values undefined. Use integrate(...) instead";
+    return -1;
 }
 
 void IntegralFunction::save(const QString &group)

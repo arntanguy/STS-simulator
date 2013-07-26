@@ -14,7 +14,7 @@ class AbstractFunction : public QObject
     Q_OBJECT
 
 public:
-    enum FunctionType { Function, HierarchicalFunction, Unknown};
+    enum FunctionType { Function, HierarchicalFunction, Integral, Unknown};
 
 public:
     AbstractFunction(QObject *parent=0);

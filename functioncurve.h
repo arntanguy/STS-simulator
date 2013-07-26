@@ -24,19 +24,21 @@ public:
 
 private:
     void init();
+    virtual void updateData();
 
 public Q_SLOTS:
-    void updateData();
+    void slotUpdateData();
     void updateName(const QString &);
 
 Q_SIGNALS:
     void functionUpdated(AbstractFunction *);
     void functionDataUpdated(AbstractFunction *);
 
-private:
-    AbstractFunction *mFunction;
+protected:
     QVector<double> mXData, mYData;
+    AbstractFunction *mFunction;
 
+private:
     int mResolution;
 };
 
