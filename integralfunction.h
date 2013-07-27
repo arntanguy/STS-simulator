@@ -20,11 +20,15 @@ public:
     virtual void save(const QString &group);
     virtual void loadFromConfig(const QString &group);
 
+    void setIntegrationVariable(const QString &variable);
+    QString getIntegrationVariable() const;
+
     virtual double compute(double);
     virtual IntegralData integrate(double min, double max, double resolution, double stepNumber);
 
 private:
     void init();
+    void setFunctionsIntegrationVariable();
 
 private:
     double mStepNumber;

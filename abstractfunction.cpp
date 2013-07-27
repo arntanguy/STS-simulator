@@ -121,6 +121,10 @@ QString AbstractFunction::getGroup() const
     return mBaseGroup + mName;
 }
 
+void AbstractFunction::setImplicitVariable(const QString& variable, double* value)
+{
+}
+
 // ========================== SLOTS =========================
 void AbstractFunction::updateLinkedCurve(QString var, double val)
 {

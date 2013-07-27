@@ -1,5 +1,7 @@
 #include "function.h"
 #include "projectsingleton.h"
+#include "variablefactory.h"
+#include "muParser.h"
 
 #include <QDebug>
 #include <iostream>
@@ -21,7 +23,7 @@ using namespace mu;
 double* addVariable(const char *a_szName, void *pUserVariableFactory)
 {
     std::cout << "Generating new variable \""
-              << a_szName << "\"" << std::endl;
+        << a_szName << "\"" << std::endl;
 
     // Use the variable factory passed as user data to create a new variable
     VariableFactory *varFactory= static_cast<VariableFactory*>(pUserVariableFactory);
@@ -51,6 +53,7 @@ Function::Function(Function const& toCopy)
 Function::~Function()
 {
     delete mImplicitVarFactory;
+    delete mParser;
 }
 
 // ================================= PRIVATE =================================
@@ -58,11 +61,12 @@ void Function::init()
 {
     setType(AbstractFunction::Function);
 
+    mParser = new mu::Parser();
     mImplicitVarFactory = new VariableFactory();
     mVariable = "V";
 
     // Defines the variable factory used for implicit variable declaration.
-    mParser.SetVarFactory(addVariable, mImplicitVarFactory);
+    mParser->SetVarFactory(addVariable, mImplicitVarFactory);
 
     mBaseGroup = "Functions/Function/";
 }
@@ -76,15 +80,15 @@ void Function::init()
 void Function::cleanupVariables()
 {
     // Cleanup parser vars (values will be retained by the variablefactory)
-    mParser.ClearVar();
+    mParser->ClearVar();
     // Evaluate new expressions
-    mParser.Eval();
+    mParser->Eval();
 
     /**
      * Queries all used variable in expression
      **/
     // Get the map with the variables
-    varmap_type variables = mParser.GetVar();
+    varmap_type variables = mParser->GetVar();
 
     varmap_type::const_iterator item = variables.begin();
     QStringList used;
@@ -100,9 +104,9 @@ void Function::cleanupVariables()
 // ===================================== PUBLIC =========================================
 void Function::setExpression(const QString &exp)
 {
-    if(exp.toStdString() != mParser.GetExpr()) {
+    if(exp.toStdString() != mParser->GetExpr()) {
 
-        mParser.SetExpr(exp.toStdString());
+        mParser->SetExpr(exp.toStdString());
 
         if(isValidExpression()) {
             cleanupVariables();
@@ -113,10 +117,31 @@ void Function::setExpression(const QString &exp)
     }
 }
 
+QString Function::getExpression() const {
+    return mParser->GetExpr().c_str();
+}
+
+bool Function::isValidExpression() const {
+    try {
+        mParser->Eval();
+    } catch (...) {
+        return false;
+    }
+    return true;
+}
+
+QString Function::getError() const {
+    try {
+        mParser->Eval();
+    } catch(mu::ParserError &e) {
+        return e.GetMsg().c_str();
+    } catch(...) {
+    }
+}
 double Function::computeOnly(double x)
 {
-    mParser.DefineVar(mVariable.toStdString(), &x);
-    return mParser.Eval();
+    mParser->DefineVar(mVariable.toStdString(), &x);
+    return mParser->Eval();
 }
 
 void Function::setImplicitVariable(const QString &varName, double value)
@@ -133,16 +158,16 @@ bool Function::setParameters(const QString &parameters)
 {
     if(mParameters != parameters) {
         qDebug() << "Function::setParameters - setting " << parameters;
-        if(checkParameters(parameters)) {
-            qDebug() << "Function::setParameters - valid" << parameters;
-            mNeedsUpdate = true;
-            mParameters = parameters;
-            emit needsRecompute();
-            return true;
-        } else {
-            qDebug() << "Function::setParameters - INVALID" << parameters;
-            return false;
-        }
+        //if(checkParameters(parameters)) {
+        qDebug() << "Function::setParameters - valid" << parameters;
+        mNeedsUpdate = true;
+        mParameters = parameters;
+        emit needsRecompute();
+        return true;
+        //} else {
+        //qDebug() << "Function::setParameters - INVALID" << parameters;
+        //return false;
+        //}
     } else {
         // Nothing to do
         return true;
@@ -166,8 +191,8 @@ double Function::compute(double x)
 {
     qDebug() << "Function::compute("<<x<<")";
     if(mParameters.isEmpty()) {
-        mParser.DefineVar(mVariable.toStdString(), &x);
-        return mParser.Eval();
+        mParser->DefineVar(mVariable.toStdString(), &x);
+        return mParser->Eval();
     } else {
         return compute(mParameters, x);
     }
@@ -193,7 +218,7 @@ double Function::compute(const QString& parameters, double x)
     qDebug() << "Function::compute(parameters: " << parameters <<", x="<<x<<")";
 
     // Define x value in function parser
-    mParser.DefineVar(getVariable().toStdString(), &x);
+    mParser->DefineVar(getVariable().toStdString(), &x);
 
     /**
      * Create a parser for the parameters
@@ -271,13 +296,13 @@ bool Function::checkParameters(const QString &parameters) const
 
 bool Function::hasVariable(const QString &name) const
 {
-    varmap_type variables = mParser.GetVar();
-    return mParser.GetVar().find(name.toStdString()) != variables.end();
+    varmap_type variables = mParser->GetVar();
+    return mParser->GetVar().find(name.toStdString()) != variables.end();
 }
 
 double* Function::getVariable(const QString &name)
 {
-    varmap_type variables = mParser.GetVar();
+    varmap_type variables = mParser->GetVar();
     varmap_type::iterator it = variables.find(name.toStdString());
     if(it != variables.end()) {
         return it->second;

@@ -8,6 +8,7 @@
 namespace Ui {
 class FunctionVariablesWidget;
 }
+
 class Function;
 class ValueSelector;
 

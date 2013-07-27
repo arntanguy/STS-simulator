@@ -47,6 +47,10 @@ public:
 
     bool isDisplayed(unsigned int plotId) const;
 
+    // XXX: ugly hack because using Function in integralfunction.cpp wouldn't be accepted by compiler for some reason.
+    // Get rid of this virtual function and fix it
+    virtual void setImplicitVariable(const QString& variable, double* value);
+
 protected:
     void abstractsave(const QString &group);
 

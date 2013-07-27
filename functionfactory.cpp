@@ -1,5 +1,6 @@
 #include "functionfactory.h"
 #include "functionssingleton.h"
+#include "function.h"
 
 FunctionFactory::FunctionFactory()
 {

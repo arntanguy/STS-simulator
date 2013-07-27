@@ -1,13 +1,18 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 
-#include "muParser.h"
-#include "variablefactory.h"
 #include "abstractfunction.h"
 
 #include <QObject>
 #include <QString>
 #include <QMetaType>
+
+
+class VariableFactory;
+namespace mu
+{
+    class Parser;
+}
 
 double* addVariable(const char *a_szName, void *pUserVariableFactory);
 
@@ -21,9 +26,9 @@ public:
     ~Function();
 
     void setExpression(const QString &exp);
-    QString getExpression() const {
-        return mParser.GetExpr().c_str();
-    }
+    QString getExpression() const;
+    bool isValidExpression() const;
+    QString getError() const;
 
     void setImplicitVariable(const QString &varName, double value);
     VariableFactory* getVariableFactory() {
@@ -38,23 +43,6 @@ public:
     bool setParameters(const QString &parameters);
     QString getParameters() const;
 
-    bool isValidExpression() const {
-        try {
-            mParser.Eval();
-        } catch (...) {
-            return false;
-        }
-        return true;
-    }
-
-    QString getError() const {
-        try {
-            mParser.Eval();
-        } catch(mu::ParserError &e) {
-            return e.GetMsg().c_str();
-        } catch(...) {
-        }
-    }
 
     double compute(double x);
 
@@ -90,7 +78,7 @@ private:
 private:
     QString mParameters;
 protected:
-    mu::Parser mParser;
+    mu::Parser *mParser;
 
     // Implicit variables factory
     VariableFactory *mImplicitVarFactory;

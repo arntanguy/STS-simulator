@@ -2,6 +2,7 @@
 #include "projectsingleton.h"
 #include "curve.h"
 #include "functioncurve.h"
+#include "variablefactory.h"
 
 #include "function.h"
 #include "integralfunction.h"

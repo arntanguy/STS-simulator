@@ -3,8 +3,8 @@
 
 #include <QMap>
 #include "singleton.h"
-#include "abstractfunction.h"
-//class Function;
+
+class AbstractFunction;
 
 class FunctionsSingleton
 {

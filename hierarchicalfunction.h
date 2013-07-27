@@ -34,7 +34,7 @@ public Q_SLOTS:
 private:
     void init();
 
-private:
+protected:
     QList<AbstractFunction *> mFunctions;
 };
 

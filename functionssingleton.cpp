@@ -2,6 +2,7 @@
 #include "projectsingleton.h"
 #include "function.h"
 #include "hierarchicalfunction.h"
+#include "abstractfunction.h"
 
 #include <QStringList>
 #include <QDebug>

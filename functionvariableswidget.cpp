@@ -5,6 +5,7 @@
 #include "function.h"
 #include "valueselector.h"
 #include "helperfunctions.h"
+#include "variablefactory.h"
 
 #include <QDebug>
 #include <QLabel>

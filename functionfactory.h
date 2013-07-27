@@ -1,7 +1,9 @@
 #ifndef FUNCTIONFACTORY_H
 #define FUNCTIONFACTORY_H
 
-#include "function.h"
+class Function;
+
+#include <QString>
 
 class FunctionFactory
 {

@@ -4,6 +4,7 @@
 #include "functionssingleton.h"
 #include "function.h"
 #include "valueselector.h"
+#include "variablefactory.h"
 
 #include <QStandardItemModel>
 #include <QStandardItem>
