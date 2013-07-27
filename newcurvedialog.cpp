@@ -8,6 +8,7 @@
 #include "functionselectiondialog.h"
 #include "newfunctiondialog.h"
 #include "functioncurve.h"
+#include "integralcurve.h"
 
 #include <QSettings>
 #include <QFileDialog>
@@ -66,7 +67,23 @@ void NewCurveDialog::loadFromCurve(Curve *curve)
         ui->curveMin->setValue(curve->getMin());
         ui->curveMax->setValue(curve->getMax());
 
-        if(mCurve->getType() == Curve::Experimental) {
+        if(mCurve->getType() != Curve::Experimental) {
+            ui->tabWidget->removeTab(1);
+            ui->curveResolutionWidget->show();
+            FunctionCurve *c = dynamic_cast<FunctionCurve*>(curve);
+            if(c != 0)
+                ui->curveResolution->setValue(c->getResolution());
+
+            if(mCurve->getType() == Curve::Integral) {
+                IntegralCurve *integralCurve = dynamic_cast<IntegralCurve*>(mCurve);
+                if(integralCurve != 0) {
+                    ui->curveIntegralResolution->setValue(integralCurve->getStepNumber());
+                    ui->curveIntegralResolutionWidget->show();
+                }
+            } else {
+                ui->curveIntegralResolutionWidget->hide();
+            }
+        } else {
             ui->curveResolutionWidget->hide();
 
             // XXX: load settings outside of curve, not very clean, but works
@@ -94,12 +111,6 @@ void NewCurveDialog::loadFromCurve(Curve *curve)
             settings->endGroup();
 
 
-        } else {
-            ui->tabWidget->removeTab(1);
-            ui->curveResolutionWidget->show();
-            FunctionCurve *c = dynamic_cast<FunctionCurve*>(curve);
-            if(c != 0)
-                ui->curveResolution->setValue(c->getResolution());
         }
     }
 }
@@ -134,6 +145,12 @@ void NewCurveDialog::accept()
     if(mCurve->getType() == Curve::Experimental) {
         Singleton<CurveSingleton>::Instance().addCurve(mCurve);
     } else {
+        if(mCurve->getType() == Curve::Integral) {
+            IntegralCurve *c = dynamic_cast<IntegralCurve*>(mCurve);
+            if(c != 0) {
+                c->setStepNumber(ui->curveIntegralResolution->value());
+            }
+        }
         FunctionCurve *c = dynamic_cast<FunctionCurve *>(mCurve);
         if(c != 0) {
             c->setResolution(ui->curveResolution->value());

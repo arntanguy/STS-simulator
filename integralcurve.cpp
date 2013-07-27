@@ -1,6 +1,7 @@
 #include "integralcurve.h"
 #include "plotwidget.h"
 #include "integralfunction.h"
+#include "projectsingleton.h"
 
 IntegralCurve::IntegralCurve() : FunctionCurve()
 {
@@ -60,9 +61,20 @@ void IntegralCurve::updateData()
 void IntegralCurve::save()
 {
     FunctionCurve::save();
+
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup("Curves/"+QString::number(getId()));
+    settings->setValue("integralResolution", getStepNumber());
+    settings->endGroup();
 }
 
 void IntegralCurve::loadFromSettings()
 {
     FunctionCurve::loadFromSettings();
+
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup("Curves/"+QString::number(getId()));
+    setStepNumber(settings->value("integralResolution", 10).toInt());
+    settings->endGroup();
+    update();
 }

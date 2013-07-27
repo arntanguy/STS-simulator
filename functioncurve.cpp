@@ -138,7 +138,9 @@ void FunctionCurve::save()
 
 void FunctionCurve::loadFromSettings()
 {
+    qDebug() << "FunctionCurve::loadFromSettings()";
     Curve::loadFromSettings();
+
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
     settings->beginGroup("Curves/"+QString::number(getId())+"/");
     setResolution(settings->value("resolution", 10).toInt());

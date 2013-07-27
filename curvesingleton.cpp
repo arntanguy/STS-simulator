@@ -51,9 +51,14 @@ void CurveSingleton::loadFromSettings()
             qDebug() << "Loading experimental curve " << curve->getId();
             curve->loadFromSettings();
             addCurve(curve);
-        } else {
+        } else if(type == Curve::Function){
             FunctionCurve *curve = new FunctionCurve(id);
             qDebug() << "Loading Function curve " << curve->getId();
+            curve->loadFromSettings();
+            addCurve(curve);
+        } else {
+            IntegralCurve *curve = new IntegralCurve(id);
+            qDebug() << "Loading Integral curve " << curve->getId();
             curve->loadFromSettings();
             addCurve(curve);
         }
