@@ -1,7 +1,7 @@
 #ifndef INTEGRALFUNCTION_H
 #define INTEGRALFUNCTION_H
 
-#include "function.h"
+#include "hierarchicalfunction.h"
 
 #include <QVector>
 
@@ -11,7 +11,7 @@ struct IntegralData
     QVector<double> y;
 };
 
-class IntegralFunction : public Function
+class IntegralFunction : public HierarchicalFunction
 {
 public:
     IntegralFunction();

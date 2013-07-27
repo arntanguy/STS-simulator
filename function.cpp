@@ -27,7 +27,7 @@ double* addVariable(const char *a_szName, void *pUserVariableFactory)
     VariableFactory *varFactory= static_cast<VariableFactory*>(pUserVariableFactory);
     varFactory->createNewVariable(a_szName);
 
-    *varFactory->getVariableAddress(a_szName) = 2;
+    *varFactory->getVariableAddress(a_szName) = 0;
     return varFactory->getVariableAddress(a_szName);
 }
 
@@ -127,6 +127,71 @@ double Function::compute(double x)
 {
     mParser.DefineVar(mVariable.toStdString(), &x);
     return mParser.Eval();
+}
+
+/**
+ * @brief Function::compute
+ *  Computes the value with parameters f(parameters)
+ * @param parameters
+ *  Any valid expression composed of constants and variables from the function expression
+ *  Ex:
+ *  f(V) = V+e, with e=10
+ *  compute("V+2*e", 1) => f(V+2*e) => f(21) = 31
+ * @param x
+ *  Value for which to compute
+ * @return
+ *  Computed value f(parameters)
+ */
+double Function::compute(const QString& parameters, double x)
+{
+    qDebug() << "Function::compute(parameters: " << parameters <<", x="<<x<<")";
+
+    // Define x value in function parser
+    mParser.DefineVar(getVariable().toStdString(), &x);
+
+    /**
+     * Create a parser for the parameters
+     **/
+    mu::Parser pParser;
+    pParser.SetExpr(parameters.toStdString());
+    VariableFactory pVarFact;
+    pParser.SetVarFactory(addVariable, &pVarFact);
+    pParser.Eval();
+
+    /**
+     * This loop check if parameters variables are in the function expression
+     * If they are, the parameter variable is set to the function value
+     * Otherwise an exception is (XXX) thrown
+     **/
+    // Get the map with the variables
+    varmap_type variables = pParser.GetVar();
+    varmap_type::const_iterator item = variables.begin();
+    // Query the variables
+    for (; item!=variables.end(); ++item)
+    {
+        double* pVal = 0;
+        pVal = getVariable(item->first.c_str());
+        if(pVal != 0) {
+            pParser.DefineVar(item->first, pVal);
+        } else {
+            // XXX: throw error!
+            return -1;
+        }
+    }
+
+    double parameterValue = pParser.Eval();
+    return compute(parameterValue);
+}
+
+double* Function::getVariable(const QString &name)
+{
+    varmap_type variables = mParser.GetVar();
+    varmap_type::iterator it = variables.find(name.toStdString());
+    if(it != variables.end()) {
+        return it->second;
+    } else {
+        return 0;
+    }
 }
 
 // ============================= VIRTUAL =================================

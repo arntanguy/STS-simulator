@@ -3,6 +3,7 @@
 #include "curve.h"
 #include "functioncurve.h"
 
+#include "function.h"
 #include "integralfunction.h"
 #include "integralcurve.h"
 #include "functionssingleton.h"
@@ -68,7 +69,12 @@ void CurveSingleton::loadFromSettings()
     // ==========================================================
     IntegralFunction *f = new IntegralFunction();
     f->setName("IntegralFunction");
-    f->setExpression("e");
+    Function *f1 = new Function();
+    f1->setName("f1");
+    f1->setExpression("V+e");
+    f1->getVariableFactory()->setValue("e", 10);
+    qDebug() << "RESULT: "<<f1->compute("V+2*e", 1);
+    f->addFunction(f1);
     Singleton<FunctionsSingleton>::Instance().addFunction(f);
     IntegralCurve *curve = new IntegralCurve();
     curve->setTitle("Integral");

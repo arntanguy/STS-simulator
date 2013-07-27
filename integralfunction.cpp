@@ -3,7 +3,7 @@
 
 #include <QDebug>
 
-IntegralFunction::IntegralFunction() : Function()
+IntegralFunction::IntegralFunction() : HierarchicalFunction()
 {
     init();
 }
@@ -33,33 +33,33 @@ IntegralData IntegralFunction::integrate(double min, double max, double resoluti
 {
     qDebug() << "IntegralFunction::integrate(min: "<<min<<", max: "<<max<<", resolution: "<<resolution<<", stepNumber: "<<stepNumber<<")";
 
-    if(resolution == 0 || stepNumber == 0) {
-        qDebug() << "FATAL ERROR: NULL STEP NUMBER";
-        exit(1);
-    }
+    //if(resolution == 0 || stepNumber == 0) {
+    //    qDebug() << "FATAL ERROR: NULL STEP NUMBER";
+    //    exit(1);
+    //}
 
-    double step = std::abs(max-min)/resolution;
-    double deltaX = (double)(std::abs(max-min)/resolution)/(double)stepNumber;
-    qDebug() << "IntegralFunction::integrate() -- step size deltaX="<<deltaX;
+    //double step = std::abs(max-min)/resolution;
+    //double deltaX = (double)(std::abs(max-min)/resolution)/(double)stepNumber;
+    //qDebug() << "IntegralFunction::integrate() -- step size deltaX="<<deltaX;
 
     IntegralData data;
 
-    double result = 0;
-    double x = min;
-    double e = min;
-    mParser.DefineVar(mVariable.toStdString(), &x);
-    mParser.DefineVar(mIntegrationVariable.toStdString(), &e);
+    //double result = 0;
+    //double x = min;
+    //double e = min;
+    //mParser.DefineVar(mVariable.toStdString(), &x);
+    //mParser.DefineVar(mIntegrationVariable.toStdString(), &e);
 
-    for(; x<max; x += step) {
-        while(e < x) {
-            double h0 = mParser.Eval();
-            e += deltaX;
-            double h1 = mParser.Eval();
-            result += deltaX * (h0 + h1)/2.d;
-        }
-        data.x.append(x);
-        data.y.append(result);
-    }
+    //for(; x<max; x += step) {
+    //    while(e < x) {
+    //        double h0 = mParser.Eval();
+    //        e += deltaX;
+    //        double h1 = mParser.Eval();
+    //        result += deltaX * (h0 + h1)/2.d;
+    //    }
+    //    data.x.append(x);
+    //    data.y.append(result);
+    //}
     return data;
 }
 
@@ -71,10 +71,10 @@ double IntegralFunction::compute(double x)
 
 void IntegralFunction::save(const QString &group)
 {
-    Function::save(getGroup());
+    HierarchicalFunction::save(getGroup());
 }
 
 void IntegralFunction::loadFromConfig(const QString &group)
 {
-    Function::loadFromConfig(getGroup());
+    HierarchicalFunction::loadFromConfig(getGroup());
 }

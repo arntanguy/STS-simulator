@@ -29,6 +29,10 @@ public:
     VariableFactory* getVariableFactory() {
         return mImplicitVarFactory;
     }
+    QString getVariable() const {
+        return AbstractFunction::getVariable();
+    }
+    double* getVariable(const QString &name);
 
 
     bool isValidExpression() const {
@@ -50,6 +54,7 @@ public:
     }
 
     double compute(double x);
+    double compute(const QString& parameters, double x);
 
     double operator() (double x) {
         return compute(x);
