@@ -32,8 +32,11 @@ public:
     QString getVariable() const {
         return AbstractFunction::getVariable();
     }
+    bool hasVariable(const QString &name) const;
     double* getVariable(const QString &name);
 
+    bool setParameters(const QString &parameters);
+    QString getParameters() const;
 
     bool isValidExpression() const {
         try {
@@ -54,7 +57,6 @@ public:
     }
 
     double compute(double x);
-    double compute(const QString& parameters, double x);
 
     double operator() (double x) {
         return compute(x);
@@ -81,7 +83,12 @@ Q_SIGNALS:
 private:
     void init();
     void cleanupVariables();
+    double compute(const QString& parameters, double x);
+    bool checkParameters(const QString &parameters) const;
+    double computeOnly(double x);
 
+private:
+    QString mParameters;
 protected:
     mu::Parser mParser;
 

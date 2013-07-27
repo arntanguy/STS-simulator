@@ -113,6 +113,12 @@ void Function::setExpression(const QString &exp)
     }
 }
 
+double Function::computeOnly(double x)
+{
+    mParser.DefineVar(mVariable.toStdString(), &x);
+    return mParser.Eval();
+}
+
 void Function::setImplicitVariable(const QString &varName, double value)
 {
     if(mImplicitVarFactory->hasVariable(varName)) {
@@ -123,10 +129,48 @@ void Function::setImplicitVariable(const QString &varName, double value)
     emit needsRecompute();
 }
 
+bool Function::setParameters(const QString &parameters)
+{
+    if(mParameters != parameters) {
+        qDebug() << "Function::setParameters - setting " << parameters;
+        if(checkParameters(parameters)) {
+            qDebug() << "Function::setParameters - valid" << parameters;
+            mNeedsUpdate = true;
+            mParameters = parameters;
+            emit needsRecompute();
+            return true;
+        } else {
+            qDebug() << "Function::setParameters - INVALID" << parameters;
+            return false;
+        }
+    } else {
+        // Nothing to do
+        return true;
+    }
+}
+QString Function::getParameters() const
+{
+    return mParameters;
+}
+
+/**
+ * @brief Function::compute
+ *  Computes the value (with parameters if set)
+ *  If mParameters (set by using setParameters) is not null, the parameters will be used
+ * @param x
+ *  Value for which to compute
+ * @return
+ *  Computed value f(parameters)
+ */
 double Function::compute(double x)
 {
-    mParser.DefineVar(mVariable.toStdString(), &x);
-    return mParser.Eval();
+    qDebug() << "Function::compute("<<x<<")";
+    if(mParameters.isEmpty()) {
+        mParser.DefineVar(mVariable.toStdString(), &x);
+        return mParser.Eval();
+    } else {
+        return compute(mParameters, x);
+    }
 }
 
 /**
@@ -137,6 +181,8 @@ double Function::compute(double x)
  *  Ex:
  *  f(V) = V+e, with e=10
  *  compute("V+2*e", 1) => f(V+2*e) => f(21) = 31
+ *
+ *  If left empty, compute(x) will be called instead
  * @param x
  *  Value for which to compute
  * @return
@@ -174,13 +220,59 @@ double Function::compute(const QString& parameters, double x)
         if(pVal != 0) {
             pParser.DefineVar(item->first, pVal);
         } else {
+            std::cout << "ERROR: " << item->first << std::endl;
             // XXX: throw error!
             return -1;
         }
+        //std::cout << "Variable " << item->first << ", value: " << pParser.GetVar()[item->first] << std::endl;
     }
 
     double parameterValue = pParser.Eval();
-    return compute(parameterValue);
+    return computeOnly(parameterValue);
+}
+
+/**
+ * @brief Function::checkParameters
+ *  Checks if the parameter variables are in the expression
+ * @return
+ *  True if the parameters are valid
+ *  False otherwise
+ **/
+bool Function::checkParameters(const QString &parameters) const
+{
+    if(parameters.isEmpty()) {
+        return true;
+    }
+
+    /**
+     * Create a parser for the parameters
+     **/
+    mu::Parser pParser;
+    pParser.SetExpr(parameters.toStdString());
+    VariableFactory pVarFact;
+    pParser.SetVarFactory(addVariable, &pVarFact);
+    pParser.Eval();
+
+    /**
+     * This loop check if parameters variables are in the function expression
+     **/
+    // Get the map with the variables
+    varmap_type variables = pParser.GetVar();
+    varmap_type::const_iterator item = variables.begin();
+    // Query the variables
+    for (; item!=variables.end(); ++item)
+    {
+        if(!hasVariable(item->first.c_str())) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool Function::hasVariable(const QString &name) const
+{
+    varmap_type variables = mParser.GetVar();
+    return mParser.GetVar().find(name.toStdString()) != variables.end();
 }
 
 double* Function::getVariable(const QString &name)
