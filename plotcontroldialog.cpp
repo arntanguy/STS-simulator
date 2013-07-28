@@ -14,6 +14,7 @@
 #include "curve.h"
 #include "functioncurve.h"
 #include "integralfunction.h"
+#include "integralcurve.h"
 #include "plotarea.h"
 #include "plotwidget.h"
 #include <qwt_plot.h>
@@ -489,7 +490,7 @@ void PlotControlDialog::newFunctionAvailable()
                     parentItem->setChild(subItemIndex++,item);
                 }
             }
-        } else if(f->getType() == AbstractFunction::Function || f->getType() == AbstractFunction::Integral) {
+        } else if(f->getType() == AbstractFunction::Function) {
             Function *ff = dynamic_cast<Function*>(f);
             if(ff != 0) {
                 qDebug() << "Add normal function to view";
@@ -497,6 +498,22 @@ void PlotControlDialog::newFunctionAvailable()
                 if(ff->isDisplayed(mPlotId)) Item->setCheckState(Qt::Checked);
                 mFunctionItems.append(Item);
                 model->setItem( itemIndex++, Item );
+            }
+        } else if(f->getType() == AbstractFunction::Integral) {
+            HierarchicalFunction *hf = dynamic_cast<HierarchicalFunction*>(f);
+            if(hf != 0) {
+                qDebug() << "add hierachical function to view";
+                QStandardItem *parentItem = HelperFunctions::createFunctionItem(f);
+                model->setItem(itemIndex++, parentItem);
+                if(hf->isDisplayed(mPlotId)) parentItem->setCheckState(Qt::Checked);
+                mFunctionItems.append(parentItem);
+
+                int subItemIndex = 0;
+                foreach(AbstractFunction *af, hf->getFunctions()) {
+                    QStandardItem * item = HelperFunctions::createFunctionItem(af);
+                    if(af->isDisplayed(mPlotId)) item->setCheckState(Qt::Checked);
+                    parentItem->setChild(subItemIndex++,item);
+                }
             }
         }
     }

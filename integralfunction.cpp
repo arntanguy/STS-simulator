@@ -60,30 +60,31 @@ IntegralData IntegralFunction::integrate(double min, double max, double resoluti
     IntegralData data;
 
 
-    double result = 1;
+    double r = 0;
     double x = min;
     foreach(AbstractFunction *f, mFunctions) {
         //Function *f = dynamic_cast<Function *>(af);
         if(f != 0) {
             double e = min;
+            //f->setImplicitVariable(mVariable.toStdString(), &max);
             f->setImplicitVariable(mIntegrationVariable.toStdString().c_str(), &e);
-            double r = 0;
             for(; x<max; x += step) {
                 while(e < x) {
-                    double h0 = f->compute(x);
+                    double h0 = f->compute(e);
                     e += deltaX;
-                    double h1 = f->compute(x);
+                    double h1 = f->compute(e);
                     r += deltaX * (h0 + h1)/2.d;
                 }
+                data.x.append(x);
+                data.y.append(r);
             }
-            // XXX: provide possibility of other operations
-            result *= r;
+            qDebug() << "r: "<<r;
         } else {
             qDebug() << "IntegralFunction::integrate() - CRITICAL ERROR: function isn't of type Function";
         }
     }
-    data.x.append(x);
-    data.y.append(result);
+    qDebug() << data.x;
+    qDebug() << data.y;
     //mParser.DefineVar(mVariable.toStdString(), &x);
     //mParser.DefineVar(mIntegrationVariable.toStdString(), &e);
 

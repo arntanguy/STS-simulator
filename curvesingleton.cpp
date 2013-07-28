@@ -74,7 +74,7 @@ void CurveSingleton::loadFromSettings()
     f1->setName("f1");
     f1->setExpression("V+e");
     f1->getVariableFactory()->setValue("e", 10);
-    f1->setParameters("V+2*e");
+    //f1->setParameters("V+2*e");
     qDebug() << "RESULT: "<<f1->compute(1);
     f->addFunction(f1);
     Singleton<FunctionsSingleton>::Instance().addFunction(f);
