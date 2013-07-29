@@ -28,6 +28,7 @@ public:
     /**
      * Virtual functions. Every function must have these to be a valid function
      **/
+    virtual double compute(const QString&, double) = 0;
     virtual double compute(double) = 0;
     virtual double operator() (double x) = 0;
     virtual QString getExpression() const = 0;
@@ -49,7 +50,7 @@ public:
 
     // XXX: ugly hack because using Function in integralfunction.cpp wouldn't be accepted by compiler for some reason.
     // Get rid of this virtual function and fix it
-    virtual void setImplicitVariable(const QString& variable, double* value);
+    virtual void setVariable(const QString& variable, double* value);
 
 protected:
     void abstractsave(const QString &group);

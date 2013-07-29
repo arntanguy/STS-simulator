@@ -32,6 +32,7 @@ public:
     QString getIntegrationVariable() const;
 
     virtual double compute(double);
+    virtual double compute(const QString&, double);
     virtual IntegralData integrate(double min, double max, double resolution, double stepNumber);
 
 private:

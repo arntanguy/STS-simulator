@@ -20,6 +20,7 @@ public:
      **/
     virtual QString getExpression() const;
     virtual double compute(double);
+    virtual double compute(const QString&, double);
     virtual double operator() (double x)
     {
         return compute(x);

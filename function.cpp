@@ -140,6 +140,7 @@ QString Function::getError() const {
 }
 double Function::computeOnly(double x)
 {
+    qDebug() << "computeOnly(" << x << ")";
     mParser->DefineVar(mVariable.toStdString(), &x);
     return mParser->Eval();
 }
@@ -189,14 +190,20 @@ QString Function::getParameters() const
  */
 double Function::compute(double x)
 {
-    qDebug() << "Function::compute("<<x<<")";
+    compute(mVariable, x);
+}
+
+double Function::compute(const QString &variable, double x)
+{
+    qDebug() << "Function::compute(" << variable <<" = "<<x<<")";
     if(mParameters.isEmpty()) {
-        mParser->DefineVar(mVariable.toStdString(), &x);
+        mParser->DefineVar(variable.toStdString(), &x);
         return mParser->Eval();
     } else {
-        return compute(mParameters, x);
+        return computeWithParameters(variable, x);
     }
 }
+
 
 /**
  * @brief Function::compute
@@ -204,7 +211,6 @@ double Function::compute(double x)
  * @param parameters
  *  Any valid expression composed of constants and variables from the function expression
  *  Ex:
- *  f(V) = V+e, with e=10
  *  compute("V+2*e", 1) => f(V+2*e) => f(21) = 31
  *
  *  If left empty, compute(x) will be called instead
@@ -213,18 +219,18 @@ double Function::compute(double x)
  * @return
  *  Computed value f(parameters)
  */
-double Function::compute(const QString& parameters, double x)
+double Function::computeWithParameters(const QString &variable, double x)
 {
-    qDebug() << "Function::compute(parameters: " << parameters <<", x="<<x<<")";
+    qDebug() << "Function::compute(parameters: " << mParameters <<", x="<<x<<")";
 
     // Define x value in function parser
-    mParser->DefineVar(getVariable().toStdString(), &x);
+    mParser->DefineVar(variable.toStdString(), &x);
 
     /**
      * Create a parser for the parameters
      **/
     mu::Parser pParser;
-    pParser.SetExpr(parameters.toStdString());
+    pParser.SetExpr(mParameters.toStdString());
     VariableFactory pVarFact;
     pParser.SetVarFactory(addVariable, &pVarFact);
     pParser.Eval();
@@ -253,7 +259,9 @@ double Function::compute(const QString& parameters, double x)
     }
 
     double parameterValue = pParser.Eval();
+    qDebug() << "parameter value for x="<<x<< ": " << parameterValue;
     return computeOnly(parameterValue);
+
 }
 
 /**
@@ -298,6 +306,17 @@ bool Function::hasVariable(const QString &name) const
 {
     varmap_type variables = mParser->GetVar();
     return mParser->GetVar().find(name.toStdString()) != variables.end();
+}
+
+void Function::setVariable(const QString &name, double value)
+{
+    double *var = getVariable(name);
+    if(var != 0) {
+        *var = value;
+    } else {
+        // XXX: handle error
+        qDebug() << "Function::setVariable() - var " << name << " doesn't exist, creating it";
+    }
 }
 
 double* Function::getVariable(const QString &name)

@@ -72,17 +72,18 @@ void CurveSingleton::loadFromSettings()
     f->setName("IntegralFunction");
     Function *f1 = new Function();
     f1->setName("f1");
-    //f1->setExpression("V+e");
     f1->setExpression("V");
-    qDebug() << "RESULT: "<<f1->compute(1);
+    f1->setParameters("e");
+    //f1->setParameters("V+2*e");
+    qDebug() << *f1->getVariable("V");
+    f1->setVariable("V", 10);
+    qDebug() << "RESULT: "<<f1->compute("e", 1);
 
     Function *f2 = new Function();
     f2->setName("f2");
     f2->setExpression("V");
-    //f1->getVariableFactory()->setValue("e", 10);
-    //f1->setParameters("V+2*e");
     f->addFunction(f1);
-    f->addFunction(f2);
+    //f->addFunction(f2);
     Singleton<FunctionsSingleton>::Instance().addFunction(f);
     IntegralCurve *curve = new IntegralCurve();
     curve->setTitle("Integral");

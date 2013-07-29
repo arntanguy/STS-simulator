@@ -121,7 +121,7 @@ QString AbstractFunction::getGroup() const
     return mBaseGroup + mName;
 }
 
-void AbstractFunction::setImplicitVariable(const QString& variable, double* value)
+void AbstractFunction::setVariable(const QString& variable, double* value)
 {
 }
 

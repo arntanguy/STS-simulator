@@ -53,6 +53,15 @@ double HierarchicalFunction::compute(double x)
     return result;
 }
 
+double HierarchicalFunction::compute(const QString& variable, double x)
+{
+    double result = 0;
+    foreach(AbstractFunction *f, mFunctions) {
+        result += f->compute(variable, x);
+    }
+    return result;
+}
+
 /*!
  * \brief HierarchicalFunction::getExpression
  * \return

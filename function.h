@@ -38,6 +38,7 @@ public:
         return AbstractFunction::getVariable();
     }
     bool hasVariable(const QString &name) const;
+    void setVariable(const QString &name, double value);
     double* getVariable(const QString &name);
 
     bool setParameters(const QString &parameters);
@@ -45,6 +46,7 @@ public:
 
 
     double compute(double x);
+    double compute(const QString &variable, double x);
 
     double operator() (double x) {
         return compute(x);
@@ -61,8 +63,6 @@ public:
 public:
     void listAllVariables() const;
 
-private:
-    void loadVariables(const QString &group);
 Q_SIGNALS:
     void nameUpdated();
     void expressionChanged();
@@ -70,10 +70,12 @@ Q_SIGNALS:
 
 private:
     void init();
+    void loadVariables(const QString &group);
     void cleanupVariables();
-    double compute(const QString& parameters, double x);
+
     bool checkParameters(const QString &parameters) const;
     double computeOnly(double x);
+    double computeWithParameters(const QString& variable, double x);
 
 private:
     QString mParameters;

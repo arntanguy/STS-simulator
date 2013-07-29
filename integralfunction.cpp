@@ -61,38 +61,38 @@ IntegralData IntegralFunction::integrate(double min, double max, double resoluti
     IntegralData data(resolution);
     double r = 0;
     double x = min;
-    foreach(AbstractFunction *f, mFunctions) {
-        //Function *f = dynamic_cast<Function *>(af);
-        if(f != 0) {
-            double e = min;
-            //f->setImplicitVariable(mVariable.toStdString(), &max);
-            f->setImplicitVariable(mIntegrationVariable.toStdString().c_str(), &e);
-            for(; x<max; x += step) {
-                while(e < x) {
-                    double h0 = 1;
-                    // XXX: Allow for other operations than *
-                    foreach(AbstractFunction *f, mFunctions) {
-                        h0 *= f->compute(e);
-                    }
-                    e += deltaX;
-                    double h1 = 1;
-                    foreach(AbstractFunction *f, mFunctions) {
-                        h1 *= f->compute(e);
-                    }
-                    r += deltaX * (h0 + h1)/2.d;
-                }
-                data.x.append(x);
-                data.y.append(r);
-            }
-        } else {
-            qDebug() << "IntegralFunction::integrate() - CRITICAL ERROR: function isn't of type Function";
-        }
-    }
+    //Function *f = dynamic_cast<Function *>(af);
+    double e = min;
 
+    // Set upper limit (V)
+    for(; x<max; x += step) {
+        while(e < x) {
+            double h0 = 1;
+            // XXX: Allow for other operations than *
+            foreach(AbstractFunction *f, mFunctions) {
+                f->setVariable(f->getVariable(), &x);
+                h0 *= f->compute(mIntegrationVariable, e);
+            }
+            e += deltaX;
+            double h1 = 1;
+            foreach(AbstractFunction *f, mFunctions) {
+                h1 *= f->compute(mIntegrationVariable, e);
+            }
+            r += deltaX * (h0 + h1)/2.d;
+        }
+        data.x.append(x);
+        data.y.append(r);
+    }
     return data;
 }
 
 double IntegralFunction::compute(double x)
+{
+    qDebug() << "XXX: compute individual integral values undefined. Use integrate(...) instead";
+    return -1;
+}
+
+double IntegralFunction::compute(const QString&, double)
 {
     qDebug() << "XXX: compute individual integral values undefined. Use integrate(...) instead";
     return -1;
