@@ -47,6 +47,7 @@ public:
 
     double compute(double x);
     double compute(const QString &variable, double x);
+    double computeWithParameters(const QString& variable, double x);
 
     double operator() (double x) {
         return compute(x);
@@ -74,8 +75,6 @@ private:
     void cleanupVariables();
 
     bool checkParameters(const QString &parameters) const;
-    double computeOnly(double x);
-    double computeWithParameters(const QString& variable, double x);
 
 private:
     QString mParameters;

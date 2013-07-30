@@ -65,7 +65,8 @@ SOURCES += main.cpp\
     functionvariableswidget.cpp \
     plotsingleton.cpp \
     integralfunction.cpp \
-    integralcurve.cpp
+    integralcurve.cpp \
+    integralfunctiondialog.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -102,7 +103,8 @@ HEADERS  += mainwindow.h \
     functionvariableswidget.h \
     plotsingleton.h \
     integralfunction.h \
-    integralcurve.h
+    integralcurve.h \
+    integralfunctiondialog.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
@@ -114,7 +116,8 @@ FORMS    += mainwindow.ui \
     newfunctiondialog.ui \
         functionvariableswidget.ui \
     valueselector.ui \
-    hierarchicalfunctiondialog.ui
+    hierarchicalfunctiondialog.ui \
+    integralfunctiondialog.ui
 
 QMAKE_CXXFLAGS += -std=c++0x
 

@@ -46,6 +46,7 @@ public slots:
 
     void newFunction();
     void newHierarachicalFunction();
+    void newIntegralFunction();
     void newFunctionAvailable();
     void editFunction(const QModelIndex &);
     void editFunctionCurve();

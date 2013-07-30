@@ -82,8 +82,6 @@ QStandardItem* FunctionSelectionDialog::createItem(Function *f)
 // =============================== SLOTS ==================================
 void FunctionSelectionDialog::functionSelected(const QModelIndex &index)
 {
-    qDebug() << "Function selected";
-
     QStandardItemModel *model = dynamic_cast<QStandardItemModel *>(ui->functionList->model());
     if(model != 0) {
         QVariant item = model->data(index, Qt::UserRole);

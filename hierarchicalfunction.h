@@ -3,9 +3,9 @@
 
 #include <QList>
 
-#include "abstractfunction.h"
+#include "function.h"
 
-class HierarchicalFunction : public AbstractFunction
+class HierarchicalFunction : public Function
 {
 Q_OBJECT
 public:

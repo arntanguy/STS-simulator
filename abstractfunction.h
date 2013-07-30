@@ -1,3 +1,4 @@
+//#pragma message "AbstractFunction.h"
 #ifndef ABSTRACTFUNCTION_H
 #define ABSTRACTFUNCTION_H
 
@@ -30,6 +31,7 @@ public:
      **/
     virtual double compute(const QString&, double) = 0;
     virtual double compute(double) = 0;
+    virtual double computeWithParameters(const QString& variable, double x) = 0;
     virtual double operator() (double x) = 0;
     virtual QString getExpression() const = 0;
     virtual void save(const QString &group);
@@ -39,7 +41,7 @@ public:
     }
     virtual QString getGroup() const;
 
-    FunctionCurve* createCurve();
+    virtual FunctionCurve* createCurve();
     void setCurve(FunctionCurve *curve);
     FunctionCurve* getCurve();
 

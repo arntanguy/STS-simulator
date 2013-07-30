@@ -3,6 +3,7 @@
 #include <QDebug>
 #include "function.h"
 #include "integralfunction.h"
+#include "integralcurve.h"
 
 IntegralFunction::IntegralFunction() : HierarchicalFunction()
 {
@@ -13,8 +14,8 @@ void IntegralFunction::init()
 {
     setType(mType = AbstractFunction::Integral);
     mBaseGroup = "Functions/IntegralFunction/";
-    mStepNumber = 100;
-    mLowerVal = 0;
+    setStepNumber(100);
+    setRange(ZeroToV);
     mIntegrationVariable = "e";
 }
 
@@ -26,10 +27,54 @@ void IntegralFunction::setIntegrationVariable(const QString &variable)
         updateLinkedCurve();
     }
 }
-
 QString IntegralFunction::getIntegrationVariable() const
 {
     return mIntegrationVariable;
+}
+
+void IntegralFunction::setStepNumber(const int stepNumber)
+{
+    if(mStepNumber != stepNumber) {
+        mStepNumber = stepNumber;
+        mNeedsUpdate = true;
+    }
+}
+
+int IntegralFunction::getStepNumber() const
+{
+    return mStepNumber;
+}
+
+void IntegralFunction::setRange(Range range)
+{
+    if(mRange != range) {
+        mRange = range;
+    }
+    mNeedsUpdate = true;
+}
+IntegralFunction::Range IntegralFunction::getRange() const
+{
+    return mRange;
+}
+
+QString IntegralFunction::getExpression() const
+{
+    QString exp;
+    QString separator = " * ";
+    foreach(AbstractFunction *f, mFunctions) {
+        exp += f->getExpression() + separator;
+    }
+    return exp.left(exp.length() - separator.length());
+}
+
+FunctionCurve* IntegralFunction::createCurve()
+{
+    if(mLinkedCurve == 0) {
+        mLinkedCurve = new IntegralCurve();
+        mLinkedCurve->setTitle(mName);
+        mLinkedCurve->setFunction(this);
+    }
+    return mLinkedCurve;
 }
 
 /**
@@ -70,7 +115,7 @@ IntegralData IntegralFunction::integrate(double min, double max, double resoluti
         // XXX: Allow for other operations than *
         foreach(AbstractFunction *f, mFunctions) {
             f->setVariable(f->getVariable(), &x);
-            h1 *= f->compute(mIntegrationVariable, e);
+            h1 *= f->computeWithParameters(mIntegrationVariable, e);
         }
         while(e < x) {
             // Avoid recomputing h0 needlessly.
@@ -81,7 +126,7 @@ IntegralData IntegralFunction::integrate(double min, double max, double resoluti
             h1 = 1;
             foreach(AbstractFunction *f, mFunctions) {
                 f->setVariable(f->getVariable(), &x);
-                h1 *= f->compute(mIntegrationVariable, e);
+                h1 *= f->computeWithParameters(mIntegrationVariable, e);
             }
             r += deltaX * (h0 + h1)/2.d;
         }

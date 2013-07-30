@@ -22,6 +22,9 @@ struct IntegralData
 class IntegralFunction : public HierarchicalFunction
 {
 public:
+    enum Range { ZeroToV, MinusVToZero };
+
+public:
     IntegralFunction();
 
 
@@ -31,9 +34,18 @@ public:
     void setIntegrationVariable(const QString &variable);
     QString getIntegrationVariable() const;
 
+    void setStepNumber(const int stepNumber);
+    int getStepNumber() const;
+
+    void setRange(Range range);
+    Range getRange() const;
+
+    QString getExpression() const;
+
     virtual double compute(double);
     virtual double compute(const QString&, double);
     virtual IntegralData integrate(double min, double max, double resolution, double stepNumber);
+    virtual FunctionCurve* createCurve();
 
 private:
     void init();
@@ -41,7 +53,8 @@ private:
 
 private:
     double mStepNumber;
-    double mLowerVal;
+    Range mRange;
+
     QString mIntegrationVariable;
 
 };

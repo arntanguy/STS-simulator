@@ -5,12 +5,14 @@
 #include "projectsingleton.h"
 #include "functionssingleton.h"
 #include "hierarchicalfunction.h"
+#include "integralfunction.h"
 #include "function.h"
 #include "helperfunctions.h"
 #include "curvesingleton.h"
 #include "newcurvedialog.h"
 #include "newfunctiondialog.h"
 #include "hierarchicalfunctiondialog.h"
+#include "integralfunctiondialog.h"
 #include "curve.h"
 #include "functioncurve.h"
 #include "integralfunction.h"
@@ -49,6 +51,7 @@ PlotControlDialog::PlotControlDialog(const unsigned int plotId, PlotArea *parent
     // Function page
     connect(ui->functionNew, SIGNAL(clicked()), this, SLOT(newFunction()));
     connect(ui->functionHierarchicalNew, SIGNAL(clicked()), this, SLOT(newHierarachicalFunction()));
+    connect(ui->functionIntegralNew, SIGNAL(clicked()), this, SLOT(newIntegralFunction()));
     connect(ui->functionView, SIGNAL(doubleClicked ( const QModelIndex &)), this, SLOT(editFunction(const QModelIndex &)));
     connect(ui->functionDelete, SIGNAL(clicked()), this, SLOT(deleteFunction()));
     connect(ui->functionEditCurve, SIGNAL(clicked()), this, SLOT(editFunctionCurve()));
@@ -463,6 +466,14 @@ void PlotControlDialog::newHierarachicalFunction()
     }
 }
 
+void PlotControlDialog::newIntegralFunction()
+{
+    IntegralFunctionDialog dialog(this);
+    if(dialog.exec() == QDialog::Accepted)	{
+        newFunctionAvailable();
+    }
+}
+
 void PlotControlDialog::newFunctionAvailable()
 {
     QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
@@ -537,25 +548,33 @@ void PlotControlDialog::editFunction(const QModelIndex &index)
         QVariant item = model->data(index, Qt::UserRole);
         if(item.isValid()) {
             qDebug() << item;
-            AbstractFunction *f = static_cast<AbstractFunction *>(item.value<AbstractFunction *>());
-            if(f != 0) {
+            AbstractFunction *f = item.value<AbstractFunction*>();
+            if(f->getType() == AbstractFunction::Function) {
                 Function *func = dynamic_cast<Function *>(f);
                 if(func != 0) {
                     NewFunctionDialog dialog(func, this);
                     if(dialog.exec() == QDialog::Accepted) {
                         newFunctionAvailable();
                     }
-                } else {
-                    HierarchicalFunction *function = dynamic_cast<HierarchicalFunction *>(f);
-                    if(function != 0) {
-                        HierarchicalFunctionDialog dialog(this);
-                        dialog.setFunction(function);
-                        if(dialog.exec() == QDialog::Accepted) {
-                            newFunctionAvailable();
-                        }
+                }
+            } else if(f->getType() == AbstractFunction::HierarchicalFunction) {
+                HierarchicalFunction *function = dynamic_cast<HierarchicalFunction *>(f);
+                if(function != 0) {
+                    HierarchicalFunctionDialog dialog(this);
+                    dialog.setFunction(function);
+                    if(dialog.exec() == QDialog::Accepted) {
+                        newFunctionAvailable();
                     }
                 }
-                qDebug() << "Editing function " << f->getName();
+            } else if(f->getType() == AbstractFunction::Integral) {
+                IntegralFunction *function = dynamic_cast<IntegralFunction *>(f);
+                if(function != 0) {
+                    IntegralFunctionDialog dialog(this);
+                    dialog.setFunction(function);
+                    if(dialog.exec() == QDialog::Accepted) {
+                        newFunctionAvailable();
+                    }
+                }
             }
         }
     }

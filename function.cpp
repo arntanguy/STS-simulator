@@ -139,12 +139,6 @@ QString Function::getError() const {
     } catch(...) {
     }
 }
-double Function::computeOnly(double x)
-{
-    qDebug() << "computeOnly(" << x << ")";
-    mParser->DefineVar(mVariable.toStdString(), &x);
-    return mParser->Eval();
-}
 
 void Function::setImplicitVariable(const QString &varName, double value)
 {
@@ -158,7 +152,7 @@ void Function::setImplicitVariable(const QString &varName, double value)
 
 bool Function::setParameters(const QString &parameters)
 {
-    if(mParameters != parameters) {
+    //if(mParameters != parameters) {
         qDebug() << "Function::setParameters - setting " << parameters;
         //if(checkParameters(parameters)) {
         qDebug() << "Function::setParameters - valid" << parameters;
@@ -170,10 +164,10 @@ bool Function::setParameters(const QString &parameters)
         //qDebug() << "Function::setParameters - INVALID" << parameters;
         //return false;
         //}
-    } else {
-        // Nothing to do
-        return true;
-    }
+    //} else {
+    //    // Nothing to do
+    //    return true;
+    //}
 }
 QString Function::getParameters() const
 {
@@ -196,14 +190,11 @@ double Function::compute(double x)
 
 double Function::compute(const QString &variable, double x)
 {
-    qDebug() << "Function::compute(" << variable <<" = "<<x<<")";
-    if(mParameters.isEmpty()) {
-        qDebug() << "empty parameters";
-        mParser->DefineVar(variable.toStdString(), &x);
-        return mParser->Eval();
-    } else {
-        return computeWithParameters(variable, x);
-    }
+    //qDebug() << "Function::compute(" << variable <<" = "<<x<<")";
+    mParser->DefineVar(variable.toStdString(), &x);
+    double result = mParser->Eval();
+    qDebug()  << "f("<<variable<<"="<<x<<") = "<<result;
+    return result;
 }
 
 
@@ -262,7 +253,7 @@ double Function::computeWithParameters(const QString &variable, double x)
 
     double parameterValue = pParser.Eval();
     qDebug() << "parameter value for x="<<x<< ": " << parameterValue;
-    return computeOnly(parameterValue);
+    return compute(mVariable, parameterValue);
 
 }
 
