@@ -66,16 +66,21 @@ IntegralData IntegralFunction::integrate(double min, double max, double resoluti
 
     // Set upper limit (V)
     for(; x<max; x += step) {
+        double h1 = 1;
+        // XXX: Allow for other operations than *
+        foreach(AbstractFunction *f, mFunctions) {
+            f->setVariable(f->getVariable(), &x);
+            h1 *= f->compute(mIntegrationVariable, e);
+        }
         while(e < x) {
-            double h0 = 1;
-            // XXX: Allow for other operations than *
+            // Avoid recomputing h0 needlessly.
+            // See midpoint graph for explanation
+            double h0 = h1;
+
+            e += deltaX;
+            h1 = 1;
             foreach(AbstractFunction *f, mFunctions) {
                 f->setVariable(f->getVariable(), &x);
-                h0 *= f->compute(mIntegrationVariable, e);
-            }
-            e += deltaX;
-            double h1 = 1;
-            foreach(AbstractFunction *f, mFunctions) {
                 h1 *= f->compute(mIntegrationVariable, e);
             }
             r += deltaX * (h0 + h1)/2.d;

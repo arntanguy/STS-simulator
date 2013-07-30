@@ -72,9 +72,9 @@ void CurveSingleton::loadFromSettings()
     f->setName("IntegralFunction");
     Function *f1 = new Function();
     f1->setName("f1");
-    f1->setExpression("V");
-    f1->setParameters("e");
-    //f1->setParameters("V+2*e");
+    f1->setExpression("2*V");
+    //f1->setParameters("e");
+    f1->setParameters("e*e*_pi");
     qDebug() << *f1->getVariable("V");
     f1->setVariable("V", 10);
     qDebug() << "RESULT: "<<f1->compute("e", 1);

@@ -67,6 +67,7 @@ void Function::init()
 
     // Defines the variable factory used for implicit variable declaration.
     mParser->SetVarFactory(addVariable, mImplicitVarFactory);
+    mParser->DefineConst("_pi", (double)3.14159);
 
     mBaseGroup = "Functions/Function/";
 }
@@ -197,6 +198,7 @@ double Function::compute(const QString &variable, double x)
 {
     qDebug() << "Function::compute(" << variable <<" = "<<x<<")";
     if(mParameters.isEmpty()) {
+        qDebug() << "empty parameters";
         mParser->DefineVar(variable.toStdString(), &x);
         return mParser->Eval();
     } else {
