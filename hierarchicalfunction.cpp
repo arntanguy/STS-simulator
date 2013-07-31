@@ -14,24 +14,24 @@ HierarchicalFunction::HierarchicalFunction()
 
 void HierarchicalFunction::init()
 {
-    setType(AbstractFunction::HierarchicalFunction);
+    setType(Function::HierarchicalFunction);
     mBaseGroup = "Functions/HierarchicalFunction/";
 }
 
-void HierarchicalFunction::addFunction(AbstractFunction *function)
+void HierarchicalFunction::addFunction(Function *function)
 {
     function->setGroup(mBaseGroup+mName+"/Function/");
     mFunctions.append(function);
     connect(function, SIGNAL(needsRecompute()), this, SLOT(updateData()));
-    connect(function, SIGNAL(curveUpdated(AbstractFunction *)), this, SLOT(update(AbstractFunction *)));
+    connect(function, SIGNAL(curveUpdated(Function *)), this, SLOT(update(Function *)));
 }
 
-void HierarchicalFunction::removeFunction(AbstractFunction *f)
+void HierarchicalFunction::removeFunction(Function *f)
 {
     mFunctions.removeAll(f);
 }
 
-QList<AbstractFunction *> HierarchicalFunction::getFunctions()
+QList<Function *> HierarchicalFunction::getFunctions()
 {
     return mFunctions;
 }
@@ -47,7 +47,7 @@ QList<AbstractFunction *> HierarchicalFunction::getFunctions()
 double HierarchicalFunction::compute(double x)
 {
     double result = 0;
-    foreach(AbstractFunction *f, mFunctions) {
+    foreach(Function *f, mFunctions) {
         result += f->compute(x);
     }
     return result;
@@ -56,7 +56,7 @@ double HierarchicalFunction::compute(double x)
 double HierarchicalFunction::compute(const QString& variable, double x)
 {
     double result = 0;
-    foreach(AbstractFunction *f, mFunctions) {
+    foreach(Function *f, mFunctions) {
         result += f->compute(variable, x);
     }
     return result;
@@ -71,7 +71,7 @@ QString HierarchicalFunction::getExpression() const
 {
     QString exp;
     QString separator = " + ";
-    foreach(AbstractFunction *f, mFunctions) {
+    foreach(Function *f, mFunctions) {
         exp += f->getExpression() + separator;
     }
     return exp.left(exp.length() - separator.length());
@@ -80,7 +80,7 @@ QString HierarchicalFunction::getExpression() const
 void HierarchicalFunction::loadFromConfig(const QString &group)
 {
     qDebug() << "HierarchicalFunction::loadFromConfig("<<group<<")";
-    AbstractFunction::loadFromConfig(group);
+    Function::loadFromConfig(group);
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
     settings->beginGroup(group);
 
@@ -93,7 +93,7 @@ void HierarchicalFunction::loadFromConfig(const QString &group)
 
     foreach(QString fName, groups) {
         qDebug() << "HierarchicalFunction::loadFromConfig() - adding function " << fName << " to " << mName;
-        AbstractFunction *f = FunctionFactory::createFromConfig(group+"/Function/"+fName);
+        Function *f = FunctionFactory::createFromConfig(group+"/Function/"+fName);
         if(f != 0) {
             addFunction(f);
         } else {
@@ -112,7 +112,7 @@ void HierarchicalFunction::save(const QString &group)
     settings->beginGroup(groupName);
     qDebug() << "HierarchicalFunction::save - group name: " << groupName;
     qDebug() << "HierarchicalFunction::save - " << mFunctions.size() << " sub-functions to save";
-    foreach(AbstractFunction *f, mFunctions) {
+    foreach(Function *f, mFunctions) {
         if(f != 0) {
             qDebug() << "HierarchicalFunction::save - saving subfunction " << f->getName();
             f->save("");
@@ -125,7 +125,7 @@ void HierarchicalFunction::save(const QString &group)
 
 
 // =============================== SLOTS ========================================
-void HierarchicalFunction::update(AbstractFunction *f)
+void HierarchicalFunction::update(Function *f)
 {
     updateLinkedCurve();
 }

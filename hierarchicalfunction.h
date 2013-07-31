@@ -11,9 +11,9 @@ Q_OBJECT
 public:
     HierarchicalFunction();
 
-    void addFunction(AbstractFunction *function);
-    void removeFunction(AbstractFunction *f);
-    QList<AbstractFunction *> getFunctions();
+    void addFunction(Function *function);
+    void removeFunction(Function *f);
+    QList<Function *> getFunctions();
 
     /**
      * Pure virtual functions
@@ -30,13 +30,13 @@ public:
     virtual void save(const QString &group);
 
 public Q_SLOTS:
-    void update(AbstractFunction *);
+    void update(Function *);
 
 private:
     void init();
 
 protected:
-    QList<AbstractFunction *> mFunctions;
+    QList<Function *> mFunctions;
 };
 
 #endif // HIERARCHICALFUNCTION_H

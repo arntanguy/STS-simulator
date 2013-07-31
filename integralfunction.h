@@ -41,6 +41,7 @@ public:
     Range getRange() const;
 
     QString getExpression() const;
+    QString getExpressionParameters() const;
 
     virtual double compute(double);
     virtual double compute(const QString&, double);

@@ -9,7 +9,6 @@ class IntegralFunctionDialog;
 }
 
 class IntegralFunction;
-class AbstractFunction;
 class Function;
 
 class IntegralFunctionDialog : public QDialog
@@ -28,9 +27,9 @@ public:
 private:
     void init();
     void initFromFunction();
-    void addFunction(AbstractFunction *function);
-    void addFunctionItem(AbstractFunction *);
-    void useFunction(AbstractFunction *);
+    void addFunction(Function *function);
+    void addFunctionItem(Function *);
+    void useFunction(Function *);
     void setFunctionConfiguration(Function *f);
 
 Q_SIGNALS:

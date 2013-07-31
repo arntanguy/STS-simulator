@@ -12,7 +12,7 @@ IntegralFunction::IntegralFunction() : HierarchicalFunction()
 
 void IntegralFunction::init()
 {
-    setType(mType = AbstractFunction::Integral);
+    setType(mType = Function::Integral);
     mBaseGroup = "Functions/IntegralFunction/";
     setStepNumber(100);
     setRange(ZeroToV);
@@ -61,8 +61,18 @@ QString IntegralFunction::getExpression() const
 {
     QString exp;
     QString separator = " * ";
-    foreach(AbstractFunction *f, mFunctions) {
+    foreach(Function *f, mFunctions) {
         exp += f->getExpression() + separator;
+    }
+    return exp.left(exp.length() - separator.length());
+}
+
+QString IntegralFunction::getExpressionParameters() const
+{
+    QString exp;
+    QString separator = " * ";
+    foreach(Function *f, mFunctions) {
+        exp += f->getName() + "(" + f->getParameters() + ")" + separator;
     }
     return exp.left(exp.length() - separator.length());
 }
@@ -106,15 +116,14 @@ IntegralData IntegralFunction::integrate(double min, double max, double resoluti
     IntegralData data(resolution);
     double r = 0;
     double x = min;
-    //Function *f = dynamic_cast<Function *>(af);
     double e = min;
 
     // Set upper limit (V)
     for(; x<max; x += step) {
         double h1 = 1;
         // XXX: Allow for other operations than *
-        foreach(AbstractFunction *f, mFunctions) {
-            f->setVariable(f->getVariable(), &x);
+        foreach(Function *f, mFunctions) {
+            f->setVariable(f->getVariable(), x);
             h1 *= f->computeWithParameters(mIntegrationVariable, e);
         }
         while(e < x) {
@@ -124,8 +133,8 @@ IntegralData IntegralFunction::integrate(double min, double max, double resoluti
 
             e += deltaX;
             h1 = 1;
-            foreach(AbstractFunction *f, mFunctions) {
-                f->setVariable(f->getVariable(), &x);
+            foreach(Function *f, mFunctions) {
+                f->setVariable(f->getVariable(), x);
                 h1 *= f->computeWithParameters(mIntegrationVariable, e);
             }
             r += deltaX * (h0 + h1)/2.d;

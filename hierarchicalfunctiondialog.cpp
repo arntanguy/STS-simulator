@@ -43,14 +43,14 @@ void HierarchicalFunctionDialog::setFunction(HierarchicalFunction *f)
     if(f != 0) {
         QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
         model->clear();
-        foreach(AbstractFunction* af, mFunction->getFunctions()) {
+        foreach(Function* af, mFunction->getFunctions()) {
             addFunctionItem(af);
         }
     }
 }
 
 // ============================= PRIVATE =======================
-void HierarchicalFunctionDialog::addFunction(AbstractFunction *f)
+void HierarchicalFunctionDialog::addFunction(Function *f)
 {
     if(f != 0) {
         addFunctionItem(f);
@@ -60,7 +60,7 @@ void HierarchicalFunctionDialog::addFunction(AbstractFunction *f)
     }
 }
 
-void HierarchicalFunctionDialog::addFunctionItem(AbstractFunction *f)
+void HierarchicalFunctionDialog::addFunctionItem(Function *f)
 {
     if(f != 0) {
         QStandardItem *item = new QStandardItem();
@@ -88,7 +88,7 @@ void HierarchicalFunctionDialog::removeFunction()
 {
     QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
     QModelIndex index = ui->functionView->currentIndex();
-    AbstractFunction *f = index.data(Qt::UserRole).value<AbstractFunction *>();
+    Function *f = index.data(Qt::UserRole).value<Function *>();
     mFunction->removeFunction(f);
     model->removeRow(index.row());
     delete f;

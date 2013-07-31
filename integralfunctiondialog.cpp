@@ -57,16 +57,15 @@ void IntegralFunctionDialog::setFunction(IntegralFunction *f)
     if(f != 0) {
         QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->integralView->model());
         model->clear();
-        foreach(AbstractFunction* af, mFunction->getFunctions()) {
+        foreach(Function* af, mFunction->getFunctions()) {
             addFunctionItem(af);
         }
     }
 }
 
 // ============================= PRIVATE =======================
-void IntegralFunctionDialog::addFunction(AbstractFunction *function)
+void IntegralFunctionDialog::addFunction(Function *f)
 {
-    Function *f = dynamic_cast<Function *>(function);
     if(f != 0) {
         f->setParameters(mFunction->getIntegrationVariable());
         addFunctionItem(f);
@@ -80,9 +79,8 @@ void IntegralFunctionDialog::addFunction(AbstractFunction *function)
 
 }
 
-void IntegralFunctionDialog::addFunctionItem(AbstractFunction *function)
+void IntegralFunctionDialog::addFunctionItem(Function *f)
 {
-    Function *f = dynamic_cast<Function *>(function);
     if(f != 0) {
         QStandardItem *item = new QStandardItem();
         item->setText(f->getName());
@@ -108,9 +106,8 @@ void IntegralFunctionDialog::setFunctionConfiguration(Function *f)
         f->setParameters(parameter);
 }
 
-void IntegralFunctionDialog::useFunction(AbstractFunction *function)
+void IntegralFunctionDialog::useFunction(Function *f)
 {
-    Function *f = dynamic_cast<Function*>(function);
     if(f != 0) {
         ui->functionParameters->setText(f->getParameters());
         ui->functionExpression->setText("<b>"+f->getName()+ "</b>(" + f->getVariable() + ") = " + f->getExpression());
@@ -136,7 +133,7 @@ void IntegralFunctionDialog::removeFunction()
 {
     QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->integralView->model());
     QModelIndex index = ui->integralView->currentIndex();
-    AbstractFunction *f = index.data(Qt::UserRole).value<AbstractFunction *>();
+    Function *f = index.data(Qt::UserRole).value<Function *>();
     // Detach function, don't delete it (linked to other function used elsewhere)!
     mFunction->removeFunction(f);
     model->removeRow(index.row());
@@ -156,7 +153,7 @@ void IntegralFunctionDialog::accept()
         QModelIndex index = ui->integralView->currentIndex();
             QVariant item = model->data(index, Qt::UserRole);
             if(item.isValid()) {
-                Function *f = dynamic_cast<Function *>(item.value<Function*>());
+                Function *f = item.value<Function*>();
                 if(f != 0) {
                     setFunctionConfiguration(f);
                 } else {
@@ -186,7 +183,7 @@ void IntegralFunctionDialog::functionSelectionChanged( const QModelIndex & newSe
     if(model != 0) {
             QVariant item = model->data(previousSelection, Qt::UserRole);
             if(item.isValid()) {
-                Function *f = dynamic_cast<Function *>(item.value<Function*>());
+                Function *f = item.value<Function*>();
                 if(f != 0) {
                     qDebug() << "Previous: " << f->getName();
                     setFunctionConfiguration(f);
@@ -195,7 +192,7 @@ void IntegralFunctionDialog::functionSelectionChanged( const QModelIndex & newSe
 
             item = model->data(newSelection, Qt::UserRole);
             if(item.isValid()) {
-                Function *f = dynamic_cast<Function *>(item.value<Function*>());
+                Function *f = item.value<Function*>();
                 if(f != 0) {
                     qDebug() << "New: " << f->getName();
                     useFunction(f);

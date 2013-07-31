@@ -8,7 +8,7 @@ class HierarchicalFunctionDialog;
 }
 
 class HierarchicalFunction;
-class AbstractFunction;
+class Function;
 
 class HierarchicalFunctionDialog : public QDialog
 {
@@ -26,8 +26,8 @@ public:
 private:
     void init();
     void initFromFunction();
-    void addFunction(AbstractFunction *f);
-    void addFunctionItem(AbstractFunction *f);
+    void addFunction(Function *f);
+    void addFunctionItem(Function *f);
 
 public Q_SLOTS:
     void addFunction();
