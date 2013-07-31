@@ -154,19 +154,10 @@ bool Function::setParameters(const QString &parameters)
 {
     //if(mParameters != parameters) {
         qDebug() << "Function::setParameters - setting " << parameters;
-        //if(checkParameters(parameters)) {
-        qDebug() << "Function::setParameters - valid" << parameters;
         mNeedsUpdate = true;
         mParameters = parameters;
         emit needsRecompute();
         return true;
-        //} else {
-        //qDebug() << "Function::setParameters - INVALID" << parameters;
-        //return false;
-        //}
-    //} else {
-    //    // Nothing to do
-    //    return true;
     //}
 }
 QString Function::getParameters() const
@@ -357,7 +348,7 @@ void Function::loadVariables(const QString &group)
 void Function::save(const QString &group)
 {
     qDebug() << "Function::save - Saving function "; //<<mName;
-    abstractsave(group+"/Function");
+    AbstractFunction::save(group+"/Function");
     qDebug() << "Function::save - there" <<mName;
 
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();

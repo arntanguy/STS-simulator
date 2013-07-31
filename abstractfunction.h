@@ -1,4 +1,3 @@
-//#pragma message "AbstractFunction.h"
 #ifndef ABSTRACTFUNCTION_H
 #define ABSTRACTFUNCTION_H
 
@@ -31,7 +30,6 @@ public:
      **/
     virtual double compute(const QString&, double) = 0;
     virtual double compute(double) = 0;
-    virtual double computeWithParameters(const QString& variable, double x) = 0;
     virtual double operator() (double x) = 0;
     virtual QString getExpression() const = 0;
     virtual void save(const QString &group);
@@ -49,13 +47,6 @@ public:
     void updateLinkedCurve();
 
     bool isDisplayed(unsigned int plotId) const;
-
-    // XXX: ugly hack because using Function in integralfunction.cpp wouldn't be accepted by compiler for some reason.
-    // Get rid of this virtual function and fix it
-    virtual void setVariable(const QString& variable, double* value);
-
-protected:
-    void abstractsave(const QString &group);
 
 Q_SIGNALS:
     void nameUpdated(const QString &);

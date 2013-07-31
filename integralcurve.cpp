@@ -16,7 +16,7 @@ IntegralCurve::IntegralCurve(unsigned int id) : FunctionCurve(id)
 void IntegralCurve::init()
 {
     mType = Curve::Integral;
-    mStepNumber = 2;
+    setStepNumber(2);
 }
 
 // ========================= PUBLIC =====================================
@@ -31,7 +31,7 @@ void IntegralCurve::setStepNumber(int stepNumber)
         mStepNumber = stepNumber;
         mNeedsUpdate = true;
     }
-    update();
+    //update();
 }
 
 int IntegralCurve::getStepNumber() const

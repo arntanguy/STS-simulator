@@ -106,7 +106,7 @@ void HierarchicalFunction::save(const QString &group)
 {
     qDebug() << "HierarchicalFunction::save - saving function " << mName;
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
-    abstractsave(group+"/HierarchicalFunction/");
+    AbstractFunction::save(group+"/HierarchicalFunction/");
 
     QString groupName = group+"/HierarchicalFunction/"+mName;
     settings->beginGroup(groupName);

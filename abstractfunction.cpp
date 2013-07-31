@@ -85,13 +85,21 @@ bool AbstractFunction::isDisplayed(unsigned int plotId) const
 // ========================= VIRTUAL =========================
 void AbstractFunction::save(const QString &group)
 {
-    qDebug() << "AbstractFunction::save("<<group<<")";
+    //qDebug() << "AbstractFunction::save("<<group<<")";
 
+    //QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    //if(settings != 0)
+    //    qDebug() << "AbstractFunction::save - valid settings" <<mName;
+    //else
+    //    qDebug() << "AbstractFunction::save - invalid settings" <<mName;
+    qDebug() << "AbstractFunction::abstractsave - saving " << mName;
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
-    if(settings != 0)
-        qDebug() << "AbstractFunction::save - valid settings" <<mName;
-    else
-        qDebug() << "AbstractFunction::save - invalid settings" <<mName;
+    if(settings == 0) qDebug() << "null settings";
+    settings->beginGroup(group+"/"+mName);
+    settings->setValue("name", mName);
+    if(mLinkedCurve != 0)
+        settings->setValue("curveId", mLinkedCurve->getId());
+    settings->endGroup();
 }
 
 
@@ -121,26 +129,9 @@ QString AbstractFunction::getGroup() const
     return mBaseGroup + mName;
 }
 
-void AbstractFunction::setVariable(const QString& variable, double* value)
-{
-}
-
 // ========================== SLOTS =========================
 void AbstractFunction::updateLinkedCurve(QString var, double val)
 {
     updateLinkedCurve();
     emit curveUpdated(this);
-}
-
-// ========================== PROTECTED =====================
-void AbstractFunction::abstractsave(const QString &group)
-{
-    qDebug() << "AbstractFunction::abstractsave - saving " << mName;
-    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
-    if(settings == 0) qDebug() << "null settings";
-    settings->beginGroup(group+"/"+mName);
-    settings->setValue("name", mName);
-    if(mLinkedCurve != 0)
-        settings->setValue("curveId", mLinkedCurve->getId());
-    settings->endGroup();
 }
