@@ -64,7 +64,7 @@ void FunctionVariablesWidget::variableValueChanged(QString var, double val)
     qDebug() << "Variable value changed: " << var << ": " << val;
     if(mFunction != 0) {
         qDebug() << "Eval: " << mFunction->getExpression() << " for value V=2 " << mFunction->compute(2);
-        mFunction->updateLinkedCurve(var, val);
+        mFunction->updateLinkedCurve(var, val, true);
         emit valueChanged(var, val);
     }
 }

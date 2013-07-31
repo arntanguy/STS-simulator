@@ -44,16 +44,21 @@ public:
     FunctionCurve* getCurve();
 
     unsigned int getCurveId() const;
-    void updateLinkedCurve();
+    void updateLinkedCurve(bool forceUpdate = false);
 
     bool isDisplayed(unsigned int plotId) const;
 
 Q_SIGNALS:
     void nameUpdated(const QString &);
-    void curveUpdated(AbstractFunction *);
+    virtual void curveUpdated(AbstractFunction *);
+    virtual void functionUpdated(AbstractFunction *);
+    void needsRecompute();
 
 public Q_SLOTS:
-    void updateLinkedCurve(QString var, double val);
+    void updateLinkedCurve(QString var, double val, bool forceUpdate = false);
+
+protected:
+    void abstractsave(const QString &);
 
 protected:
     QString mName;

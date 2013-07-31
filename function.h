@@ -67,7 +67,6 @@ public:
 Q_SIGNALS:
     void nameUpdated();
     void expressionChanged();
-    void needsRecompute();
 
 private:
     void init();

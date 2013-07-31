@@ -30,7 +30,7 @@ public:
     virtual void save(const QString &group);
 
 public Q_SLOTS:
-    void update(Function *);
+    void update(AbstractFunction *);
 
 private:
     void init();

@@ -67,9 +67,15 @@ unsigned int AbstractFunction::getCurveId() const
     }
 }
 
-void AbstractFunction::updateLinkedCurve()
+void AbstractFunction::updateLinkedCurve(bool forceUpdate)
 {
+    qDebug() << "AbstractFunction::updateLinkedCurve";
     if(mLinkedCurve != 0) {
+        qDebug() << "update linked curve";
+        if(forceUpdate) {
+            qDebug() << "force update";
+            mLinkedCurve->setUpdateNeeded();
+        }
         mLinkedCurve->update();
     }
 }
@@ -82,6 +88,19 @@ bool AbstractFunction::isDisplayed(unsigned int plotId) const
         return false;
 }
 
+// PROTECTED
+void AbstractFunction::abstractsave(const QString &group)
+{
+    qDebug() << "AbstractFunction::abstractsave - saving " << mName;
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    if(settings == 0) qDebug() << "null settings";
+    settings->beginGroup(group+"/"+mName);
+    settings->setValue("name", mName);
+    if(mLinkedCurve != 0)
+        settings->setValue("curveId", mLinkedCurve->getId());
+    settings->endGroup();
+}
+
 // ========================= VIRTUAL =========================
 void AbstractFunction::save(const QString &group)
 {
@@ -92,14 +111,6 @@ void AbstractFunction::save(const QString &group)
     //    qDebug() << "AbstractFunction::save - valid settings" <<mName;
     //else
     //    qDebug() << "AbstractFunction::save - invalid settings" <<mName;
-    qDebug() << "AbstractFunction::abstractsave - saving " << mName;
-    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
-    if(settings == 0) qDebug() << "null settings";
-    settings->beginGroup(group+"/"+mName);
-    settings->setValue("name", mName);
-    if(mLinkedCurve != 0)
-        settings->setValue("curveId", mLinkedCurve->getId());
-    settings->endGroup();
 }
 
 
@@ -130,8 +141,9 @@ QString AbstractFunction::getGroup() const
 }
 
 // ========================== SLOTS =========================
-void AbstractFunction::updateLinkedCurve(QString var, double val)
+void AbstractFunction::updateLinkedCurve(QString var, double val, bool forceUpdate)
 {
-    updateLinkedCurve();
-    emit curveUpdated(this);
+    emit needsRecompute();
+    updateLinkedCurve(forceUpdate);
+    emit functionUpdated(this);
 }

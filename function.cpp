@@ -184,7 +184,7 @@ double Function::compute(const QString &variable, double x)
     //qDebug() << "Function::compute(" << variable <<" = "<<x<<")";
     mParser->DefineVar(variable.toStdString(), &x);
     double result = mParser->Eval();
-    qDebug()  << "f("<<variable<<"="<<x<<") = "<<result;
+    //qDebug()  << "f("<<variable<<"="<<x<<") = "<<result;
     return result;
 }
 
@@ -205,7 +205,7 @@ double Function::compute(const QString &variable, double x)
  */
 double Function::computeWithParameters(const QString &variable, double x)
 {
-    qDebug() << "Function::compute(parameters: " << mParameters <<", x="<<x<<")";
+    //qDebug() << "Function::compute(parameters: " << mParameters <<", x="<<x<<")";
 
     // Define x value in function parser
     mParser->DefineVar(variable.toStdString(), &x);
@@ -348,7 +348,7 @@ void Function::loadVariables(const QString &group)
 void Function::save(const QString &group)
 {
     qDebug() << "Function::save - Saving function "; //<<mName;
-    AbstractFunction::save(group+"/Function");
+    AbstractFunction::abstractsave(group+"/Function");
     qDebug() << "Function::save - there" <<mName;
 
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();

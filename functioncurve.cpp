@@ -30,6 +30,7 @@ void FunctionCurve::setFunction(AbstractFunction *f)
     if(f != mFunction) {
         mFunction = f;
         setTitle(f->getName());
+        qDebug() << "FunctionCurve::createFunction for function "<<f->getName();
         connect(mFunction, SIGNAL(needsRecompute()), this, SLOT(slotUpdateData()));
         connect(mFunction, SIGNAL(nameUpdated(const QString &)), this, SLOT(updateName(const QString &)));
         mNeedsUpdate = true;
@@ -71,6 +72,7 @@ int FunctionCurve::getResolution() const
 /// =============== VIRTUAL =========================
 void FunctionCurve::update()
 {
+    qDebug() << "FunctionCurve::update()";
     if(needsUpdate()) {
         qDebug() << "FunctionCurve::update()";
         updateData();
@@ -151,6 +153,7 @@ void FunctionCurve::loadFromSettings()
 /// =============== SLOTS ==========================
 void FunctionCurve::slotUpdateData()
 {
+    qDebug() << "FunctionCurve::slotUpdateData()";
     updateData();
 }
 

@@ -20,10 +20,10 @@ void HierarchicalFunction::init()
 
 void HierarchicalFunction::addFunction(Function *function)
 {
+    qDebug() << "HierarchicalFunction::addFunction()";
     function->setGroup(mBaseGroup+mName+"/Function/");
     mFunctions.append(function);
-    connect(function, SIGNAL(needsRecompute()), this, SLOT(updateData()));
-    connect(function, SIGNAL(curveUpdated(Function *)), this, SLOT(update(Function *)));
+    connect(function, SIGNAL(functionUpdated(AbstractFunction *)), this, SLOT(update(AbstractFunction *)));
 }
 
 void HierarchicalFunction::removeFunction(Function *f)
@@ -106,7 +106,7 @@ void HierarchicalFunction::save(const QString &group)
 {
     qDebug() << "HierarchicalFunction::save - saving function " << mName;
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
-    AbstractFunction::save(group+"/HierarchicalFunction/");
+    AbstractFunction::abstractsave(group+"/HierarchicalFunction/");
 
     QString groupName = group+"/HierarchicalFunction/"+mName;
     settings->beginGroup(groupName);
@@ -125,7 +125,8 @@ void HierarchicalFunction::save(const QString &group)
 
 
 // =============================== SLOTS ========================================
-void HierarchicalFunction::update(Function *f)
+void HierarchicalFunction::update(AbstractFunction *f)
 {
-    updateLinkedCurve();
+    qDebug()<< "HierarchicalFunction::update()";
+    updateLinkedCurve(true);
 }

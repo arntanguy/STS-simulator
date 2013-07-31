@@ -48,6 +48,9 @@ public:
     void updateExperimentalData();
 
     virtual void update();
+    void setUpdateNeeded() {
+        mNeedsUpdate = true;
+    }
     bool needsUpdate() const {
         return mNeedsUpdate;
     }
