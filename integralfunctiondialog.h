@@ -42,11 +42,14 @@ public Q_SLOTS:
     void updateExpression();
 //    void functionSelected(const QModelIndex &index);
     void functionSelectionChanged( const QModelIndex & , const QModelIndex & );
+    void parametersEdited();
+    void integrationVariableEdited();
 
 private:
     Ui::IntegralFunctionDialog *ui;
 
     IntegralFunction *mFunction;
+    Function *mFunctionInUse;
 };
 
 #endif // INTEGRALFUNCTIONDIALOG_H

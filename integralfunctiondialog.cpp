@@ -15,6 +15,7 @@ IntegralFunctionDialog::IntegralFunctionDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //XXX small memory leak
     mFunction = new IntegralFunction();
 
     init();
@@ -27,6 +28,9 @@ IntegralFunctionDialog::~IntegralFunctionDialog()
 
 void IntegralFunctionDialog::init()
 {
+    mFunctionInUse = 0;
+    ui->functionConfigWidget->hide();
+
     ui->integralView->setModel(new QStandardItemModel());
 
     ui->integralRange->addItem(tr("0 to V"), IntegralFunction::ZeroToV);
@@ -36,6 +40,9 @@ void IntegralFunctionDialog::init()
     connect(ui->integralRemoveFunction, SIGNAL(clicked()), this, SLOT(removeFunction()));
     //connect(ui->integralView, SIGNAL(clicked ( const QModelIndex &)), this, SLOT(functionSelected(const QModelIndex &)));
     connect(ui->integralView->selectionModel(), SIGNAL(currentChanged (const QModelIndex & , const QModelIndex & )), this, SLOT(functionSelectionChanged(const QModelIndex& , const QModelIndex& )));
+    connect(ui->functionParameters, SIGNAL(editingFinished()), this, SLOT(parametersEdited()));
+    connect(ui->integralIntegrationVariable, SIGNAL(editingFinished()), this, SLOT(integrationVariableEdited()));
+
     connect(this, SIGNAL(expressionChanged()), this, SLOT(updateExpression()));
 
 
@@ -109,6 +116,9 @@ void IntegralFunctionDialog::setFunctionConfiguration(Function *f)
 void IntegralFunctionDialog::useFunction(Function *f)
 {
     if(f != 0) {
+        mFunctionInUse = f;
+        ui->functionConfigWidget->show();
+        ui->functionNoSelectionWidget->hide();
         ui->functionParameters->setText(f->getParameters());
         ui->functionExpression->setText("<b>"+f->getName()+ "</b>(" + f->getVariable() + ") = " + f->getExpression());
     } else {
@@ -173,7 +183,7 @@ void IntegralFunctionDialog::accept()
 
 void IntegralFunctionDialog::updateExpression()
 {
-    ui->integralExpression->setText(mFunction->getExpression());
+    ui->integralExpression->setText(mFunction->getIntegralExpression());
 }
 
 void IntegralFunctionDialog::functionSelectionChanged( const QModelIndex & newSelection, const QModelIndex & previousSelection)
@@ -199,4 +209,18 @@ void IntegralFunctionDialog::functionSelectionChanged( const QModelIndex & newSe
                 }
             }
     }
+}
+
+void IntegralFunctionDialog::parametersEdited()
+{
+    if(mFunctionInUse != 0) {
+        setFunctionConfiguration(mFunctionInUse);
+        updateExpression();
+    }
+}
+
+void IntegralFunctionDialog::integrationVariableEdited()
+{
+    mFunction->setIntegrationVariable(ui->integralIntegrationVariable->text());
+    updateExpression();
 }

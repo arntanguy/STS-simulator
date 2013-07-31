@@ -33,7 +33,7 @@
         </property>
         <layout class="QGridLayout" name="gridLayout_4">
          <item row="1" column="1">
-          <widget class="QWidget" name="widget" native="true">
+          <widget class="QWidget" name="widget_3" native="true">
            <property name="maximumSize">
             <size>
              <width>16777215</width>
@@ -41,29 +41,57 @@
             </size>
            </property>
            <layout class="QGridLayout" name="gridLayout_3">
-            <item row="1" column="2">
-             <widget class="QLineEdit" name="functionParameters">
-              <property name="text">
-               <string>e</string>
+            <item row="0" column="0" colspan="3">
+             <widget class="QWidget" name="functionNoSelectionWidget" native="true">
+              <property name="enabled">
+               <bool>false</bool>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_2">
+               <item>
+                <widget class="QLabel" name="label_7">
+                 <property name="text">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;No Function Selected!&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Select a function on the left panel to configure it.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </item>
             <item row="1" column="0">
-             <widget class="QLabel" name="label_3">
-              <property name="text">
-               <string>Parameters</string>
-              </property>
+             <widget class="QWidget" name="functionConfigWidget" native="true">
+              <layout class="QFormLayout" name="formLayout_4">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_9">
+                 <property name="text">
+                  <string>Expression</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QTextBrowser" name="functionExpression"/>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_3">
+                 <property name="text">
+                  <string>Parameters</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLineEdit" name="functionParameters">
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_9">
-              <property name="text">
-               <string>Expression</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
-             <widget class="QTextBrowser" name="functionExpression"/>
             </item>
            </layout>
           </widget>

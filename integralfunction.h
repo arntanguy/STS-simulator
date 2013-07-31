@@ -42,6 +42,7 @@ public:
 
     QString getExpression() const;
     QString getExpressionParameters() const;
+    QString getIntegralExpression() const;
 
     virtual double compute(double);
     virtual double compute(const QString&, double);

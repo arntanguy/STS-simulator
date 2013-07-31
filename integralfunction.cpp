@@ -77,6 +77,20 @@ QString IntegralFunction::getExpressionParameters() const
     return exp.left(exp.length() - separator.length());
 }
 
+QString IntegralFunction::getIntegralExpression() const
+{
+    if(mFunctions.size() > 0) {
+        QString exp;
+        QString separator = " * ";
+        foreach(Function *f, mFunctions) {
+            exp += f->getName() + "(" + f->getParameters() + ")" + separator;
+        }
+        return exp.left(exp.length() - separator.length()) + "\t<i>d</i>" + mIntegrationVariable;
+    } else {
+        return QString();
+    }
+}
+
 FunctionCurve* IntegralFunction::createCurve()
 {
     if(mLinkedCurve == 0) {
