@@ -183,6 +183,8 @@ void IntegralFunctionDialog::accept()
 
     Singleton<FunctionsSingleton>::Instance().addFunction(mFunction);
 
+    mFunction->updateLinkedCurve();
+
     QDialog::accept();
 }
 

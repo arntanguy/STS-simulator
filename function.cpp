@@ -142,12 +142,15 @@ QString Function::getError() const {
 
 void Function::setImplicitVariable(const QString &varName, double value)
 {
-    if(mImplicitVarFactory->hasVariable(varName)) {
-        qDebug() << "Warning: redining variable "+varName;
+    //if(mImplicitVarFactory->hasVariable(varName)) {
+    //    qDebug() << "Warning: redifning variable "+varName;
+    //}
+    double *var = mImplicitVarFactory->getVariableAddress(varName);
+    if(var != 0 && *var != value) {
+        mImplicitVarFactory->setValue(varName, value);
+        // XXX: don't emit unless necessary
+        emit needsRecompute();
     }
-    mImplicitVarFactory->setValue(varName, value);
-    // XXX: don't emit unless necessary
-    emit needsRecompute();
 }
 
 bool Function::setParameters(const QString &parameters)
@@ -183,9 +186,7 @@ double Function::compute(const QString &variable, double x)
 {
     //qDebug() << "Function::compute(" << variable <<" = "<<x<<")";
     mParser->DefineVar(variable.toStdString(), &x);
-    double result = mParser->Eval();
-    //qDebug()  << "f("<<variable<<"="<<x<<") = "<<result;
-    return result;
+    return mParser->Eval();
 }
 
 

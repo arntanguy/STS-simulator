@@ -9,9 +9,9 @@ VariableFactory::VariableFactory(QObject *parent) : QObject(parent)
 void VariableFactory::createNewVariable(const QString &name)
 {
     if(mVariables.find(name) != mVariables.end()) {
-        qDebug() << "VariableFactory::createNewVariable() - Var " << name << " already exists";
+        //qDebug() << "VariableFactory::createNewVariable() - Var " << name << " already exists";
     } else {
-        qDebug() << "VariableFactory::createNewVariable() - Creating var " << name << " already exists";
+        //qDebug() << "VariableFactory::createNewVariable() - Creating var " << name << " already exists";
         mVariables[name] = -42;
         emit newVariableCreated(name);
     }

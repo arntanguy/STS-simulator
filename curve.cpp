@@ -26,12 +26,18 @@ Curve::Curve(const QString &name)
     setId(mCurveStaticId);
 }
 
-void Curve::copyFromCurve(Curve *curve)
+void Curve::abstractCopyFromCurve(Curve *curve)
 {
-    qDebug() << "Curve::copyFromCurve() - name " << curve->title().text();
+    qDebug() << "Curve::abstractCopyFromCurve() - name " << curve->title().text();
     setTitle(curve->title().text());
     setMinMax(curve->getMin(), curve->getMax());
     setPen(curve->pen());
+}
+
+void Curve::copyFromCurve(Curve *curve)
+{
+    qDebug() << "Curve::copyFromCurve() - name " << curve->title().text();
+    abstractCopyFromCurve(curve);
     setExperimentalData(mExperimentalId, mExperimentalAbscissia, mExperimentalOrdinate);
 }
 
@@ -206,7 +212,7 @@ void Curve::attach(PlotWidget *plot)
 {
     qDebug() << "Cuve::attach() - attach curve " << title().text() << " to plot " << plot->getName();
     Curve *curve = 0;
-    if(mPlots.contains(plot)) {
+    if(isAttached(plot)) {
         qDebug() << "Curve already attached, update copies";
         curve = mPlots[plot];
         if(curve != 0) {

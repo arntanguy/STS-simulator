@@ -19,7 +19,7 @@ public:
     Curve(int id);
     Curve( const QString &name );
 
-    void copyFromCurve(Curve *curve);
+    virtual void copyFromCurve(Curve *curve);
 
     void setMinMax(double min, double max);
     double getMin() const {
@@ -66,6 +66,9 @@ public:
 private:
     void init();
     void setId(unsigned int id);
+
+protected:
+    void abstractCopyFromCurve(Curve *curve);
 
 
 private:

@@ -24,11 +24,13 @@ void HierarchicalFunction::addFunction(Function *function)
     function->setGroup(mBaseGroup+mName+"/Function/");
     mFunctions.append(function);
     connect(function, SIGNAL(functionUpdated(AbstractFunction *)), this, SLOT(update(AbstractFunction *)));
+    emit expressionChanged();
 }
 
 void HierarchicalFunction::removeFunction(Function *f)
 {
     mFunctions.removeAll(f);
+    emit expressionChanged();
 }
 
 QList<Function *> HierarchicalFunction::getFunctions()

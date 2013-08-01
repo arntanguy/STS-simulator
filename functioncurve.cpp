@@ -33,6 +33,7 @@ void FunctionCurve::setFunction(AbstractFunction *f)
         qDebug() << "FunctionCurve::createFunction for function "<<f->getName();
         connect(mFunction, SIGNAL(needsRecompute()), this, SLOT(slotUpdateData()));
         connect(mFunction, SIGNAL(nameUpdated(const QString &)), this, SLOT(updateName(const QString &)));
+        connect(mFunction, SIGNAL(expressionChanged()), this, SLOT(slotDeferedUpdate()));
         mNeedsUpdate = true;
         update();
     }
@@ -70,6 +71,16 @@ int FunctionCurve::getResolution() const
 
 
 /// =============== VIRTUAL =========================
+void FunctionCurve::copyFromCurve(Curve *curve)
+{
+    Curve::abstractCopyFromCurve(curve);
+    FunctionCurve *fc = dynamic_cast<FunctionCurve*>(curve);
+    if(fc != 0) {
+        setResolution(fc->getResolution());
+        setFunction(fc->getFunction());
+    }
+}
+
 void FunctionCurve::update()
 {
     qDebug() << "FunctionCurve::update()";
@@ -127,6 +138,7 @@ void FunctionCurve::updateData()
     } else {
         qDebug() << "FunctionCurve::updateData() - error, null function";
     }
+    mNeedsUpdate = false;
 }
 
 void FunctionCurve::save()
@@ -160,4 +172,9 @@ void FunctionCurve::slotUpdateData()
 void FunctionCurve::updateName(const QString &name)
 {
     setTitle(name);
+}
+
+void FunctionCurve::slotDeferedUpdate()
+{
+    mNeedsUpdate = true;
 }

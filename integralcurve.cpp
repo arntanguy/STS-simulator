@@ -56,6 +56,7 @@ void IntegralCurve::updateData()
         mXData = data.x;
         mYData = data.y;
     }
+    mNeedsUpdate = false;
 }
 
 void IntegralCurve::save()
