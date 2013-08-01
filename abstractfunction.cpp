@@ -112,7 +112,7 @@ void AbstractFunction::loadFromConfig(const QString &group)
 {
     qDebug() << "AbstractFunction::loadFromConfig("<<group<<")";
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
-    unsigned int curveId = settings->value(group+"/curveId", 0).toUInt();
+    unsigned int curveId = settings->value(group+"/curveId", -1).toUInt();
     qDebug() << "AbstractFunction::loadFromConfig() -- curve id "<< curveId << "";
     Curve *c = Singleton<CurveSingleton>::Instance().getCurve(curveId);
     if(c != 0) {

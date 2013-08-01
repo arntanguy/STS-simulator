@@ -343,7 +343,7 @@ void Function::loadVariables(const QString &group)
         }
     }
     settings->endGroup();
-    updateLinkedCurve();
+    updateLinkedCurve(true);
 }
 
 void Function::save(const QString &group)

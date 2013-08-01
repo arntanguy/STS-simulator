@@ -502,14 +502,16 @@ void PlotControlDialog::newFunctionAvailable()
                 }
             }
         } else if(f->getType() == AbstractFunction::Function) {
-            Function *ff = dynamic_cast<Function*>(f);
-            if(ff != 0) {
-                qDebug() << "Add normal function to view";
-                QStandardItem *Item = HelperFunctions::createFunctionItem(f);
-                if(ff->isDisplayed(mPlotId)) Item->setCheckState(Qt::Checked);
-                mFunctionItems.append(Item);
-                model->setItem( itemIndex++, Item );
-            }
+            //Function *ff = dynamic_cast<Function*>(f);
+            //if(ff != 0) {
+            //    qDebug() << "Add normal function to view";
+            //    QStandardItem *Item = HelperFunctions::createFunctionItem(f);
+            //    if(ff->isDisplayed(mPlotId)) Item->setCheckState(Qt::Checked);
+            //    // XXX: disable display of base functions
+            //    Item->setCheckable(false);
+            //    mFunctionItems.append(Item);
+            //    model->setItem( itemIndex++, Item );
+            //}
         } else if(f->getType() == AbstractFunction::Integral) {
             HierarchicalFunction *hf = dynamic_cast<HierarchicalFunction*>(f);
             if(hf != 0) {
