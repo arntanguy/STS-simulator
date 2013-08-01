@@ -129,4 +129,5 @@ void HierarchicalFunction::update(AbstractFunction *f)
 {
     qDebug()<< "HierarchicalFunction::update()";
     updateLinkedCurve(true);
+    emit functionUpdated(this);
 }
