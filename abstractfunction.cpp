@@ -104,13 +104,7 @@ void AbstractFunction::abstractsave(const QString &group)
 // ========================= VIRTUAL =========================
 void AbstractFunction::save(const QString &group)
 {
-    //qDebug() << "AbstractFunction::save("<<group<<")";
-
-    //QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
-    //if(settings != 0)
-    //    qDebug() << "AbstractFunction::save - valid settings" <<mName;
-    //else
-    //    qDebug() << "AbstractFunction::save - invalid settings" <<mName;
+    qDebug() << "AbstractFunction::save("<<group<<")";
 }
 
 

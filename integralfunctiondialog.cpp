@@ -135,7 +135,12 @@ void IntegralFunctionDialog::addFunction()
     if(dialog.exec() == QDialog::Accepted) {
         // Don't copy for integral, it has to be updated to the parent curve
         // XXX: link any change to parent to integral
-        addFunction(dialog.getSelectedFunction());
+        Function *function = dynamic_cast<Function *>(dialog.getSelectedFunction());
+        if(function != 0) {
+            addFunction(dialog.getSelectedFunction());
+        } else {
+            qDebug() << "IntegralFunctionDialog::addFunction  -- XXX: fatal error: invalid function type!";
+        }
     }
 }
 
