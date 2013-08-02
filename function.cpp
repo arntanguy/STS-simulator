@@ -2,6 +2,7 @@
 #include "projectsingleton.h"
 #include "variablefactory.h"
 #include "muParser.h"
+#include "functioncurve.h"
 
 #include <QDebug>
 #include <iostream>
@@ -327,16 +328,18 @@ void Function::loadFromConfig(const QString &group)
 {
     qDebug() << "Function::loadFromConfig("<<group<<")";
     AbstractFunction::loadFromConfig(group);
+
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
     settings->beginGroup(group);
-    setName(settings->value("name", "Unkown").toString());
     setExpression(settings->value("expression", "").toString());
     settings->endGroup();
-
-    loadVariables(group);
+    loadVariables();
+    if(mLinkedCurve == 0) { qDebug() << "null curve!!";} else{
+    mLinkedCurve->update(true);
+    }
 }
 
-void Function::loadVariables(const QString &group)
+void Function::loadVariables()
 {
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
     settings->beginGroup("Variables/"+QString::number(getId()));
@@ -364,7 +367,7 @@ void Function::save(const QString &group)
         qDebug() << "Function::save - valid settings" <<mName;
     else
         qDebug() << "Function::save - invalid settings" <<mName;
-    settings->beginGroup(group+"/Function/"+mName+"/");
+    settings->beginGroup(group+"/Function/"+QString::number(getId())+"/");
     settings->setValue("expression", getExpression());
     settings->endGroup();
 }

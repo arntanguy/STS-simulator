@@ -19,7 +19,7 @@ void FunctionsSingleton::addFunction(AbstractFunction *f)
 {
     qDebug() << "FunctionSingleton::addFunction: adding function "<<f->getName();
     if(f != 0) {
-        mFunctions[f->getName()] = f;
+        mFunctions[f->getId()] = f;
     } else {
         qDebug() << "FunctionSingleton::addFunction: CANNOT ADD A NULL FUNCTION";
     }
@@ -28,7 +28,7 @@ void FunctionsSingleton::addFunction(AbstractFunction *f)
 void FunctionsSingleton::removeFunction(AbstractFunction *f)
 {
     if(f != 0) {
-        QMap<QString, AbstractFunction *>::iterator it = mFunctions.find(f->getName());
+        QMap<int, AbstractFunction *>::iterator it = mFunctions.find(f->getId());
         if(it != mFunctions.end()) {
             qDebug() << "FunctionsSingleton::removeFunction() - deleting " << it.value()->getName();
             mFunctions.erase(it);
@@ -37,22 +37,17 @@ void FunctionsSingleton::removeFunction(AbstractFunction *f)
     }
 }
 
-AbstractFunction *FunctionsSingleton::getFunction(const QString &name)
-{
-    return mFunctions[name];
-}
-
-AbstractFunction *FunctionsSingleton::getFunctionById(const QString &id)
+AbstractFunction *FunctionsSingleton::getFunctionById(int id)
 {
     foreach(AbstractFunction *f, mFunctions) {
-        if(f->getFunctionId() == id) {
+        if(f->getId() == id) {
             return f;
         }
     }
     return 0;
 }
 
-QStringList FunctionsSingleton::getFunctionNames() const
+QList<int> FunctionsSingleton::getFunctionIds() const
 {
     return mFunctions.keys();
 }
@@ -68,8 +63,7 @@ void FunctionsSingleton::loadFromSettings()
     settings->endGroup();
 
     foreach(QString functionId, groups) {
-        int id = settings->value("Functions/Function/"+functionId+"/id", -1).toInt();
-        Function *f = new Function(id);
+        Function *f = new Function(functionId.toInt());
         f->loadFromConfig("Functions/Function/"+functionId);
         addFunction(f);
     }
@@ -79,8 +73,7 @@ void FunctionsSingleton::loadFromSettings()
     settings->endGroup();
 
     foreach(QString functionId, hGroups) {
-        int id = settings->value("Functions/HierarchicalFunction/"+functionId+"/id", -1).toInt();
-        HierarchicalFunction *f = new HierarchicalFunction(id);
+        HierarchicalFunction *f = new HierarchicalFunction(functionId.toInt());
         f->loadFromConfig("Functions/HierarchicalFunction/"+functionId);
         addFunction(f);
     }
@@ -90,8 +83,7 @@ void FunctionsSingleton::loadFromSettings()
     settings->endGroup();
 
     foreach(QString functionId, iGroups) {
-        int id = settings->value("Functions/IntegralFunction/"+functionId+"/id", -1).toInt();
-        IntegralFunction *f = new IntegralFunction(id);
+        IntegralFunction *f = new IntegralFunction(functionId.toInt());
         f->loadFromConfig("Functions/IntegralFunction/"+functionId);
         addFunction(f);
     }
@@ -113,8 +105,8 @@ void FunctionsSingleton::save()
 
 
     // Now save all the curves
-    foreach(QString fName, mFunctions.keys()) {
-        qDebug() << "Function " << fName;
-        mFunctions[fName]->save("Functions");
+    foreach(int fId, mFunctions.keys()) {
+        qDebug() << "Function " << fId;
+        mFunctions[fId]->save("Functions");
     }
 }

@@ -14,12 +14,11 @@ public:
 
     void addFunction(AbstractFunction *f);
     void removeFunction(AbstractFunction *f);
-    AbstractFunction* getFunction(const QString &name);
-    AbstractFunction* getFunctionById(const QString &id);
-    QStringList getFunctionNames() const;
+    AbstractFunction* getFunctionById(int id);
+    QList<int> getFunctionIds() const;
 
-    bool hasFunction(const QString& name) const {
-        return mFunctions.find(name) != mFunctions.end();
+    bool hasFunction(int id) const {
+        return mFunctions.find(id) != mFunctions.end();
     }
 
     void loadFromSettings();
@@ -27,7 +26,7 @@ public:
 
 private:
     // Function name, function
-    QMap<QString, AbstractFunction *> mFunctions;
+    QMap<int , AbstractFunction *> mFunctions;
 };
 
 #endif // FUNCTIONSSINGLETON_H

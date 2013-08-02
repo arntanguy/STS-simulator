@@ -86,25 +86,20 @@ QString HierarchicalFunction::getExpression() const
 
 void HierarchicalFunction::loadFromConfig(const QString &group)
 {
-    qDebug() << "HierarchicalFunction::loadFromConfig("<<group<<")";
+    qDebug() << "HierarchicalFunction::loadFromConfig("<<group<<", id: " << getId()<<")";
     Function::loadFromConfig(group);
-    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
-    settings->beginGroup(group);
 
-    setName(settings->value("name", "Unknown").toString());
-    settings->beginGroup("Function/");
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup(group+"/Function");
     QStringList groups = settings->childGroups();
     settings->endGroup();
 
-    settings->endGroup();
-
-    foreach(QString fName, groups) {
-        qDebug() << "HierarchicalFunction::loadFromConfig() - adding function " << fName << " to " << mName;
-        Function *f = FunctionFactory::createFromConfig(group+"/Function/"+fName);
+    foreach(QString fId, groups) {
+        Function *f = FunctionFactory::createFromConfig(group+"/Function/"+fId);
         if(f != 0) {
             addFunction(f);
         } else {
-            qDebug() << "FATAL Error: function " << fName << " doesn't exist!";
+            qDebug() << "FATAL Error: function " << fId << " doesn't exist!";
         }
     }
 }
@@ -115,19 +110,14 @@ void HierarchicalFunction::save(const QString &group)
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
     AbstractFunction::abstractsave(group+"/HierarchicalFunction/");
 
-    QString groupName = group+"/HierarchicalFunction/"+mName;
-    settings->beginGroup(groupName);
-    qDebug() << "HierarchicalFunction::save - group name: " << groupName;
-    qDebug() << "HierarchicalFunction::save - " << mFunctions.size() << " sub-functions to save";
+    QString groupName = group+"/HierarchicalFunction/"+QString::number(getId());
     foreach(Function *f, mFunctions) {
         if(f != 0) {
-            qDebug() << "HierarchicalFunction::save - saving subfunction " << f->getName();
-            f->save("");
+            f->save(groupName);
         } else {
             qDebug() << "Error saving HierarchicalFunction "<< mName << ": NULL SUBFUNCTION";
         }
     }
-    settings->endGroup();
 }
 
 

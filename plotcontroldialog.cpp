@@ -482,9 +482,9 @@ void PlotControlDialog::newFunctionAvailable()
 
     int itemIndex=0;
     FunctionsSingleton *fSingleton = &Singleton<FunctionsSingleton>::Instance();
-    QStringList fNames = fSingleton->getFunctionNames();
-    foreach(QString fName, fNames) {
-        AbstractFunction *f = fSingleton->getFunction(fName);
+    QList<int> fIds = fSingleton->getFunctionIds();
+    foreach(int id, fIds) {
+        AbstractFunction *f = fSingleton->getFunctionById(id);
         if(f->getType() == AbstractFunction::HierarchicalFunction) {
             HierarchicalFunction *hf = dynamic_cast<HierarchicalFunction*>(f);
             if(hf != 0) {

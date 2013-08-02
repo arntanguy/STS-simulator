@@ -200,6 +200,7 @@ void IntegralFunction::loadFromConfig(const QString &group)
 {
     qDebug() << "IntegralFunction::loadFromConfig("<<group<<")";
     Function::loadFromConfig(group);
+
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
     settings->beginGroup(group);
 
@@ -208,7 +209,7 @@ void IntegralFunction::loadFromConfig(const QString &group)
     QStringList functionIds = settings->value("ids", QStringList()).toStringList();
     QStringList parameters = settings->value("parameters", QStringList()).toStringList();
     for(int i=0; i<functionIds.size(); i++) {
-        QString id = functionIds[i];
+        int id = functionIds[i].toInt();
         QString parameter = parameters[i];
         Function *f = dynamic_cast<Function *>(Singleton<FunctionsSingleton>::Instance().getFunctionById(id));
         if(f != 0) {
@@ -219,6 +220,7 @@ void IntegralFunction::loadFromConfig(const QString &group)
         }
     }
     settings->endGroup();
+    if(mLinkedCurve != 0) mLinkedCurve->update(true);
 }
 
 void IntegralFunction::save(const QString &group)
@@ -227,13 +229,13 @@ void IntegralFunction::save(const QString &group)
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
     AbstractFunction::abstractsave(group+"/IntegralFunction/");
 
-    QString groupName = group+"/IntegralFunction/"+mName+"/";
+    QString groupName = group+"/IntegralFunction/"+QString::number(getId())+"/";
     QStringList functionIds;
     QStringList parameters;
     foreach(Function *f, mFunctions) {
         if(f != 0) {
             qDebug() << "+++++++++++ adding function "<<f->getName() << " with group "<< f->getGroup();
-            functionIds << f->getFunctionId() ;
+            functionIds << QString::number(f->getId()) ;
             parameters << mParameters[f];
         }
     }

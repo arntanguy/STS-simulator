@@ -18,7 +18,7 @@ public:
     }
     void setComputeRange(double min, double max, int resolution);
 
-    virtual void update();
+    virtual void update(bool forceUpdate = false);
     virtual void save();
     virtual void loadFromSettings();
 

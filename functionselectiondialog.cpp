@@ -31,13 +31,13 @@ FunctionSelectionDialog::~FunctionSelectionDialog()
 void FunctionSelectionDialog::init()
 {
     FunctionsSingleton *singleton = &Singleton<FunctionsSingleton>::Instance();
-    QStringList fNames = singleton->getFunctionNames();
+    QList<int> fIds = singleton->getFunctionIds();
     QStandardItemModel *model = new QStandardItemModel();
     ui->functionList->setModel(model);
     if(model != 0) {
         int row = 0;
-        foreach(QString name, fNames) {
-            Function *f = dynamic_cast<Function*>(singleton->getFunction(name));
+        foreach(int id, fIds) {
+            Function *f = dynamic_cast<Function*>(singleton->getFunctionById(id));
             if(f != 0)
                 model->setItem(row++, createItem(f));
         }

@@ -64,7 +64,7 @@ Q_SIGNALS:
 
 private:
     void init();
-    void loadVariables(const QString &group);
+    void loadVariables();
     void cleanupVariables();
 
     bool checkParameters(const QString &parameters) const;

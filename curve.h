@@ -14,7 +14,7 @@ class Curve: public QObject, public QwtPlotCurve
 {
     Q_OBJECT
 public:
-    enum Type { Experimental, Function, Integral };
+    enum Type { Experimental, Function, Integral, Unknown };
     Curve();
     Curve(int id);
     Curve( const QString &name );
@@ -47,8 +47,9 @@ public:
     void setExperimentalData(const QString &experimentId, const QString &abscissiaColumnName, const QString &ordinateColumnName);
     void updateExperimentalData();
 
-    virtual void update();
+    virtual void update(bool forceUpdate = false);
     void setUpdateNeeded() {
+        qDebug() <<"========== force update=============";
         mNeedsUpdate = true;
     }
     bool needsUpdate() const {

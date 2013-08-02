@@ -32,18 +32,21 @@ void Curve::abstractCopyFromCurve(Curve *curve)
     setTitle(curve->title().text());
     setMinMax(curve->getMin(), curve->getMax());
     setPen(curve->pen());
+    mType = curve->getType();
 }
 
 void Curve::copyFromCurve(Curve *curve)
 {
     qDebug() << "Curve::copyFromCurve() - name " << curve->title().text();
     abstractCopyFromCurve(curve);
-    setExperimentalData(mExperimentalId, mExperimentalAbscissia, mExperimentalOrdinate);
+    if(curve->getType() == Experimental) {
+        setExperimentalData(mExperimentalId, mExperimentalAbscissia, mExperimentalOrdinate);
+    }
 }
 
 void Curve::init()
 {
-    mType = Experimental;
+    mType = Unknown;
     setRenderHint( QwtPlotItem::RenderAntialiased );
     setMinMax(0, 1);
 }
@@ -200,7 +203,7 @@ void Curve::setPen(const QPen& pen)
     update();
 }
 // =============================== VIRTUAL ======================================
-void Curve::update()
+void Curve::update(bool forceUpdate)
 {
     foreach(PlotWidget *plot, mPlots.keys()) {
         plot->replot();
@@ -222,7 +225,8 @@ void Curve::attach(PlotWidget *plot)
         curve = new Curve(getId());
         curve->copyFromCurve(this);
         curve->QwtPlotItem::attach(plot);
-        curve->setExperimentalData(mExperimentalId, mExperimentalAbscissia, mExperimentalOrdinate);
+        if(curve->getType() == Experimental)
+            curve->setExperimentalData(mExperimentalId, mExperimentalAbscissia, mExperimentalOrdinate);
     }
     mPlots[plot] = curve;
 }

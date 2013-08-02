@@ -39,9 +39,9 @@ int IntegralCurve::getStepNumber() const
 }
 
 // ========================= PUBLIC VIRTUAL ==============================
-void IntegralCurve::update()
+void IntegralCurve::update(bool forceUpdate)
 {
-    FunctionCurve::update();
+    FunctionCurve::update(forceUpdate);
 }
 
 void IntegralCurve::updateData()
@@ -76,5 +76,5 @@ void IntegralCurve::loadFromSettings()
     settings->beginGroup("Curves/"+QString::number(getId()));
     setStepNumber(settings->value("integralResolution", 10).toInt());
     settings->endGroup();
-    update();
+    update(true);
 }

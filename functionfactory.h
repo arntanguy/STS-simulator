@@ -10,7 +10,7 @@ class FunctionFactory
 public:
     FunctionFactory();
     static Function* createFromConfig(const QString &functionGroup);
-    static Function* createFromSingleton(const QString &name);
+    static Function* createFromSingleton(int id);
     static Function* createFromFunction(Function *f);
 };
 

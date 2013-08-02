@@ -30,7 +30,7 @@ void FunctionCurve::setFunction(AbstractFunction *f)
     if(f != mFunction) {
         mFunction = f;
         setTitle(f->getName());
-        qDebug() << "FunctionCurve::createFunction for function "<<f->getName();
+        qDebug() << "FunctionCurve::setFunction for function "<<f->getName();
         connect(mFunction, SIGNAL(needsRecompute()), this, SLOT(slotUpdateData()));
         connect(mFunction, SIGNAL(nameUpdated(const QString &)), this, SLOT(updateName(const QString &)));
         connect(mFunction, SIGNAL(expressionChanged()), this, SLOT(slotDeferedUpdate()));
@@ -81,10 +81,10 @@ void FunctionCurve::copyFromCurve(Curve *curve)
     }
 }
 
-void FunctionCurve::update()
+void FunctionCurve::update(bool forceUpdate)
 {
     qDebug() << "FunctionCurve::update()";
-    if(needsUpdate()) {
+    if(needsUpdate() || forceUpdate) {
         qDebug() << "FunctionCurve::update()";
         updateData();
     }

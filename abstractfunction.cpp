@@ -26,13 +26,13 @@ AbstractFunction::AbstractFunction(int id, QObject *parent) : QObject(parent)
 void AbstractFunction::setId(int id)
 {
     qDebug() << "set id " << id;
-    if(id >= mFunctionStaticId) {
+    //if(id >= mFunctionStaticId) {
         mFunctionId = id;
         mFunctionStaticId = std::max(id, mFunctionStaticId) + 1;
-    } else {
+    //} else {
         // XXX: handle error
-        mFunctionId = -1;
-    }
+        //mFunctionId = -1;
+    //}
 }
 
 void AbstractFunction::setName(const QString &name)
@@ -95,11 +95,7 @@ void AbstractFunction::updateLinkedCurve(bool forceUpdate)
     qDebug() << "AbstractFunction::updateLinkedCurve";
     if(mLinkedCurve != 0) {
         qDebug() << "update linked curve";
-        if(forceUpdate) {
-            qDebug() << "force update";
-            mLinkedCurve->setUpdateNeeded();
-        }
-        mLinkedCurve->update();
+        mLinkedCurve->update(forceUpdate);
     }
 }
 
@@ -117,7 +113,7 @@ void AbstractFunction::abstractsave(const QString &group)
     qDebug() << "AbstractFunction::abstractsave - saving " << mName;
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
     if(settings == 0) qDebug() << "null settings";
-    settings->beginGroup(group+"/"+mName);
+    settings->beginGroup(group+"/"+QString::number(mFunctionId));
     settings->setValue("name", mName);
     settings->setValue("id", mFunctionId);
     if(mLinkedCurve != 0)
@@ -136,21 +132,22 @@ void AbstractFunction::loadFromConfig(const QString &group)
 {
     qDebug() << "AbstractFunction::loadFromConfig("<<group<<")";
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
-    unsigned int curveId = settings->value(group+"/curveId", -1).toInt();
-    qDebug() << "AbstractFunction::loadFromConfig() -- curve id "<< curveId << "";
-    Curve *c = Singleton<CurveSingleton>::Instance().getCurve(curveId);
-    if(c != 0) {
-        qDebug() << "AbstractFunction::loadFromConfig() - valid curve";
-        FunctionCurve *curve = dynamic_cast<FunctionCurve*>(c);
-        if(curve != 0) {
-            qDebug() << "AbstractFunction::loadFromConfig() - valid function curve";
-            curve->loadFromSettings();
-            curve->setFunction(this);
-            setCurve(curve);
-            updateLinkedCurve();
+    settings->beginGroup(group);
+    int curveId = settings->value("curveId", -1).toInt();
+    qDebug() << "Curve ID =============";
+    setName(settings->value("name", "Unkown").toString());
+    settings->endGroup();
+    if(curveId != -1) {
+        Curve *c = Singleton<CurveSingleton>::Instance().getCurve(curveId);
+        if(c != 0) {
+            FunctionCurve *curve = dynamic_cast<FunctionCurve*>(c);
+            if(curve != 0) {
+                qDebug() << "AbstractFunction::loadFromConfig() - valid function curve - id: " << curve->getId();
+                curve->setFunction(this);
+                setCurve(curve);
+            }
         }
     }
-    settings->endGroup();
 }
 
 QString AbstractFunction::getGroup() const

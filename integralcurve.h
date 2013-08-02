@@ -17,7 +17,7 @@ public:
     void setStepNumber(int stepNumber);
     int getStepNumber() const;
 
-    virtual void update();
+    virtual void update(bool forceUpdate = false);
     virtual void save();
     virtual void loadFromSettings();
 

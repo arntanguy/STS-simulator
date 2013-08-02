@@ -55,11 +55,11 @@ bool NewFunctionDialog::setupFunction()
     if(mFunction->isValidExpression()) {
         qDebug() << "Valid expression, accept";
         if(!mEditFunction) {
-            if(singleton->hasFunction(ui->functionName->text())) {
-                QMessageBox::critical(this, tr("Function name already exists"),
-                        tr("You can't have two base functions with the same name!"));
-                return false;
-            }
+            //if(singleton->hasFunction(ui->functionName->text())) {
+            //    QMessageBox::critical(this, tr("Function name already exists"),
+            //            tr("You can't have two base functions with the same name!"));
+            //    return false;
+            //}
             singleton->addFunction(mFunction);
             setFunction(mFunction);
         }
