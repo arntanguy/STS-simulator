@@ -38,6 +38,7 @@ public:
         mBaseGroup = group;
     }
     virtual QString getGroup() const;
+    QString getFunctionId() const;
 
     virtual FunctionCurve* createCurve();
     void setCurve(FunctionCurve *curve);

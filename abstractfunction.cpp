@@ -131,7 +131,17 @@ void AbstractFunction::loadFromConfig(const QString &group)
 
 QString AbstractFunction::getGroup() const
 {
+    if(getType() == AbstractFunction::HierarchicalFunction) {
+        qDebug() << "========== hierarchical: " << mBaseGroup;
+    }
+    qDebug() << "========== base group: " << mBaseGroup;
+    qDebug() << "========== name: " << mName;
     return mBaseGroup + mName;
+}
+
+QString AbstractFunction::getFunctionId() const
+{
+    return getGroup();
 }
 
 // ========================== SLOTS =========================

@@ -31,7 +31,6 @@ void IntegralCurve::setStepNumber(int stepNumber)
         mStepNumber = stepNumber;
         mNeedsUpdate = true;
     }
-    //update();
 }
 
 int IntegralCurve::getStepNumber() const

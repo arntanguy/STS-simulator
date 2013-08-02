@@ -124,6 +124,7 @@ QString Function::getExpression() const {
 
 bool Function::isValidExpression() const {
     try {
+        qDebug() << "++++++++++++ "<< getFunctionId() << " eval expression";
         mParser->Eval();
     } catch (...) {
         return false;
@@ -206,7 +207,7 @@ double Function::compute(const QString &variable, double x)
  */
 double Function::computeWithParameters(const QString &variable, double x)
 {
-    //qDebug() << "Function::compute(parameters: " << mParameters <<", x="<<x<<")";
+    qDebug() << "Function::compute(parameters: " << mParameters <<", x="<<x<<")";
 
     // Define x value in function parser
     mParser->DefineVar(variable.toStdString(), &x);
@@ -219,6 +220,8 @@ double Function::computeWithParameters(const QString &variable, double x)
     VariableFactory pVarFact;
     pParser.SetVarFactory(addVariable, &pVarFact);
     pParser.Eval();
+
+    qDebug() << "#there";
 
     /**
      * This loop check if parameters variables are in the function expression

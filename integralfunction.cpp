@@ -1,6 +1,9 @@
 #include <math.h>
 
 #include <QDebug>
+#include <QSettings>
+#include "projectsingleton.h"
+#include "functionssingleton.h"
 #include "function.h"
 #include "integralfunction.h"
 #include "integralcurve.h"
@@ -117,6 +120,7 @@ FunctionCurve* IntegralFunction::createCurve()
 IntegralData IntegralFunction::integrate(double min, double max, double resolution, double stepNumber)
 {
     qDebug() << "IntegralFunction::integrate(min: "<<min<<", max: "<<max<<", resolution: "<<resolution<<", stepNumber: "<<stepNumber<<")";
+    qDebug() << "Expression : " << getExpression();
 
     if(resolution == 0 || stepNumber == 0) {
         qDebug() << "FATAL ERROR: NULL STEP NUMBER";
@@ -132,13 +136,21 @@ IntegralData IntegralFunction::integrate(double min, double max, double resoluti
     double x = min;
     double e = min;
 
+    qDebug() << "Here";
+
     // Set upper limit (V)
     for(; x<max; x += step) {
+        qDebug() << "begin";
         double h1 = 1;
         // XXX: Allow for other operations than *
         foreach(Function *f, mFunctions) {
+            if(f == 0)  qDebug () << "null function";
+            qDebug() << "there";
             f->setVariable(f->getVariable(), x);
+            qDebug() << "there2";
+            qDebug() << mIntegrationVariable << " " << e;
             h1 *= f->computeWithParameters(mIntegrationVariable, e);
+            qDebug() << "there3";
         }
         while(e < x) {
             // Avoid recomputing h0 needlessly.
@@ -148,11 +160,13 @@ IntegralData IntegralFunction::integrate(double min, double max, double resoluti
             e += deltaX;
             h1 = 1;
             foreach(Function *f, mFunctions) {
+                if(f == 0)  qDebug () << "null function";
                 f->setVariable(f->getVariable(), x);
                 h1 *= f->computeWithParameters(mIntegrationVariable, e);
             }
             r += deltaX * (h0 + h1)/2.d;
         }
+        qDebug() << x << " " << r;
         data.x.append(x);
         data.y.append(r);
     }
@@ -171,12 +185,51 @@ double IntegralFunction::compute(const QString&, double)
     return -1;
 }
 
-void IntegralFunction::save(const QString &group)
-{
-    HierarchicalFunction::save(getGroup());
-}
 
 void IntegralFunction::loadFromConfig(const QString &group)
 {
-    HierarchicalFunction::loadFromConfig(getGroup());
+    qDebug() << "IntegralFunction::loadFromConfig("<<group<<")";
+    Function::loadFromConfig(group);
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup(group);
+
+    setName(settings->value("name", "Unknown").toString());
+
+    QStringList functionIds = settings->value("ids", QStringList()).toStringList();
+    QStringList parameters = settings->value("parameters", QStringList()).toStringList();
+    for(int i=0; i<functionIds.size(); i++) {
+        QString id = functionIds[i];
+        QString parameter = parameters[i];
+        Function *f = dynamic_cast<Function *>(Singleton<FunctionsSingleton>::Instance().getFunctionById(id));
+        if(f != 0) {
+            qDebug() << "+++++++++++++ Adding funciton " << f->getFunctionId() << " with expression "<<f->getExpression();
+            f->setParameters(parameter);
+            addFunction(f);
+        } else {
+            qDebug() << "================= FATAL Error: function " << id << " doesn't exist!";
+        }
+    }
+}
+
+void IntegralFunction::save(const QString &group)
+{
+    qDebug() << "IntegralFunction::save - saving function " << mName;
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    AbstractFunction::abstractsave(group+"/IntegralFunction/");
+
+    QString groupName = group+"/IntegralFunction/"+mName+"/";
+    QStringList functionIds;
+    QStringList parameters;
+    foreach(Function *f, mFunctions) {
+        if(f != 0) {
+            qDebug() << "+++++++++++ adding function "<<f->getName() << " with group "<< f->getGroup();
+            functionIds << f->getFunctionId() ;
+            parameters << f->getParameters();
+        }
+    }
+    settings->beginGroup(groupName);
+    qDebug() << "IntegralFunction::save - group name: " << groupName;
+    settings->setValue("ids", functionIds);
+    settings->setValue("parameters", parameters);
+    settings->endGroup();
 }

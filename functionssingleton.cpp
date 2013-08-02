@@ -2,6 +2,7 @@
 #include "projectsingleton.h"
 #include "function.h"
 #include "hierarchicalfunction.h"
+#include "integralfunction.h"
 #include "abstractfunction.h"
 
 #include <QStringList>
@@ -41,6 +42,16 @@ AbstractFunction *FunctionsSingleton::getFunction(const QString &name)
     return mFunctions[name];
 }
 
+AbstractFunction *FunctionsSingleton::getFunctionById(const QString &id)
+{
+    foreach(AbstractFunction *f, mFunctions) {
+        if(f->getFunctionId() == id) {
+            return f;
+        }
+    }
+    return 0;
+}
+
 QStringList FunctionsSingleton::getFunctionNames() const
 {
     return mFunctions.keys();
@@ -72,10 +83,18 @@ void FunctionsSingleton::loadFromSettings()
         addFunction(f);
     }
 
+    settings->beginGroup("Functions/IntegralFunction/");
+    QStringList iGroups = settings->childGroups();
+    settings->endGroup();
+
+    foreach(QString functionId, iGroups) {
+        IntegralFunction *f = new IntegralFunction();
+        f->loadFromConfig("Functions/IntegralFunction/"+functionId);
+        addFunction(f);
+    }
+
     foreach(AbstractFunction *f, mFunctions) {
-        if(f->getType() == AbstractFunction::HierarchicalFunction) {
-            f->updateLinkedCurve();
-        }
+        f->updateLinkedCurve();
     }
 }
 

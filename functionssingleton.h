@@ -15,6 +15,7 @@ public:
     void addFunction(AbstractFunction *f);
     void removeFunction(AbstractFunction *f);
     AbstractFunction* getFunction(const QString &name);
+    AbstractFunction* getFunctionById(const QString &id);
     QStringList getFunctionNames() const;
 
     bool hasFunction(const QString& name) const {

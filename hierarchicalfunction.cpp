@@ -21,7 +21,7 @@ void HierarchicalFunction::init()
 void HierarchicalFunction::addFunction(Function *function)
 {
     qDebug() << "HierarchicalFunction::addFunction()";
-    function->setGroup(mBaseGroup+mName+"/Function/");
+    //function->setGroup(mBaseGroup+mName+"/Function/");
     mFunctions.append(function);
     connect(function, SIGNAL(functionUpdated(AbstractFunction *)), this, SLOT(update(AbstractFunction *)));
     emit expressionChanged();
