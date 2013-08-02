@@ -4,6 +4,8 @@
 #include "hierarchicalfunction.h"
 #include "integralfunction.h"
 #include "abstractfunction.h"
+#include "curve.h"
+#include "functioncurve.h"
 
 #include <QStringList>
 #include <QDebug>
@@ -28,6 +30,10 @@ void FunctionsSingleton::addFunction(AbstractFunction *f)
 void FunctionsSingleton::removeFunction(AbstractFunction *f)
 {
     if(f != 0) {
+        Curve *c = f->getCurve();
+        if(c != 0) {
+            c->detachFromAll();
+        }
         QMap<int, AbstractFunction *>::iterator it = mFunctions.find(f->getId());
         if(it != mFunctions.end()) {
             qDebug() << "FunctionsSingleton::removeFunction() - deleting " << it.value()->getName();

@@ -37,6 +37,9 @@ public:
         return mData;
     }
 
+    void setType(Type t) {
+        mType = t;
+    }
     Type getType() const {
         return mType;
     }
@@ -61,6 +64,7 @@ public:
 
     void attach(PlotWidget *plot);
     void detach(PlotWidget *plot);
+    void detachFromAll();
     bool isAttached(PlotWidget *plot) const;
     bool isAttached(unsigned int plotId) const;
 

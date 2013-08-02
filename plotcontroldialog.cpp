@@ -541,6 +541,8 @@ void PlotControlDialog::deleteFunction()
     mFunctionItems.removeOne(model->itemFromIndex(index));
     Singleton<FunctionsSingleton>::Instance().removeFunction(f);
     model->removeRow(index.row());
+    // XXX: More appropriate call?
+    newFunctionAvailable();
 }
 
 void PlotControlDialog::editFunction(const QModelIndex &index)

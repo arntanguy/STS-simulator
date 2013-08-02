@@ -128,6 +128,7 @@ void Curve::loadFromSettings()
     setMinMax(settings->value("min", 0).toDouble(), settings->value("max", 10).toDouble());
 
     Curve::Type type = static_cast<Curve::Type>(settings->value("type", Curve::Experimental).toUInt());
+    setType(type);
     if(type == Curve::Experimental) {
         // Load data
         QString path = settings->value("data", "").toString();;
@@ -238,6 +239,18 @@ void Curve::detach(PlotWidget *plot)
         curve->QwtPlotItem::detach();
         delete curve;
         mPlots.remove(plot);
+    }
+}
+
+void Curve::detachFromAll()
+{
+    foreach(PlotWidget *p, mPlots.keys()) {
+        Curve *c = mPlots[p];
+        if(c != 0) {
+            c->QwtPlotItem::detach();
+            delete c;
+            mPlots.remove(p);
+        }
     }
 }
 

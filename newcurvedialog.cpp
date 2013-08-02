@@ -55,6 +55,9 @@ void NewCurveDialog::init()
 
 
     ui->dataTable->setEditTriggers(QTableView::NoEditTriggers);
+
+    mCurve = new Curve();
+    mCurve->setType(Curve::Experimental);
 }
 
 void NewCurveDialog::loadFromCurve(Curve *curve)
@@ -118,7 +121,6 @@ void NewCurveDialog::loadFromCurve(Curve *curve)
 // ========================= SLOTS ============================
 void NewCurveDialog::accept()
 {
-    if(mCurve == 0)  mCurve = new Curve();
     mCurve->setTitle(ui->curveName->text());
     Qt::PenStyle penStyle = static_cast<Qt::PenStyle>(ui->curvePenStyle->itemData(ui->curvePenStyle->currentIndex()).toInt());
     QPen pen(ui->curveColor->currentColor());
@@ -156,9 +158,6 @@ void NewCurveDialog::accept()
             c->setResolution(ui->curveResolution->value());
         }
     }
-
-    // Save the curve
-    mCurve->save();
 
     QDialog::accept();
 }
