@@ -5,7 +5,7 @@
 #include "plotsingleton.h"
 #include "plotwidget.h"
 
-unsigned int Curve::mCurveStaticId = 0;
+int Curve::mCurveStaticId = 0;
 
 Curve::Curve()
 {
@@ -48,7 +48,7 @@ void Curve::init()
     setMinMax(0, 1);
 }
 
-void Curve::setId(unsigned int id)
+void Curve::setId(int id)
 {
     qDebug() << "set id " << id;
     if(id >= mCurveStaticId) {

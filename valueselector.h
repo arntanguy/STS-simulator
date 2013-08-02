@@ -7,17 +7,18 @@ namespace Ui {
 class ValueSelector;
 }
 class QSettings;
+class Function;
 
 class ValueSelector : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit ValueSelector(const QString &name, double *variable, QWidget *parent = 0);
+    explicit ValueSelector(const QString &name, Function *f, QWidget *parent = 0);
     ~ValueSelector();
 
     void save();
-    void loadFromConfig(const QString &group);
+    void loadFromConfig();
 
 public Q_SLOTS:
     void minValueChanged(double);
@@ -34,6 +35,7 @@ private:
     /**
      * Any change made to this variable will be repercuted when computing the function
      **/
+    Function *mFunction;
     double *mVariable;
     QString mName;
 };

@@ -38,7 +38,12 @@ Function::Function(QObject *parent) : AbstractFunction(parent)
     init();
 }
 
-Function::Function(Function const& toCopy)
+Function::Function(int id, QObject *parent) : AbstractFunction(id, parent)
+{
+    init();
+}
+
+Function::Function(Function const& toCopy) : Function()
 {
     // Creates a new variable factory and set default parameters
     init();
@@ -154,21 +159,6 @@ void Function::setImplicitVariable(const QString &varName, double value)
     }
 }
 
-bool Function::setParameters(const QString &parameters)
-{
-    //if(mParameters != parameters) {
-        qDebug() << "Function::setParameters - setting " << parameters;
-        mNeedsUpdate = true;
-        mParameters = parameters;
-        emit needsRecompute();
-        return true;
-    //}
-}
-QString Function::getParameters() const
-{
-    return mParameters;
-}
-
 /**
  * @brief Function::compute
  *  Computes the value (with parameters if set)
@@ -205,9 +195,12 @@ double Function::compute(const QString &variable, double x)
  * @return
  *  Computed value f(parameters)
  */
-double Function::computeWithParameters(const QString &variable, double x)
+double Function::computeWithParameters(const QString &parameters, const QString &variable, double x)
 {
-    qDebug() << "Function::compute(parameters: " << mParameters <<", x="<<x<<")";
+    //qDebug() << "Function::compute(parameters: " << parameters <<", x="<<x<<")";
+    if(parameters.isEmpty()) {
+        qDebug() << "Function::computeWithParameters -- WARNING: empty parameters";
+    }
 
     // Define x value in function parser
     mParser->DefineVar(variable.toStdString(), &x);
@@ -216,12 +209,11 @@ double Function::computeWithParameters(const QString &variable, double x)
      * Create a parser for the parameters
      **/
     mu::Parser pParser;
-    pParser.SetExpr(mParameters.toStdString());
+    pParser.SetExpr(parameters.toStdString());
     VariableFactory pVarFact;
     pParser.SetVarFactory(addVariable, &pVarFact);
     pParser.Eval();
 
-    qDebug() << "#there";
 
     /**
      * This loop check if parameters variables are in the function expression
@@ -247,7 +239,7 @@ double Function::computeWithParameters(const QString &variable, double x)
     }
 
     double parameterValue = pParser.Eval();
-    qDebug() << "parameter value for x="<<x<< ": " << parameterValue;
+    //qDebug() << "parameter value for x="<<x<< ": " << parameterValue;
     return compute(mVariable, parameterValue);
 
 }
@@ -318,6 +310,18 @@ double* Function::getVariable(const QString &name)
     }
 }
 
+QStringList Function::getVariableList() const
+{
+    varmap_type variables = mParser->GetVar();
+    varmap_type::iterator it = variables.begin();
+    QStringList list;
+    while(it++ != variables.end()) {
+        QString val = it->first.c_str();
+        list << val;
+    }
+    return list;
+}
+
 // ============================= VIRTUAL =================================
 void Function::loadFromConfig(const QString &group)
 {
@@ -335,18 +339,18 @@ void Function::loadFromConfig(const QString &group)
 void Function::loadVariables(const QString &group)
 {
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
-    settings->beginGroup("Variables/"+group);
+    settings->beginGroup("Variables/"+QString::number(getId()));
     qDebug() << "Function::loadVariables() -- from group " << settings->group();
 
     QStringList variables = getVariableFactory()->getVariableNames();
     foreach(QString var, variables) {
         // If it's not the function variable
         if(var != getVariable()) {
+            qDebug() << " -------------- Loading variable "<<var<< " = " << settings->value(var+"/value", -1).toDouble();
             getVariableFactory()->setValue(var, settings->value(var+"/value", -1).toDouble());
         }
     }
     settings->endGroup();
-    updateLinkedCurve(true);
 }
 
 void Function::save(const QString &group)
@@ -364,17 +368,6 @@ void Function::save(const QString &group)
     settings->setValue("expression", getExpression());
     settings->endGroup();
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 // ============ HELPER FUNCTIONS maily for debug ===========================

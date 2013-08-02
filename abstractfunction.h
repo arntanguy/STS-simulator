@@ -18,6 +18,7 @@ public:
 
 public:
     AbstractFunction(QObject *parent=0);
+    AbstractFunction(int id, QObject *parent=0);
 
     void setName(const QString &name);
     QString getName() const;
@@ -49,6 +50,11 @@ public:
 
     bool isDisplayed(unsigned int plotId) const;
 
+    void setId(int id);
+    int getId() const {
+        return mFunctionId;
+    }
+
 Q_SIGNALS:
     void nameUpdated(const QString &);
     virtual void curveUpdated(AbstractFunction *);
@@ -60,6 +66,10 @@ public Q_SLOTS:
 
 protected:
     void abstractsave(const QString &);
+
+private:
+    static int mFunctionStaticId;
+    int mFunctionId;
 
 protected:
     QString mName;

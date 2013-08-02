@@ -65,7 +65,7 @@ public:
 
 private:
     void init();
-    void setId(unsigned int id);
+    void setId(int id);
 
 protected:
     void abstractCopyFromCurve(Curve *curve);
@@ -78,8 +78,8 @@ private:
 
     double mMin, mMax;
 
-    static unsigned int mCurveStaticId;
-    unsigned int mCurveId;
+    static int mCurveStaticId;
+    int mCurveId;
 
 protected:
     bool mNeedsUpdate;

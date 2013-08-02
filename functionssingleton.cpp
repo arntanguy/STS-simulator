@@ -68,7 +68,8 @@ void FunctionsSingleton::loadFromSettings()
     settings->endGroup();
 
     foreach(QString functionId, groups) {
-        Function *f = new Function();
+        int id = settings->value("Functions/Function/"+functionId+"/id", -1).toInt();
+        Function *f = new Function(id);
         f->loadFromConfig("Functions/Function/"+functionId);
         addFunction(f);
     }
@@ -78,7 +79,8 @@ void FunctionsSingleton::loadFromSettings()
     settings->endGroup();
 
     foreach(QString functionId, hGroups) {
-        HierarchicalFunction *f = new HierarchicalFunction();
+        int id = settings->value("Functions/HierarchicalFunction/"+functionId+"/id", -1).toInt();
+        HierarchicalFunction *f = new HierarchicalFunction(id);
         f->loadFromConfig("Functions/HierarchicalFunction/"+functionId);
         addFunction(f);
     }
@@ -88,13 +90,14 @@ void FunctionsSingleton::loadFromSettings()
     settings->endGroup();
 
     foreach(QString functionId, iGroups) {
-        IntegralFunction *f = new IntegralFunction();
+        int id = settings->value("Functions/IntegralFunction/"+functionId+"/id", -1).toInt();
+        IntegralFunction *f = new IntegralFunction(id);
         f->loadFromConfig("Functions/IntegralFunction/"+functionId);
         addFunction(f);
     }
 
     foreach(AbstractFunction *f, mFunctions) {
-        f->updateLinkedCurve();
+        f->updateLinkedCurve(true);
     }
 }
 

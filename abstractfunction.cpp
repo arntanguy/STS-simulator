@@ -3,13 +3,36 @@
 #include "curvesingleton.h"
 
 #include <QDebug>
+#include <algorithm>
 #include "plotwidget.h"
 #include "functioncurve.h"
+
+int AbstractFunction::mFunctionStaticId = 0;
 
 AbstractFunction::AbstractFunction(QObject *parent) : QObject(parent)
 {
     mBaseGroup = "Functions/AbstractFunction/";
     mLinkedCurve = 0;
+    setId(mFunctionStaticId);
+}
+
+AbstractFunction::AbstractFunction(int id, QObject *parent) : QObject(parent)
+{
+    mBaseGroup = "Functions/AbstractFunction/";
+    mLinkedCurve = 0;
+    setId(id);
+}
+
+void AbstractFunction::setId(int id)
+{
+    qDebug() << "set id " << id;
+    if(id >= mFunctionStaticId) {
+        mFunctionId = id;
+        mFunctionStaticId = std::max(id, mFunctionStaticId) + 1;
+    } else {
+        // XXX: handle error
+        mFunctionId = -1;
+    }
 }
 
 void AbstractFunction::setName(const QString &name)
@@ -96,6 +119,7 @@ void AbstractFunction::abstractsave(const QString &group)
     if(settings == 0) qDebug() << "null settings";
     settings->beginGroup(group+"/"+mName);
     settings->setValue("name", mName);
+    settings->setValue("id", mFunctionId);
     if(mLinkedCurve != 0)
         settings->setValue("curveId", mLinkedCurve->getId());
     settings->endGroup();
@@ -112,7 +136,7 @@ void AbstractFunction::loadFromConfig(const QString &group)
 {
     qDebug() << "AbstractFunction::loadFromConfig("<<group<<")";
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
-    unsigned int curveId = settings->value(group+"/curveId", -1).toUInt();
+    unsigned int curveId = settings->value(group+"/curveId", -1).toInt();
     qDebug() << "AbstractFunction::loadFromConfig() -- curve id "<< curveId << "";
     Curve *c = Singleton<CurveSingleton>::Instance().getCurve(curveId);
     if(c != 0) {

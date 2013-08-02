@@ -10,6 +10,7 @@ class HierarchicalFunction : public Function
 Q_OBJECT
 public:
     HierarchicalFunction();
+    HierarchicalFunction(int id);
 
     void addFunction(Function *function);
     void removeFunction(Function *f);

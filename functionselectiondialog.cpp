@@ -63,7 +63,7 @@ void FunctionSelectionDialog::useFunction(Function *f)
     foreach(QString var, variables) {
         // If it's not the function variable
         if(var != f->getVariable()) {
-            ValueSelector *valueSelector = new ValueSelector(var, f->getVariableFactory()->getVariableAddress(var), this);
+            ValueSelector *valueSelector = new ValueSelector(var, f, this);
             connect(valueSelector, SIGNAL(valueChanged(QString,double)), this, SLOT(variableValueChanged(QString, double)));
             // Creates a widget to control it
             ui->functionVariablesLayout->addWidget(valueSelector);

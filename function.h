@@ -22,6 +22,7 @@ class Function : public AbstractFunction
 
 public:
     Function(QObject *parent = 0);
+    Function(int id, QObject *parent = 0);
     Function(Function const& toCopy);
     ~Function();
 
@@ -40,14 +41,11 @@ public:
     bool hasVariable(const QString &name) const;
     void setVariable(const QString &name, double value);
     double* getVariable(const QString &name);
-
-    bool setParameters(const QString &parameters);
-    QString getParameters() const;
-
+    QStringList getVariableList() const;
 
     double compute(double x);
     double compute(const QString &variable, double x);
-    double computeWithParameters(const QString& variable, double x);
+    double computeWithParameters(const QString &parameters, const QString& variable, double x);
 
     double operator() (double x) {
         return compute(x);
@@ -71,8 +69,6 @@ private:
 
     bool checkParameters(const QString &parameters) const;
 
-private:
-    QString mParameters;
 protected:
     mu::Parser *mParser;
 

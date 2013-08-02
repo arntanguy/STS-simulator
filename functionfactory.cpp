@@ -1,6 +1,9 @@
 #include "functionfactory.h"
 #include "functionssingleton.h"
 #include "function.h"
+#include "projectsingleton.h"
+
+#include <QSettings>
 
 FunctionFactory::FunctionFactory()
 {
@@ -9,7 +12,12 @@ FunctionFactory::FunctionFactory()
 // ============================ STATIC PUBLIC ===============================
 Function* FunctionFactory::createFromConfig(const QString &functionGroup)
 {
-    Function *function = new Function();
+
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup(functionGroup);
+    int id = settings->value("id", -1).toInt();
+
+    Function *function = new Function(id);
     function->loadFromConfig(functionGroup);
     return function;
 }

@@ -1,23 +1,26 @@
 #include "valueselector.h"
 #include "ui_valueselector.h"
 #include "projectsingleton.h"
+#include "function.h"
+#include "variablefactory.h"
 
 #include <qwt_slider.h>
 #include <QDebug>
 #include <QSettings>
 
-ValueSelector::ValueSelector(const QString &name, double *variable, QWidget *parent) :
+ValueSelector::ValueSelector(const QString &name, Function *f, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ValueSelector)
 {
     ui->setupUi(this);
+    mFunction = f;
 
     minValueChanged(ui->variableMin->value());
     maxValueChanged(ui->variableMax->value());
 
     mName = name;
 
-    mVariable = variable;
+    mVariable = mFunction->getVariableFactory()->getVariableAddress(name);
     *mVariable = ui->variableValue->value();
 
     ui->variableName->setText(name + " = ");
@@ -44,10 +47,10 @@ void ValueSelector::save()
     settings->endGroup();
 }
 
-void ValueSelector::loadFromConfig(const QString &baseGroup)
+void ValueSelector::loadFromConfig()
 {
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
-    settings->beginGroup("Variables/"+baseGroup+"/"+mName);
+    settings->beginGroup("Variables/"+QString::number(mFunction->getId())+"/"+mName);
     qDebug() << "ValueSelector::loadFromConfig() - loading from " << settings->group();
     ui->variableValue->setValue(settings->value("value", 0).toDouble());
     ui->variableMin->setValue(settings->value("min", 0).toDouble());

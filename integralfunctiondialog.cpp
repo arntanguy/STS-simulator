@@ -74,7 +74,7 @@ void IntegralFunctionDialog::setFunction(IntegralFunction *f)
 void IntegralFunctionDialog::addFunction(Function *f)
 {
     if(f != 0) {
-        f->setParameters(mFunction->getIntegrationVariable());
+        mFunction->setParameters(f, mFunction->getIntegrationVariable());
         addFunctionItem(f);
         mFunction->addFunction(f);
 
@@ -108,9 +108,9 @@ void IntegralFunctionDialog::setFunctionConfiguration(Function *f)
     QString parameter = ui->functionParameters->text();
     qDebug() << "with parameters: "<<parameter;
     if(parameter.isEmpty())
-        f->setParameters(ui->integralIntegrationVariable->text());
+        mFunction->setParameters(f, ui->integralIntegrationVariable->text());
     else
-        f->setParameters(parameter);
+        mFunction->setParameters(f, parameter);
 }
 
 void IntegralFunctionDialog::useFunction(Function *f)
@@ -119,7 +119,7 @@ void IntegralFunctionDialog::useFunction(Function *f)
         mFunctionInUse = f;
         ui->functionConfigWidget->show();
         ui->functionNoSelectionWidget->hide();
-        ui->functionParameters->setText(f->getParameters());
+        ui->functionParameters->setText(mFunction->getParameters(f));
         ui->functionExpression->setText("<b>"+f->getName()+ "</b>(" + f->getVariable() + ") = " + f->getExpression());
     } else {
         //XXX:

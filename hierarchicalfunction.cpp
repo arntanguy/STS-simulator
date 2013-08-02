@@ -7,7 +7,12 @@
 #include <QDebug>
 #include <QStringList>
 
-HierarchicalFunction::HierarchicalFunction()
+HierarchicalFunction::HierarchicalFunction() : Function()
+{
+    init();
+}
+
+HierarchicalFunction::HierarchicalFunction(int id) : Function(id)
 {
     init();
 }

@@ -4,6 +4,7 @@
 #include "hierarchicalfunction.h"
 
 #include <QVector>
+#include <QMap>
 
 struct IntegralData
 {
@@ -26,6 +27,7 @@ public:
 
 public:
     IntegralFunction();
+    IntegralFunction(int id);
 
 
     virtual void save(const QString &group);
@@ -49,6 +51,9 @@ public:
     virtual IntegralData integrate(double min, double max, double resolution, double stepNumber);
     virtual FunctionCurve* createCurve();
 
+    void setParameters(Function *f, const QString &parameter);
+    QString getParameters(Function *f) const;
+
 private:
     void init();
     void setFunctionsIntegrationVariable();
@@ -58,6 +63,8 @@ private:
     Range mRange;
 
     QString mIntegrationVariable;
+
+    QMap<Function*, QString> mParameters;
 
 };
 
