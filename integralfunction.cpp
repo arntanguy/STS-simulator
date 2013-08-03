@@ -148,36 +148,75 @@ IntegralData IntegralFunction::integrate(double min, double max, double resoluti
     qDebug() << "IntegralFunction::integrate() -- step size deltaX="<<deltaX;
 
     IntegralData data(resolution);
-    double r = 0;
-    double x = min;
-    double e = min;
 
-    // Set upper limit (V)
-    for(; x<max; x += step) {
-        double h1 = 1;
-        // XXX: Allow for other operations than *
-        foreach(Function *f, mFunctions) {
-            f->setVariable(f->getVariable(), x);
-            h1 *= f->computeWithParameters(mParameters[f], mIntegrationVariable, e);
-        }
-        while(e < x) {
-            // Avoid recomputing h0 needlessly.
-            // See midpoint graph for explanation
-            double h0 = h1;
+    if(mRange == ZeroToV) {
+        qDebug() << "IntegralFunction::integrate() -- 0 to V";
+        double r = 0;
+        min = 0;
+        double x = min;
+        double e = min;
 
-            e += deltaX;
-            h1 = 1;
+        // Set upper limit (V)
+        for(; x<max; x += step) {
+            double h1 = 1;
+            // XXX: Allow for other operations than *
             foreach(Function *f, mFunctions) {
                 f->setVariable(f->getVariable(), x);
                 h1 *= f->computeWithParameters(mParameters[f], mIntegrationVariable, e);
             }
-            r += deltaX * (h0 + h1)/2.d;
+            while(e < x) {
+                // Avoid recomputing h0 needlessly.
+                // See midpoint graph for explanation
+                double h0 = h1;
+
+                e += deltaX;
+                h1 = 1;
+                foreach(Function *f, mFunctions) {
+                    f->setVariable(f->getVariable(), x);
+                    h1 *= f->computeWithParameters(mParameters[f], mIntegrationVariable, e);
+                }
+                r += deltaX * (h0 + h1)/2.d;
+            }
+            data.x.append(x);
+            data.y.append(r);
         }
-        data.x.append(x);
-        data.y.append(r);
+    } else if(mRange == MinusVToZero) {
+        qDebug() << "IntegralFunction::integrate() -- 0 to -V";
+        double r = 0;
+        max = 0;
+        double x = max;
+        double e = max;
+
+        // Set upper limit (V)
+        for(; x>min; x -= step) {
+            double h1 = 1;
+            // XXX: Allow for other operations than *
+            foreach(Function *f, mFunctions) {
+                f->setVariable(f->getVariable(), x);
+                h1 *= f->computeWithParameters(mParameters[f], mIntegrationVariable, e);
+            }
+            while(e > x) {
+                // Avoid recomputing h0 needlessly.
+                // See midpoint graph for explanation
+                double h0 = h1;
+
+                e -= deltaX;
+                h1 = 1;
+                foreach(Function *f, mFunctions) {
+                    f->setVariable(f->getVariable(), x);
+                    h1 *= f->computeWithParameters(mParameters[f], mIntegrationVariable, e);
+                }
+                r += deltaX * (h0 + h1)/2.d;
+            }
+            data.x.append(x);
+            data.y.append(r);
+        }
+    } else {
+        // XXX:
+        qDebug() << "IntegralFunction::integrate() - INVALID RANGE: supported range are 0 to V and 0 to -V";
     }
-    qDebug() << "X:  "<< data.x;
-    qDebug() << "Y:  "<< data.y;
+    //qDebug() << "X:  "<< data.x;
+    //qDebug() << "Y:  "<< data.y;
     return data;
 }
 
@@ -203,7 +242,7 @@ void IntegralFunction::loadFromConfig(const QString &group)
     settings->beginGroup(group);
 
     setName(settings->value("name", "Unknown").toString());
-
+    setRange(static_cast<Range>(settings->value("range", ZeroToV).toUInt()));
     QStringList functionIds = settings->value("ids", QStringList()).toStringList();
     QStringList parameters = settings->value("parameters", QStringList()).toStringList();
     for(int i=0; i<functionIds.size(); i++) {
@@ -241,5 +280,6 @@ void IntegralFunction::save(const QString &group)
     qDebug() << "IntegralFunction::save - group name: " << groupName;
     settings->setValue("ids", functionIds);
     settings->setValue("parameters", parameters);
+    settings->setValue("range", mRange);
     settings->endGroup();
 }

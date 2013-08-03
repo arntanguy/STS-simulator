@@ -23,8 +23,8 @@ using namespace mu;
  */
 double* addVariable(const char *a_szName, void *pUserVariableFactory)
 {
-    std::cout << "Generating new variable \""
-        << a_szName << "\"" << std::endl;
+    //std::cout << "Generating new variable \""
+    //    << a_szName << "\"" << std::endl;
 
     // Use the variable factory passed as user data to create a new variable
     VariableFactory *varFactory= static_cast<VariableFactory*>(pUserVariableFactory);
@@ -296,7 +296,7 @@ void Function::setVariable(const QString &name, double value)
         *var = value;
     } else {
         // XXX: handle error
-        qDebug() << "Function::setVariable() - var " << name << " doesn't exist, creating it";
+        //qDebug() << "Function::setVariable() - var " << name << " doesn't exist, creating it";
     }
 }
 
