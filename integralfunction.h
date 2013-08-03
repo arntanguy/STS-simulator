@@ -13,10 +13,6 @@ struct IntegralData
     IntegralData(int resolution) {
         x.reserve(resolution);
         y.reserve(resolution);
-        for(int i = 0; i<resolution; i++) {
-            x.append(0);
-            y.append(1);
-        }
     }
 };
 

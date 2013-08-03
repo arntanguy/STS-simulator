@@ -152,15 +152,12 @@ IntegralData IntegralFunction::integrate(double min, double max, double resoluti
     double x = min;
     double e = min;
 
-    qDebug() << "Here";
-
     // Set upper limit (V)
     for(; x<max; x += step) {
         double h1 = 1;
         // XXX: Allow for other operations than *
         foreach(Function *f, mFunctions) {
             f->setVariable(f->getVariable(), x);
-            qDebug() << mIntegrationVariable << " " << e;
             h1 *= f->computeWithParameters(mParameters[f], mIntegrationVariable, e);
         }
         while(e < x) {
@@ -176,10 +173,11 @@ IntegralData IntegralFunction::integrate(double min, double max, double resoluti
             }
             r += deltaX * (h0 + h1)/2.d;
         }
-        qDebug() << x << " " << r;
         data.x.append(x);
         data.y.append(r);
     }
+    qDebug() << "X:  "<< data.x;
+    qDebug() << "Y:  "<< data.y;
     return data;
 }
 
