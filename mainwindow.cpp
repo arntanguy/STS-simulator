@@ -7,11 +7,10 @@
 #include "curve.h"
 #include "projectsingleton.h"
 #include "plotsingleton.h"
+#include "globalconfigdialog.h"
 
-#include <QMdiSubWindow>
-#include <QFileDialog>
-#include <QColor>
 #include <QCloseEvent>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -60,6 +59,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionSave, SIGNAL(triggered(bool)), this, SLOT(actionSave(bool)));
     connect(ui->actionNew_Project, SIGNAL(triggered(bool)), this, SLOT(actionNewProject(bool)));
     connect(ui->actionLoad_Project, SIGNAL(triggered(bool)), this, SLOT(actionLoadProject(bool)));
+
+    connect(ui->actionGlobal_Settings, SIGNAL(triggered(bool)), this, SLOT(actionGlobalSettings(bool)));
 
 }
 
@@ -188,6 +189,12 @@ void MainWindow::actionSaveAs(bool)
 void MainWindow::actionNewProject(bool)
 {
     slotNewProject();
+}
+
+void MainWindow::actionGlobalSettings(bool)
+{
+    GlobalConfigDialog dialog;
+    dialog.exec();
 }
 
 void MainWindow::slotNewProject()

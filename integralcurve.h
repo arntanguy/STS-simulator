@@ -21,6 +21,9 @@ public:
     virtual void save();
     virtual void loadFromSettings();
 
+public Q_SLOTS:
+    void initGlobalSettings();
+
 private:
     void init();
     virtual void updateData();

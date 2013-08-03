@@ -31,6 +31,7 @@ public slots:
     void actionLoadExperimentalData(bool);
     void actionSaveAs(bool);
     void actionSave(bool);
+    void actionGlobalSettings(bool);
     void slotNewProject();
     void slotOpenProject(QString &fileName);
 

@@ -27,6 +27,9 @@ public:
 
     virtual void copyFromCurve(Curve *curve);
 
+public Q_SLOTS:
+    void initGlobalSettings();
+
 private:
     void init();
     virtual void updateData();

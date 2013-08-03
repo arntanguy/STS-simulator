@@ -3,6 +3,7 @@
 #include "muParser.h"
 #include "plotwidget.h"
 #include "projectsingleton.h"
+#include "globalsettingssingleton.h"
 
 #include <QDebug>
 #include <QVector>
@@ -22,7 +23,18 @@ void FunctionCurve::init()
 {
     mFunction = 0;
     mType = Curve::Function;
-    setResolution(1000);
+
+    initGlobalSettings();
+
+    GlobalSettingsSingleton *singleton = &Singleton<GlobalSettingsSingleton>::Instance();
+    connect(singleton, SIGNAL(curveSettingsUpdated()), this, SLOT(initGlobalSettings()));
+}
+
+void FunctionCurve::initGlobalSettings()
+{
+    GlobalSettingsSingleton *singleton = &Singleton<GlobalSettingsSingleton>::Instance();
+    setMinMax(singleton->getMin(), singleton->getMax());
+    setResolution(singleton->getResolution());
 }
 
 void FunctionCurve::setFunction(AbstractFunction *f)
@@ -115,7 +127,7 @@ void FunctionCurve::updateData()
             return;
         }
         qDebug() << "FunctionCurve::updateData() - updating data of " << mFunction->getName()
-                 << " with resolution: "<<resolution<<", stepsize: "<<stepSize<<", min: "<<getMin()<<", max: "<<getMax();
+            << " with resolution: "<<resolution<<", stepsize: "<<stepSize<<", min: "<<getMin()<<", max: "<<getMax();
         double xval = getMin();
         for(int i=0; i<resolution; i++) {
             double yval = 0;

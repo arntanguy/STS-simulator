@@ -217,38 +217,6 @@
          </layout>
         </widget>
        </item>
-       <item row="2" column="0">
-        <widget class="QGroupBox" name="groupBox_2">
-         <property name="title">
-          <string>Precision</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_3">
-          <item row="2" column="1">
-           <widget class="QwtCounter" name="plotResolution" native="true">
-            <property name="maximum" stdset="0">
-             <double>1000000.000000000000000</double>
-            </property>
-            <property name="numButtons" stdset="0">
-             <number>2</number>
-            </property>
-            <property name="stepButton2" stdset="0">
-             <number>100</number>
-            </property>
-            <property name="stepButton3" stdset="0">
-             <number>1000</number>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="plotResolutionLabel">
-            <property name="text">
-             <string>Resolution</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
        <item row="3" column="0">
         <widget class="QGroupBox" name="groupBox_3">
          <property name="title">
@@ -316,6 +284,38 @@
           </item>
           <item row="2" column="1">
            <widget class="QComboBox" name="legendItemVerticalPositionComboBox"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Precision</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="2" column="1">
+           <widget class="QwtCounter" name="plotResolution" native="true">
+            <property name="maximum" stdset="0">
+             <double>1000000.000000000000000</double>
+            </property>
+            <property name="numButtons" stdset="0">
+             <number>2</number>
+            </property>
+            <property name="stepButton2" stdset="0">
+             <number>100</number>
+            </property>
+            <property name="stepButton3" stdset="0">
+             <number>1000</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="plotResolutionLabel">
+            <property name="text">
+             <string>Resolution</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>

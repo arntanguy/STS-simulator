@@ -67,28 +67,10 @@ void NewCurveDialog::loadFromCurve(Curve *curve)
         ui->curveName->setText(mCurve->title().text());
         ui->curveColor->setCurrentColor(mCurve->pen().color());
         ui->curveThickness->setValue(mCurve->pen().width());
-        ui->curveMin->setValue(curve->getMin());
-        ui->curveMax->setValue(curve->getMax());
 
         if(mCurve->getType() != Curve::Experimental) {
             ui->tabWidget->removeTab(1);
-            ui->curveResolutionWidget->show();
-            FunctionCurve *c = dynamic_cast<FunctionCurve*>(curve);
-            if(c != 0)
-                ui->curveResolution->setValue(c->getResolution());
-
-            if(mCurve->getType() == Curve::Integral) {
-                IntegralCurve *integralCurve = dynamic_cast<IntegralCurve*>(mCurve);
-                if(integralCurve != 0) {
-                    ui->curveIntegralResolution->setValue(integralCurve->getStepNumber());
-                    ui->curveIntegralResolutionWidget->show();
-                }
-            } else {
-                ui->curveIntegralResolutionWidget->hide();
-            }
         } else {
-            ui->curveResolutionWidget->hide();
-
             // XXX: load settings outside of curve, not very clean, but works
             QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
             settings->beginGroup("Curves/"+QString::number(curve->getId()));
@@ -112,8 +94,6 @@ void NewCurveDialog::loadFromCurve(Curve *curve)
                 ui->dataOrdinate->setCurrentIndex(index);
             }
             settings->endGroup();
-
-
         }
     }
 }
@@ -128,8 +108,6 @@ void NewCurveDialog::accept()
     pen.setWidth(ui->curveThickness->value());
     mCurve->setPen(pen);
 
-    mCurve->setMinMax(ui->curveMin->value(), ui->curveMax->value());
-
     // Set curve data
     // If there is experimental data
     QString fileName = ui->dataLoaded->itemData(ui->dataLoaded->currentIndex()).toString();
@@ -138,7 +116,6 @@ void NewCurveDialog::accept()
             QString ordinate = ui->dataOrdinate->itemData(ui->dataOrdinate->currentIndex()).toString();
             if(!abscissia.isEmpty() && !ordinate.isEmpty()) {
                 qDebug() << "NewCurveDialog::accept(): setting experimental curve data ("<<abscissia<<", "<<ordinate<<")" << endl;
-                qDebug() << "NewCurveDialog::accept(): min, max ("<<ui->curveMin->value()<<", "<<ui->curveMax->value()<<")" << endl;
                 mCurve->setExperimentalData(fileName, abscissia, ordinate);
             }
     }
@@ -146,17 +123,6 @@ void NewCurveDialog::accept()
 
     if(mCurve->getType() == Curve::Experimental) {
         Singleton<CurveSingleton>::Instance().addCurve(mCurve);
-    } else {
-        if(mCurve->getType() == Curve::Integral) {
-            IntegralCurve *c = dynamic_cast<IntegralCurve*>(mCurve);
-            if(c != 0) {
-                c->setStepNumber(ui->curveIntegralResolution->value());
-            }
-        }
-        FunctionCurve *c = dynamic_cast<FunctionCurve *>(mCurve);
-        if(c != 0) {
-            c->setResolution(ui->curveResolution->value());
-        }
     }
 
     QDialog::accept();

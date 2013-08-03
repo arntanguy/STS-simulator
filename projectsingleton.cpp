@@ -3,6 +3,7 @@
 #include "datasingleton.h"
 #include "functionssingleton.h"
 #include "plotsingleton.h"
+#include "globalsettingssingleton.h"
 #include <QDebug>
 #include <QStringList>
 
@@ -51,6 +52,7 @@ void ProjectSingleton::openProject(const QString& fileName)
     delete mSettings;
     mSettings = new QSettings(fileName, QSettings::IniFormat);
 
+    Singleton<GlobalSettingsSingleton>::Instance().loadFromSettings();
     // Load all curves
     Singleton<PlotSingleton>::Instance().loadFromSettings();
     Singleton<DataSingleton>::Instance().loadFromSettings();
@@ -66,6 +68,7 @@ void ProjectSingleton::save()
 {
     if(!mFileName.isEmpty())
     {
+        Singleton<GlobalSettingsSingleton>::Instance().save();
         // Save all curves
         Singleton<CurveSingleton>::Instance().save();
         mSettings->sync();

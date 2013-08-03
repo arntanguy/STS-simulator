@@ -2,6 +2,7 @@
 #include "plotwidget.h"
 #include "integralfunction.h"
 #include "projectsingleton.h"
+#include "globalsettingssingleton.h"
 
 IntegralCurve::IntegralCurve() : FunctionCurve()
 {
@@ -16,7 +17,18 @@ IntegralCurve::IntegralCurve(unsigned int id) : FunctionCurve(id)
 void IntegralCurve::init()
 {
     mType = Curve::Integral;
-    setStepNumber(2);
+    initGlobalSettings();
+
+    GlobalSettingsSingleton *singleton = &Singleton<GlobalSettingsSingleton>::Instance();
+    connect(singleton, SIGNAL(integralSettingsUpdated()), this, SLOT(initGlobalSettings()));
+}
+
+// XXX : check if updated correctly
+void IntegralCurve::initGlobalSettings()
+{
+    FunctionCurve::initGlobalSettings();
+    GlobalSettingsSingleton *singleton = &Singleton<GlobalSettingsSingleton>::Instance();
+    setStepNumber(singleton->getIntegralResolution());
 }
 
 // ========================= PUBLIC =====================================
