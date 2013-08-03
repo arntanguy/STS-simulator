@@ -4,7 +4,7 @@
 #include <QWidget>
 
 class QAction;
-class PlotControlDialog;
+class PlotControlWindow;
 class PlotWidget;
 
 namespace Ui {
@@ -28,7 +28,7 @@ private:
     Ui::PlotArea *ui;
 
     QString mName;
-    PlotControlDialog *mConfigDialog;
+    PlotControlWindow *mConfigWindow;
 
 public slots:
     void openConfigDialog();

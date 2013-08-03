@@ -3,6 +3,7 @@
 #include "function.h"
 #include "functionssingleton.h"
 #include "functionvariableswidget.h"
+#include "globalsettingssingleton.h"
 
 #include <QMessageBox>
 #include <QDebug>
@@ -23,6 +24,9 @@ NewFunctionDialog::NewFunctionDialog(Function *f, QWidget *parent) :
 {
     ui->setupUi(this);
     mFunction = f;
+    if(f != 0) {
+        setWindowTitle("Variables of " + f->getName());
+    }
     init();
 }
 
@@ -43,6 +47,10 @@ void NewFunctionDialog::init()
     } else {
         mEditFunction = false;
     }
+
+    mSettings = &Singleton<GlobalSettingsSingleton>::Instance();
+    connect(mSettings, SIGNAL(overlayOpacityUpdated()), this, SLOT(updateOpacity()));
+    setWindowOpacity(mSettings->getOverlayOpacity());
 }
 
 bool NewFunctionDialog::setupFunction()
@@ -85,9 +93,10 @@ void NewFunctionDialog::accept()
 {
     if(setupFunction()) {
         ui->variablesWidget->save();
+        emit accepted();
         QDialog::accept();
     } else {
-        //QDialog::reject();
+        QDialog::reject();
     }
 }
 
@@ -96,4 +105,9 @@ void NewFunctionDialog::pageChanged(int index)
     if(index == 1) {
         setupFunction();
     }
+}
+
+void NewFunctionDialog::updateOpacity()
+{
+    setWindowOpacity(mSettings->getOverlayOpacity());
 }

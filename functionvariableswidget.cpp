@@ -6,6 +6,7 @@
 #include "valueselector.h"
 #include "helperfunctions.h"
 #include "variablefactory.h"
+#include "globalsettingssingleton.h"
 
 #include <QDebug>
 #include <QLabel>
@@ -15,6 +16,12 @@ FunctionVariablesWidget::FunctionVariablesWidget(QWidget *parent) :
     ui(new Ui::FunctionVariablesWidget)
 {
     ui->setupUi(this);
+
+    init();
+}
+
+void FunctionVariablesWidget::init()
+{
     mVariabesLayout = new QVBoxLayout();
     QWidget *w = new QWidget(this);
     w->setLayout(mVariabesLayout);

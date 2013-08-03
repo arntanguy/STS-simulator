@@ -36,6 +36,7 @@ void GlobalConfigDialog::accept()
     mSingleton->setMax(ui->plotMax->value());
     mSingleton->setResolution(ui->plotResolution->value());
     mSingleton->setIntegralResolution(ui->integralResolution->value());
+    mSingleton->setOverlayOpacity(ui->overlayOpacity->value());
     mSingleton->update();
     QDialog::accept();
 }

@@ -29,7 +29,7 @@ public:
     double getIntegralResolution() const {
         return mIntegralResolution;
     }
-    double getOverlayOpacity() const {
+    float getOverlayOpacity() const {
         return mOverlayOpacity;
     }
 
@@ -40,6 +40,7 @@ public:
 Q_SIGNALS:
     void curveSettingsUpdated();
     void integralSettingsUpdated();
+    void overlayOpacityUpdated();
 
 private:
     void init();

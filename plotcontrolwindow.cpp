@@ -1,7 +1,7 @@
 #include <QSettings>
 #include <QDebug>
-#include "plotcontroldialog.h"
-#include "ui_plotcontroldialog.h"
+#include "plotcontrolwindow.h"
+#include "ui_plotcontrolwindow.h"
 #include "projectsingleton.h"
 #include "functionssingleton.h"
 #include "hierarchicalfunction.h"
@@ -23,9 +23,9 @@
 #include <QStandardItem>
 #include <QStandardItemModel>
 
-PlotControlDialog::PlotControlDialog(const unsigned int plotId, PlotArea *parent) :
-    QDialog(parent),
-    ui(new Ui::PlotControlDialog)
+PlotControlWindow::PlotControlWindow(const unsigned int plotId, PlotArea *parent) :
+    QMainWindow(parent),
+    ui(new Ui::PlotControlWindow)
 {
     ui->setupUi(this);
     mPlot = parent->getPlotWidget();
@@ -38,7 +38,7 @@ PlotControlDialog::PlotControlDialog(const unsigned int plotId, PlotArea *parent
     connect(this->ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(this->ui->buttonBox, SIGNAL(accepted()), this, SLOT(close()));
     connect(this->ui->buttonBox, SIGNAL(accepted()), parent, SLOT(plotConfigChanged()));
-    connect(this->ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(this->ui->buttonBox, SIGNAL(rejected()), this, SLOT(close()));
 
     // Plot page
     connect(this->ui->autoAbscissa, SIGNAL(toggled(bool)), this, SLOT(autoAbscissaChecked(bool)));
@@ -55,9 +55,11 @@ PlotControlDialog::PlotControlDialog(const unsigned int plotId, PlotArea *parent
     connect(ui->functionView, SIGNAL(doubleClicked ( const QModelIndex &)), this, SLOT(editFunction(const QModelIndex &)));
     connect(ui->functionDelete, SIGNAL(clicked()), this, SLOT(deleteFunction()));
     connect(ui->functionEditCurve, SIGNAL(clicked()), this, SLOT(editFunctionCurve()));
+
+    setWindowModality(Qt::NonModal);
 }
 
-PlotControlDialog::~PlotControlDialog()
+PlotControlWindow::~PlotControlWindow()
 {
     delete ui;
 }
@@ -66,11 +68,12 @@ PlotControlDialog::~PlotControlDialog()
 // ================================= PRIVATE ======================================
 // ================================================================================
 /*!
- * \brief PlotControlDialog::init
+ * \brief PlotControlWindow::init
  *  Init config dialog (combobox...)
  */
-void PlotControlDialog::init()
+void PlotControlWindow::init()
 {
+
     // Init Axis scale controls
     ui->horizontalAxisScale->addItem(tr("Linear"), "linear");
     ui->horizontalAxisScale->addItem(tr("Log10"), "log10");
@@ -112,14 +115,14 @@ void PlotControlDialog::init()
 }
 
 /*!
- * \brief PlotControlDialog::initFromConfig
+ * \brief PlotControlWindow::initFromConfig
  *  Initialize from saved configuration (QSettings)
  */
-void PlotControlDialog::initFromConfig()
+void PlotControlWindow::initFromConfig()
 {
     QSettings *mSettings = Singleton<ProjectSingleton>::Instance().getSettings();
 
-    qDebug() << "PlotControlDialog::initFromConfig() - plot id " << mPlotId;
+    qDebug() << "PlotControlWindow::initFromConfig() - plot id " << mPlotId;
     mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/legend");
     ui->legendCheckBox->setChecked(mSettings->value("isEnabled", false).toBool());
     int index = ui->legendPositionComboBox->findData(mSettings->value("position", Qt::AlignBottom).toInt());
@@ -246,21 +249,21 @@ void PlotControlDialog::initFromConfig()
  * return: the curve if exists and active
  *         0 otherwise
  **/
-FunctionCurve* PlotControlDialog::manageFunctionCurveFromItem(QStandardItem *item)
+FunctionCurve* PlotControlWindow::manageFunctionCurveFromItem(QStandardItem *item)
 {
     AbstractFunction* function = static_cast<AbstractFunction *>(item->data(Qt::UserRole).value<AbstractFunction *>());
     if(function != 0) {
         FunctionCurve *c = function->getCurve();
         if(item->checkState() == Qt::Checked) {
             if(c != 0) {
-                qDebug() << "PlotControlDialog::manageFunctionCurveFromItem() - Function already has a curve, use it";
+                qDebug() << "PlotControlWindow::manageFunctionCurveFromItem() - Function already has a curve, use it";
                 c->attach(mPlot);
                 c->update();
                 if(Singleton<CurveSingleton>::Instance().getCurve(c->getId()) == 0)
                     Singleton<CurveSingleton>::Instance().addCurve(c);
                 return c;
             } else {
-                qDebug() << "PlotControlDialog::manageFunctionCurveFromItem() - Function doesn't have a curve, create it";
+                qDebug() << "PlotControlWindow::manageFunctionCurveFromItem() - Function doesn't have a curve, create it";
                 FunctionCurve *fcurve = function->createCurve();
                 fcurve->setComputeRange(ui->minAbscissaRange->value(), ui->maxAbscissaRange->value(), ui->plotResolution->value());
                 // TODO: save which curve is attached.
@@ -277,7 +280,7 @@ FunctionCurve* PlotControlDialog::manageFunctionCurveFromItem(QStandardItem *ite
             return 0;
         }
     } else {
-        qDebug() << "PlotControlDialog::manageFunctionCurveFromItem() - NULL Curve";
+        qDebug() << "PlotControlWindow::manageFunctionCurveFromItem() - NULL Curve";
     }
     return 0;
 }
@@ -287,14 +290,14 @@ FunctionCurve* PlotControlDialog::manageFunctionCurveFromItem(QStandardItem *ite
 // ============================== PUBLIC ==========================================
 // ================================================================================
 /*!
- * \brief PlotControlDialog::accept
+ * \brief PlotControlWindow::accept
  *  Saves all the parameters set within the config dialog (QSettings)
  *  Discards config dialog
  */
-void PlotControlDialog::accept()
+void PlotControlWindow::accept()
 {
     QSettings *mSettings = Singleton<ProjectSingleton>::Instance().getSettings();
-    qDebug() << "PlotControlDialog::accept()";
+    qDebug() << "PlotControlWindow::accept()";
     mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/legend");
     mSettings->setValue("isEnabled", ui->legendCheckBox->isChecked());
     mSettings->setValue("position", ui->legendPositionComboBox->itemData(ui->legendPositionComboBox->currentIndex()));
@@ -377,33 +380,33 @@ void PlotControlDialog::accept()
     }
 
     mSettings->sync();
-    QDialog::accept();
+    emit accepted();
 }
 
 
 // =========================== SLOTS =================================
-void PlotControlDialog::autoAbscissaChecked(bool checked)
+void PlotControlWindow::autoAbscissaChecked(bool checked)
 {
     ui->autoAbscissa->setChecked(checked);
     ui->minAbscissaRange->setEnabled(!checked);
     ui->maxAbscissaRange->setEnabled(!checked);
 }
 
-void PlotControlDialog::autoOrdinateChecked(bool checked)
+void PlotControlWindow::autoOrdinateChecked(bool checked)
 {
     ui->autoOrdinate->setChecked(checked);
     ui->minOrdinateRange->setEnabled(!checked);
     ui->maxOrdinateRange->setEnabled(!checked);
 }
 
-void PlotControlDialog::newCurve()
+void PlotControlWindow::newCurve()
 {
     NewCurveDialog dialog(this);
     connect(&dialog, SIGNAL(accepted()), this, SLOT(newCurveAvailable()));
     dialog.exec();
 }
 
-void PlotControlDialog::editCurve(const QModelIndex &index)
+void PlotControlWindow::editCurve(const QModelIndex &index)
 {
     NewCurveDialog dialog(this);
     dialog.setWindowTitle(tr("Edit Curve"));
@@ -422,9 +425,9 @@ void PlotControlDialog::editCurve(const QModelIndex &index)
     dialog.exec();
 }
 
-void PlotControlDialog::newCurveAvailable()
+void PlotControlWindow::newCurveAvailable()
 {
-    qDebug() << "PlotControlDialog::newCurveAvailable()";
+    qDebug() << "PlotControlWindow::newCurveAvailable()";
     QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->curveSelection->model());
     model->clear();
     mCurveItems.clear();
@@ -450,15 +453,14 @@ void PlotControlDialog::newCurveAvailable()
     }
 }
 
-void PlotControlDialog::newFunction()
+void PlotControlWindow::newFunction()
 {
-    NewFunctionDialog dialog(this);
-    if(dialog.exec() == QDialog::Accepted)	{
-        newFunctionAvailable();
-    }
+    NewFunctionDialog* dialog = new NewFunctionDialog(this);
+    connect(dialog, SIGNAL(accepted()), this, SLOT(functionDialogAccepted()));
+    dialog->show();
 }
 
-void PlotControlDialog::newHierarachicalFunction()
+void PlotControlWindow::newHierarachicalFunction()
 {
     HierarchicalFunctionDialog dialog(this);
     if(dialog.exec() == QDialog::Accepted)	{
@@ -466,7 +468,7 @@ void PlotControlDialog::newHierarachicalFunction()
     }
 }
 
-void PlotControlDialog::newIntegralFunction()
+void PlotControlWindow::newIntegralFunction()
 {
     IntegralFunctionDialog dialog(this);
     if(dialog.exec() == QDialog::Accepted)	{
@@ -474,7 +476,7 @@ void PlotControlDialog::newIntegralFunction()
     }
 }
 
-void PlotControlDialog::newFunctionAvailable()
+void PlotControlWindow::newFunctionAvailable()
 {
     QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
     model->clear();
@@ -532,9 +534,9 @@ void PlotControlDialog::newFunctionAvailable()
     }
 }
 
-void PlotControlDialog::deleteFunction()
+void PlotControlWindow::deleteFunction()
 {
-    qDebug() << "PlotControlDialog::deleteFunction()";
+    qDebug() << "PlotControlWindow::deleteFunction()";
     QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
     QModelIndex index = ui->functionView->currentIndex();
     AbstractFunction *f = index.data(Qt::UserRole).value<AbstractFunction *>();
@@ -545,7 +547,7 @@ void PlotControlDialog::deleteFunction()
     newFunctionAvailable();
 }
 
-void PlotControlDialog::editFunction(const QModelIndex &index)
+void PlotControlWindow::editFunction(const QModelIndex &index)
 {
     QStandardItemModel *model = dynamic_cast<QStandardItemModel *>(ui->functionView->model());
     if(model != 0) {
@@ -556,10 +558,9 @@ void PlotControlDialog::editFunction(const QModelIndex &index)
             if(f->getType() == AbstractFunction::Function) {
                 Function *func = dynamic_cast<Function *>(f);
                 if(func != 0) {
-                    NewFunctionDialog dialog(func, this);
-                    if(dialog.exec() == QDialog::Accepted) {
-                        newFunctionAvailable();
-                    }
+                    NewFunctionDialog* dialog = new NewFunctionDialog(func);
+                    connect(dialog, SIGNAL(accepted()), this, SLOT(functionDialogAccepted()));
+                    dialog->show();
                 }
             } else if(f->getType() == AbstractFunction::HierarchicalFunction) {
                 HierarchicalFunction *function = dynamic_cast<HierarchicalFunction *>(f);
@@ -567,7 +568,7 @@ void PlotControlDialog::editFunction(const QModelIndex &index)
                     HierarchicalFunctionDialog dialog(this);
                     dialog.setFunction(function);
                     if(dialog.exec() == QDialog::Accepted) {
-                        newFunctionAvailable();
+                       newFunctionAvailable();
                     }
                 }
             } else if(f->getType() == AbstractFunction::Integral) {
@@ -584,7 +585,7 @@ void PlotControlDialog::editFunction(const QModelIndex &index)
     }
 }
 
-void PlotControlDialog::editFunctionCurve()
+void PlotControlWindow::editFunctionCurve()
 {
     QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
     QModelIndex index = ui->functionView->currentIndex();
@@ -599,4 +600,12 @@ void PlotControlDialog::editFunctionCurve()
     if(dialog.exec() == QDialog::Accepted) {
         f->setCurve(curve);
     }
+}
+
+
+
+void PlotControlWindow::functionDialogAccepted()
+{
+    qDebug() << "accepted!";
+//    newFunctionAvailable();
 }

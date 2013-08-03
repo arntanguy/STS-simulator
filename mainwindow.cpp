@@ -61,7 +61,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionLoad_Project, SIGNAL(triggered(bool)), this, SLOT(actionLoadProject(bool)));
 
     connect(ui->actionGlobal_Settings, SIGNAL(triggered(bool)), this, SLOT(actionGlobalSettings(bool)));
-
 }
 
 MainWindow::~MainWindow()

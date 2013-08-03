@@ -97,6 +97,7 @@ void GlobalSettingsSingleton::update()
         emit curveSettingsUpdated();
     if(mUpdateIntegral)
         emit integralSettingsUpdated();
+    emit overlayOpacityUpdated();
     mUpdateCurve = false;
     mUpdateIntegral = false;
 }

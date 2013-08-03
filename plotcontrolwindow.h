@@ -1,7 +1,7 @@
-#ifndef PLOTCONTROLDIALOG_H
-#define PLOTCONTROLDIALOG_H
+#ifndef PLOTCONTROLWINDOW_H
+#define PLOTCONTROLWINDOW_H
 
-#include <QDialog>
+#include <QMainWindow>
 #include <QSettings>
 
 class QStandardItem;
@@ -11,21 +11,19 @@ class QModelIndex;
 class FunctionCurve;
 
 namespace Ui {
-class PlotControlDialog;
+class PlotControlWindow;
 }
 
-class PlotControlDialog : public QDialog
+class PlotControlWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit PlotControlDialog(unsigned int plotId, PlotArea *parent = 0);
-    ~PlotControlDialog();
-
-    virtual void accept();
+    explicit PlotControlWindow(unsigned int plotId, PlotArea *parent = 0);
+    ~PlotControlWindow();
 
 private:
-    Ui::PlotControlDialog *ui;
+    Ui::PlotControlWindow *ui;
     unsigned int mPlotId;
     PlotWidget *mPlot;
 
@@ -36,6 +34,9 @@ private:
     void init();
     void initFromConfig();
     FunctionCurve* manageFunctionCurveFromItem(QStandardItem *item);
+
+Q_SIGNALS:
+    void accepted();
 
 public slots:
     void autoAbscissaChecked(bool checked);
@@ -51,6 +52,10 @@ public slots:
     void editFunction(const QModelIndex &);
     void editFunctionCurve();
     void deleteFunction();
+
+    void accept();
+
+    void functionDialogAccepted();
 };
 
 #endif // PLOTCONTROLDIALOG_H

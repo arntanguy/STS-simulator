@@ -2,6 +2,7 @@
 #define HIERARCHICALFUNCTIONDIALOG_H
 
 #include <QDialog>
+#include "qthideandshowdialog.h"
 
 namespace Ui {
 class HierarchicalFunctionDialog;
@@ -10,7 +11,7 @@ class HierarchicalFunctionDialog;
 class HierarchicalFunction;
 class Function;
 
-class HierarchicalFunctionDialog : public QDialog
+class HierarchicalFunctionDialog : public QtHideAndShowDialog
 {
     Q_OBJECT
 
@@ -37,6 +38,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void expressionChanged();
+    void accepted();
 
 private:
     Ui::HierarchicalFunctionDialog *ui;

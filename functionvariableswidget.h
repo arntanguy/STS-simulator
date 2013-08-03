@@ -29,6 +29,7 @@ public slots:
     void updateVariables();
 
 private:
+    void init();
     void useFunction(Function *f);
 
 private:

@@ -37,7 +37,6 @@ SOURCES += main.cpp\
     plotwidget.cpp \
     legenditem.cpp \
     plotarea.cpp \
-    plotcontroldialog.cpp \
     curve.cpp \
     csvfilereader.cpp \
     csvexperimentaldatareader.cpp \
@@ -68,14 +67,15 @@ SOURCES += main.cpp\
     integralcurve.cpp \
     integralfunctiondialog.cpp \
     globalconfigdialog.cpp \
-    globalsettingssingleton.cpp
+    globalsettingssingleton.cpp \
+    qthideandshowdialog.cpp \
+    plotcontrolwindow.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
     plotwidget.h \
     legenditem.h \
     plotarea.h \
-    plotcontroldialog.h \
     randomcurve.h \
     curve.h \
     csvfilereader.h \
@@ -108,13 +108,14 @@ HEADERS  += mainwindow.h \
     integralcurve.h \
     integralfunctiondialog.h \
     globalconfigdialog.h \
-    globalsettingssingleton.h
+    globalsettingssingleton.h \
+    qthideandshowdialog.h \
+    plotcontrolwindow.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
     plotwidget.ui \
     plotarea.ui \
-    plotcontroldialog.ui \
     newcurvedialog.ui \
     functionselectiondialog.ui \
     newfunctiondialog.ui \
@@ -122,7 +123,8 @@ FORMS    += mainwindow.ui \
     valueselector.ui \
     hierarchicalfunctiondialog.ui \
     integralfunctiondialog.ui \
-    globalconfigdialog.ui
+    globalconfigdialog.ui \
+    plotcontrolwindow.ui
 
 QMAKE_CXXFLAGS += -std=c++0x
 

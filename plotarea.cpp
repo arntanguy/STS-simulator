@@ -1,7 +1,7 @@
 #include <QAction>
 #include "plotarea.h"
 #include "ui_plotarea.h"
-#include "plotcontroldialog.h"
+#include "plotcontrolwindow.h"
 
 PlotArea::PlotArea(const QString &name, const unsigned int id, QWidget *parent) :
     QWidget(parent),
@@ -14,6 +14,9 @@ PlotArea::PlotArea(const QString &name, const unsigned int id, QWidget *parent) 
 
     ui->plotWidget->setTitle(mName);
     ui->plotWidget->setName(mName);
+
+    mConfigWindow = new PlotControlWindow(id, this);
+    mConfigWindow->setWindowTitle(tr("Configuring plot ")+mName);
 
     // Connect PlotArea events
     connect( ui->plotConfigButton, SIGNAL(clicked()), this, SLOT(openConfigDialog()) );
@@ -42,10 +45,9 @@ unsigned int PlotArea::getId() const
 // ======================== SLOTS =======================================
 void PlotArea::openConfigDialog()
 {
-    PlotControlDialog mConfigDialog(getId(), this);
-    mConfigDialog.setWindowTitle(tr("Configuring plot ")+mName);
     qDebug() << "Opening Graph control dialog";
-    mConfigDialog.exec();
+    mConfigWindow->newFunctionAvailable();
+    mConfigWindow->show();
 }
 
 /*!

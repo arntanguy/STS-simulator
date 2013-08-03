@@ -10,7 +10,7 @@
 #include <QDebug>
 
 HierarchicalFunctionDialog::HierarchicalFunctionDialog(QWidget *parent) :
-    QDialog(parent),
+    QtHideAndShowDialog(parent),
     ui(new Ui::HierarchicalFunctionDialog)
 {
     ui->setupUi(this);

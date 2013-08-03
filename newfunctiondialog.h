@@ -2,12 +2,14 @@
 #define NEWFUNCTIONDIALOG_H
 
 #include <QDialog>
+#include "qthideandshowdialog.h"
 
 namespace Ui {
 class NewFunctionDialog;
 }
 
 class Function;
+class GlobalSettingsSingleton;
 
 class NewFunctionDialog : public QDialog
 {
@@ -27,14 +29,20 @@ private:
     void init();
     bool setupFunction();
 
+Q_SIGNALS:
+    void accepted();
+
 public slots:
     void accept();
     void pageChanged(int);
+    void updateOpacity();
 
 private:
     Ui::NewFunctionDialog *ui;
     Function *mFunction;
     bool mEditFunction;
+
+    GlobalSettingsSingleton *mSettings;
 };
 
 #endif // NEWFUNCTIONDIALOG_H
