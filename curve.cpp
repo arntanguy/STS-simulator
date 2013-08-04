@@ -93,15 +93,14 @@ void Curve::setExperimentalData(const QString &experimentId, const QString &absc
  **/
 void Curve::setMinMax(double min, double max)
 {
-    //if(min != mMin || max != mMax) {
+    if(min != mMin || max != mMax) {
         mMin = min;
         mMax = max;
         mNeedsUpdate = true;
         foreach(Curve *curve, mPlots) {
             curve->setMinMax(min, max);
         }
-        //updateExperimentalData();
-    //}
+    }
 
 }
 
