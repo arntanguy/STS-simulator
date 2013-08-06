@@ -21,7 +21,7 @@ public:
     virtual void attach(PlotWidget *plot);
 
 public Q_SLOTS:
-    void slotUpdateData();
+    virtual void slotUpdateData();
 
 
 private:

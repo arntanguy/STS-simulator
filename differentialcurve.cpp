@@ -53,15 +53,15 @@ void DifferentialCurve::updateData()
         if(f != 0) {
             PlotData data = f->differentiate();
            // qDebug() << "differential data";
-            qDebug() << "V: " <<data.x;
-            qDebug() << "f'(V): " <<data.y;
+            //qDebug() << "V: " <<data.x;
+            //qDebug() << "f'(V): " <<data.y;
             mXData = data.x;
             mYData = data.y;
         } else {
             qDebug() << "DifferentialCurve::ERROR - Unable to compute differential: invalid function type.";
         }
     }
-    mNeedsUpdate = false;
+    //mNeedsUpdate = false;
 }
 
 
@@ -83,6 +83,8 @@ void DifferentialCurve::setFunction(DifferentialFunction *f)
 // =================================== SLOTS ================================
 void DifferentialCurve::slotUpdateData()
 {
+    qDebug() <<"++++++++++++++++++++++++++=";
     qDebug() << "DifferentialCurve::slotUpdateData";
+    qDebug() <<"++++++++++++++++++++++++++=";
     update(true);
 }

@@ -37,7 +37,7 @@ protected:
     virtual void updateData();
 
 public Q_SLOTS:
-    void slotUpdateData();
+    virtual void slotUpdateData();
     void updateName(const QString &);
     void slotDeferedUpdate();
 
