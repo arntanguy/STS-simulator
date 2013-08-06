@@ -11,7 +11,7 @@ class FunctionCurve : public Curve
 
 public:
     FunctionCurve();
-    FunctionCurve(unsigned int id);
+    FunctionCurve(int id);
     void setFunction(AbstractFunction *f);
     AbstractFunction* getFunction() {
         return mFunction;
@@ -32,6 +32,8 @@ public Q_SLOTS:
 
 private:
     void init();
+
+protected:
     virtual void updateData();
 
 public Q_SLOTS:

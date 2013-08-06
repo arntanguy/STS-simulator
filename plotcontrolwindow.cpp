@@ -2,23 +2,31 @@
 #include <QDebug>
 #include "plotcontrolwindow.h"
 #include "ui_plotcontrolwindow.h"
+
 #include "projectsingleton.h"
 #include "functionssingleton.h"
-#include "hierarchicalfunction.h"
-#include "integralfunction.h"
-#include "function.h"
-#include "helperfunctions.h"
 #include "curvesingleton.h"
-#include "newcurvedialog.h"
-#include "newfunctiondialog.h"
+
+#include "function.h"
+#include "hierarchicalfunction.h"
+#include "differentialfunction.h"
+#include "integralfunction.h"
+
 #include "hierarchicalfunctiondialog.h"
 #include "integralfunctiondialog.h"
+#include "differentialfunctiondialog.h"
+
 #include "curve.h"
 #include "functioncurve.h"
-#include "integralfunction.h"
 #include "integralcurve.h"
+
+#include "newcurvedialog.h"
+#include "newfunctiondialog.h"
 #include "plotarea.h"
 #include "plotwidget.h"
+
+#include "helperfunctions.h"
+
 #include <qwt_plot.h>
 #include <QStandardItem>
 #include <QStandardItemModel>
@@ -52,6 +60,7 @@ PlotControlWindow::PlotControlWindow(const unsigned int plotId, PlotArea *parent
     connect(ui->functionNew, SIGNAL(clicked()), this, SLOT(newFunction()));
     connect(ui->functionHierarchicalNew, SIGNAL(clicked()), this, SLOT(newHierarachicalFunction()));
     connect(ui->functionIntegralNew, SIGNAL(clicked()), this, SLOT(newIntegralFunction()));
+    connect(ui->functionDifferentialNew, SIGNAL(clicked()), this, SLOT(newDifferentialFunction()));
     connect(ui->functionView, SIGNAL(doubleClicked ( const QModelIndex &)), this, SLOT(editFunction(const QModelIndex &)));
     connect(ui->functionDelete, SIGNAL(clicked()), this, SLOT(deleteFunction()));
     connect(ui->functionEditCurve, SIGNAL(clicked()), this, SLOT(editFunctionCurve()));
@@ -269,7 +278,7 @@ FunctionCurve* PlotControlWindow::manageFunctionCurveFromItem(QStandardItem *ite
                 // TODO: save which curve is attached.
                 function->setCurve(fcurve);
                 fcurve->attach(mPlot);
-                fcurve->update();
+                fcurve->update(true);
                 Singleton<CurveSingleton>::Instance().addCurve(fcurve);
                 return fcurve;
             }
@@ -476,6 +485,14 @@ void PlotControlWindow::newIntegralFunction()
     }
 }
 
+void PlotControlWindow::newDifferentialFunction()
+{
+    DifferentialFunctionDialog dialog(this);
+    if(dialog.exec() == QDialog::Accepted)	{
+        newFunctionAvailable();
+    }
+}
+
 void PlotControlWindow::newFunctionAvailable()
 {
     QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
@@ -504,16 +521,16 @@ void PlotControlWindow::newFunctionAvailable()
                 }
             }
         } else if(f->getType() == AbstractFunction::Function) {
-            //Function *ff = dynamic_cast<Function*>(f);
-            //if(ff != 0) {
-            //    qDebug() << "Add normal function to view";
-            //    QStandardItem *Item = HelperFunctions::createFunctionItem(f);
-            //    if(ff->isDisplayed(mPlotId)) Item->setCheckState(Qt::Checked);
-            //    // XXX: disable display of base functions
-            //    Item->setCheckable(false);
-            //    mFunctionItems.append(Item);
-            //    model->setItem( itemIndex++, Item );
-            //}
+            Function *ff = dynamic_cast<Function*>(f);
+            if(ff != 0) {
+                qDebug() << "Add normal function to view";
+                QStandardItem *Item = HelperFunctions::createFunctionItem(f);
+                if(ff->isDisplayed(mPlotId)) Item->setCheckState(Qt::Checked);
+                // XXX: disable display of base functions
+                Item->setCheckable(false);
+                mFunctionItems.append(Item);
+                model->setItem( itemIndex++, Item );
+            }
         } else if(f->getType() == AbstractFunction::Integral) {
             HierarchicalFunction *hf = dynamic_cast<HierarchicalFunction*>(f);
             if(hf != 0) {
@@ -529,6 +546,16 @@ void PlotControlWindow::newFunctionAvailable()
                     if(af->isDisplayed(mPlotId)) item->setCheckState(Qt::Checked);
                     parentItem->setChild(subItemIndex++,item);
                 }
+            }
+        } else if(f->getType() == AbstractFunction::Differential) {
+            DifferentialFunction *ff = dynamic_cast<DifferentialFunction*>(f);
+            if(ff != 0) {
+                qDebug() << "Add normal function to view";
+                QStandardItem *Item = HelperFunctions::createFunctionItem(f);
+                if(ff->isDisplayed(mPlotId)) Item->setCheckState(Qt::Checked);
+                Item->setCheckable(true);
+                mFunctionItems.append(Item);
+                model->setItem( itemIndex++, Item );
             }
         }
     }
@@ -576,6 +603,14 @@ void PlotControlWindow::editFunction(const QModelIndex &index)
                 if(function != 0) {
                     IntegralFunctionDialog dialog(this);
                     dialog.setFunction(function);
+                    if(dialog.exec() == QDialog::Accepted) {
+                        newFunctionAvailable();
+                    }
+                }
+            } else if(f->getType() == AbstractFunction::Differential) {
+                DifferentialFunction *function = dynamic_cast<DifferentialFunction *>(f);
+                if(function != 0) {
+                    DifferentialFunctionDialog dialog(function, this);
                     if(dialog.exec() == QDialog::Accepted) {
                         newFunctionAvailable();
                     }

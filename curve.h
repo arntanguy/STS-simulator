@@ -14,7 +14,7 @@ class Curve: public QObject, public QwtPlotCurve
 {
     Q_OBJECT
 public:
-    enum Type { Experimental, Function, Integral, Unknown };
+    enum Type { Experimental, Function, Integral, Differential, Unknown };
     Curve();
     Curve(int id);
     Curve( const QString &name );
@@ -62,7 +62,7 @@ public:
     void setTitle(const QString& title);
     void setPen(const QPen& pen);
 
-    void attach(PlotWidget *plot);
+    virtual void attach(PlotWidget *plot);
     void detach(PlotWidget *plot);
     void detachFromAll();
     bool isAttached(PlotWidget *plot) const;

@@ -2,22 +2,15 @@
 #define INTEGRALFUNCTION_H
 
 #include "hierarchicalfunction.h"
+#include "plotdata.h"
 
 #include <QVector>
 #include <QMap>
 
-struct IntegralData
-{
-    QVector<double> x;
-    QVector<double> y;
-    IntegralData(int resolution) {
-        x.reserve(resolution);
-        y.reserve(resolution);
-    }
-};
 
 class IntegralFunction : public HierarchicalFunction
 {
+    Q_OBJECT
 public:
     enum Range { ZeroToV, MinusVToZero };
 
@@ -44,11 +37,18 @@ public:
 
     virtual double compute(double);
     virtual double compute(const QString&, double);
-    virtual IntegralData integrate(double min, double max, double resolution, double stepNumber);
+    virtual PlotData integrate(double min, double max, double resolution, double stepNumber);
     virtual FunctionCurve* createCurve();
 
     void setParameters(Function *f, const QString &parameter);
     QString getParameters(Function *f) const;
+
+    PlotData getData() {
+        return mData;
+    }
+
+Q_SIGNALS:
+    void integralDataComputed();
 
 private:
     void init();
@@ -61,6 +61,8 @@ private:
     QString mIntegrationVariable;
 
     QMap<Function*, QString> mParameters;
+
+    PlotData mData;
 
 };
 

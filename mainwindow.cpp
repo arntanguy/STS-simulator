@@ -3,11 +3,12 @@
 #include "aboutdialog.h"
 #include "plotwidget.h"
 #include "plotarea.h"
-#include "csvexperimentaldatareader.h"
-#include "curve.h"
+#include "globalconfigdialog.h"
+
+#include "globalsettingssingleton.h"
 #include "projectsingleton.h"
 #include "plotsingleton.h"
-#include "globalconfigdialog.h"
+
 
 #include <QCloseEvent>
 #include <QFileDialog>
@@ -21,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Creates the first instance of the singleton
     ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
     singleton->loadDefaultConfig();
+    Singleton<GlobalSettingsSingleton>::Instance().loadFromSettings();
 
     mPlotArea1 = new PlotArea("Plot1", 0);
     mPlotArea2 = new PlotArea("Plot2", 1);

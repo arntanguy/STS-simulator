@@ -8,6 +8,7 @@
 #include "integralfunction.h"
 #include "integralcurve.h"
 #include "functionssingleton.h"
+#include "differentialcurve.h"
 
 CurveSingleton::CurveSingleton()
 {

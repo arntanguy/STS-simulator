@@ -69,7 +69,10 @@ SOURCES += main.cpp\
     globalconfigdialog.cpp \
     globalsettingssingleton.cpp \
     qthideandshowdialog.cpp \
-    plotcontrolwindow.cpp
+    plotcontrolwindow.cpp \
+    differentialcurve.cpp \
+    differentialfunction.cpp \
+    differentialfunctiondialog.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -110,7 +113,11 @@ HEADERS  += mainwindow.h \
     globalconfigdialog.h \
     globalsettingssingleton.h \
     qthideandshowdialog.h \
-    plotcontrolwindow.h
+    plotcontrolwindow.h \
+    differentialcurve.h \
+    PlotData.h \
+    differentialfunction.h \
+    differentialfunctiondialog.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
@@ -124,7 +131,8 @@ FORMS    += mainwindow.ui \
     hierarchicalfunctiondialog.ui \
     integralfunctiondialog.ui \
     globalconfigdialog.ui \
-    plotcontrolwindow.ui
+    plotcontrolwindow.ui \
+    differentialfunctiondialog.ui
 
 QMAKE_CXXFLAGS += -std=c++0x
 

@@ -14,7 +14,7 @@ FunctionCurve::FunctionCurve() : Curve()
     init();
 }
 
-FunctionCurve::FunctionCurve(unsigned int id) : Curve(id)
+FunctionCurve::FunctionCurve(int id) : Curve(id)
 {
     init();
 }
@@ -85,6 +85,7 @@ int FunctionCurve::getResolution() const
 /// =============== VIRTUAL =========================
 void FunctionCurve::copyFromCurve(Curve *curve)
 {
+    qDebug() << "FunctionCurve::copyFromCurve";
     Curve::abstractCopyFromCurve(curve);
     FunctionCurve *fc = dynamic_cast<FunctionCurve*>(curve);
     if(fc != 0) {
@@ -101,11 +102,13 @@ void FunctionCurve::update(bool forceUpdate)
         updateData();
     }
     foreach(PlotWidget *plot, mPlots.keys()) {
-        qDebug() << "Updating " << plot->getName();
+        qDebug() << "Updating on plot " << plot->getName();
         Curve *curve = mPlots[plot];
         if(curve != 0) {
             qDebug() << "Updating " << curve->title().text();
             curve->setSamples(mXData, mYData);
+        } else {
+            qDebug() << "NULL CURVE!!!!!!!!!!!!!" << curve;
         }
         plot->replot();
     }

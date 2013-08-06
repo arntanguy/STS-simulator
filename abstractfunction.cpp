@@ -165,6 +165,10 @@ QString AbstractFunction::getFunctionId() const
     return getGroup();
 }
 
+double AbstractFunction::operator() (double x)
+{
+    return compute(x);
+}
 // ========================== SLOTS =========================
 void AbstractFunction::updateLinkedCurve(QString var, double val, bool forceUpdate)
 {

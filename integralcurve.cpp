@@ -63,7 +63,7 @@ void IntegralCurve::updateData()
     if(f != 0) {
         qDebug() << "IntegralCurve::updateData() -- valid integral function";
         // XXX: set stepNumber based on curve preferences
-        IntegralData data = f->integrate(getMin(), getMax(), getResolution(), mStepNumber);
+        PlotData data = f->integrate(getMin(), getMax(), getResolution(), mStepNumber);
         mXData = data.x;
         mYData = data.y;
     }

@@ -133,7 +133,7 @@ QString IntegralFunction::getParameters(Function *f) const
  *  Number of step for each integral computation (i.e, there will be stepNumber steps
  *  between min, and min + (max-min)/resolution
  **/
-IntegralData IntegralFunction::integrate(double min, double max, double resolution, double stepNumber)
+PlotData IntegralFunction::integrate(double min, double max, double resolution, double stepNumber)
 {
     qDebug() << "IntegralFunction::integrate(min: "<<min<<", max: "<<max<<", resolution: "<<resolution<<", stepNumber: "<<stepNumber<<")";
     qDebug() << "Expression : " << getExpression();
@@ -147,7 +147,8 @@ IntegralData IntegralFunction::integrate(double min, double max, double resoluti
     double deltaX = (double)(std::abs(max-min)/resolution)/(double)stepNumber;
     qDebug() << "IntegralFunction::integrate() -- step size deltaX="<<deltaX;
 
-    IntegralData data(resolution);
+    mData.clear();
+    mData.reserve(resolution);
 
     if(mRange == ZeroToV) {
         qDebug() << "IntegralFunction::integrate() -- 0 to V";
@@ -177,8 +178,8 @@ IntegralData IntegralFunction::integrate(double min, double max, double resoluti
                 }
                 r += deltaX * (h0 + h1)/2.d;
             }
-            data.x.append(x);
-            data.y.append(r);
+            mData.x.append(x);
+            mData.y.append(r);
         }
     } else if(mRange == MinusVToZero) {
         qDebug() << "IntegralFunction::integrate() -- 0 to -V";
@@ -208,16 +209,16 @@ IntegralData IntegralFunction::integrate(double min, double max, double resoluti
                 }
                 r += deltaX * (h0 + h1)/2.d;
             }
-            data.x.append(x);
-            data.y.append(r);
+            mData.x.append(x);
+            mData.y.append(r);
         }
     } else {
         // XXX:
         qDebug() << "IntegralFunction::integrate() - INVALID RANGE: supported range are 0 to V and 0 to -V";
     }
-    //qDebug() << "X:  "<< data.x;
-    //qDebug() << "Y:  "<< data.y;
-    return data;
+    qDebug() << "IntegralFunction::integrate() - emitting finish signal integralDataComputed()";
+    emit integralDataComputed();
+    return mData;
 }
 
 double IntegralFunction::compute(double x)

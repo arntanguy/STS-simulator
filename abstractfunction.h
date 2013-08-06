@@ -14,7 +14,7 @@ class AbstractFunction : public QObject
     Q_OBJECT
 
 public:
-    enum FunctionType { Function, HierarchicalFunction, Integral, Unknown};
+    enum FunctionType { Function, HierarchicalFunction, Integral, Differential, Unknown};
 
 public:
     AbstractFunction(QObject *parent=0);
@@ -31,7 +31,7 @@ public:
      **/
     virtual double compute(const QString&, double) = 0;
     virtual double compute(double) = 0;
-    virtual double operator() (double x) = 0;
+    virtual double operator() (double x);
     virtual QString getExpression() const = 0;
     virtual void save(const QString &group);
     virtual void loadFromConfig(const QString &group);
