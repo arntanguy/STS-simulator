@@ -4,10 +4,12 @@
 
 DifferentialCurve::DifferentialCurve() : FunctionCurve()
 {
+    init();
 }
 
 DifferentialCurve::DifferentialCurve(int id) : FunctionCurve(id)
 {
+    init();
 }
 
 void DifferentialCurve::init()
@@ -25,49 +27,11 @@ void DifferentialCurve::update(bool forceUpdate)
 void DifferentialCurve::attach(PlotWidget *plot)
 {
     FunctionCurve::attach(plot);
-    qDebug() << "PLOT: "<<plot->getId();
-    //qDebug() << "DifferentialCurve::attach() - attach curve " << title().text() << " to plot " << plot->getName();
-    //Curve *curve = 0;
-    //if(isAttached(plot)) {
-    //    qDebug() << "Curve already attached, update copies";
-    //    curve = mPlots[plot];
-    //    if(curve != 0) {
-    //        curve->copyFromCurve(this);
-    //    }
-    //} else {
-    //    qDebug() << "DifferentialCurve::attach() - create new curve";
-    //    DifferentialCurve *c = new DifferentialCurve(getId());
-    //    c->copyFromCurve(this);
-    //    c->QwtPlotItem::attach(plot);
-    //    curve = c;
-    //}
-    //qDebug() << "Attach curve====";
-    //qDebug() << "curve "<< curve << " attached";
-    //mPlots[plot] = curve;
-    //qDebug() << "curve from plot "<< mPlots[plot] << " attached";
-    //mPlots[plot] = this;
-}
-
-void DifferentialCurve::copyFromCurve(Curve *curve)
-{
-    qDebug() <<"ABCG";
-    qDebug() << "DifferentialCurve::copyFromCurve()";
-    Curve::abstractCopyFromCurve(curve);
-    DifferentialCurve *fc = dynamic_cast<DifferentialCurve*>(curve);
-    if(fc != 0) {
-        setResolution(fc->getResolution());
-        DifferentialFunction *f = dynamic_cast<DifferentialFunction*>(fc->getFunction());
-        if(f != 0) {
-            setFunction(f);
-        }
-    } else {
-        qDebug() << "======°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°";
-        qDebug() << "Copy from null!";
-    }
 }
 
 void DifferentialCurve::save()
 {
+    qDebug() << "DifferentialCurve::save()";
     FunctionCurve::save();
 }
 

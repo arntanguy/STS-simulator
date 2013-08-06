@@ -15,14 +15,15 @@ class DifferentialFunction : public AbstractFunction
     Q_OBJECT
 public:
     DifferentialFunction();
+    DifferentialFunction(int id);
 
     virtual double compute(const QString&, double);
     virtual double compute(double);
     virtual QString getExpression() const;
     virtual FunctionCurve* createCurve();
-    //virtual void save(const QString &group);
-    //virtual void loadFromConfig(const QString &group);
-    //
+    virtual void save(const QString &group);
+    virtual void loadFromConfig(const QString &group);
+
     PlotData differentiate();
 
     void setFunction(IntegralFunction *f);

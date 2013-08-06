@@ -60,9 +60,14 @@ void CurveSingleton::loadFromSettings()
             qDebug() << "Loading Function curve " << curve->getId();
             curve->loadFromSettings();
             addCurve(curve);
-        } else {
+        } else if(type == Curve::Integral) {
             IntegralCurve *curve = new IntegralCurve(id);
             qDebug() << "Loading Integral curve " << curve->getId();
+            curve->loadFromSettings();
+            addCurve(curve);
+        } else {
+            DifferentialCurve *curve = new DifferentialCurve(id);
+            qDebug() << "Loading Differential curve " << curve->getId();
             curve->loadFromSettings();
             addCurve(curve);
         }

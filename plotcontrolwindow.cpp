@@ -19,6 +19,7 @@
 #include "curve.h"
 #include "functioncurve.h"
 #include "integralcurve.h"
+#include "differentialcurve.h"
 
 #include "newcurvedialog.h"
 #include "newfunctiondialog.h"

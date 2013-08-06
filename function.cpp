@@ -334,8 +334,9 @@ void Function::loadFromConfig(const QString &group)
     setExpression(settings->value("expression", "").toString());
     settings->endGroup();
     loadVariables();
-    if(mLinkedCurve == 0) { qDebug() << "null curve!!";} else{
-    mLinkedCurve->update(true);
+    if(mLinkedCurve != 0)
+    {
+        mLinkedCurve->update(true);
     }
 }
 

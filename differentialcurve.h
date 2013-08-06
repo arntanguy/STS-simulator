@@ -17,17 +17,16 @@ public:
 
     void setFunction(DifferentialFunction *f);
 
-    virtual void copyFromCurve(Curve *curve);
+    //virtual void copyFromCurve(Curve *curve);
     virtual void attach(PlotWidget *plot);
 
 public Q_SLOTS:
     void slotUpdateData();
 
-protected:
-    virtual void updateData();
 
 private:
     void init();
+    virtual void updateData();
 };
 
 #endif // DIFFERENTIALCURVE_H

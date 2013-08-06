@@ -4,6 +4,7 @@
 #include "hierarchicalfunction.h"
 #include "integralfunction.h"
 #include "abstractfunction.h"
+#include "differentialfunction.h"
 #include "curve.h"
 #include "functioncurve.h"
 
@@ -91,6 +92,15 @@ void FunctionsSingleton::loadFromSettings()
     foreach(QString functionId, iGroups) {
         IntegralFunction *f = new IntegralFunction(functionId.toInt());
         f->loadFromConfig("Functions/IntegralFunction/"+functionId);
+        addFunction(f);
+    }
+
+    settings->beginGroup("Functions/DifferentialFunction/");
+    QStringList dGroups = settings->childGroups();
+    settings->endGroup();
+    foreach(QString functionId, dGroups) {
+        DifferentialFunction *f = new DifferentialFunction(functionId.toInt());
+        f->loadFromConfig("Functions/DifferentialFunction/"+functionId);
         addFunction(f);
     }
 
