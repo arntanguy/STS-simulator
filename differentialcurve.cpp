@@ -53,8 +53,8 @@ void DifferentialCurve::updateData()
         if(f != 0) {
             PlotData data = f->differentiate();
            // qDebug() << "differential data";
-           // qDebug() << "V: " <<data.x;
-           // qDebug() << "f'(V): " <<data.y;
+            qDebug() << "V: " <<data.x;
+            qDebug() << "f'(V): " <<data.y;
             mXData = data.x;
             mYData = data.y;
         } else {
@@ -68,10 +68,9 @@ void DifferentialCurve::updateData()
 // ==================================== PUBLIC ==============================
 void DifferentialCurve::setFunction(DifferentialFunction *f)
 {
-    qDebug() << "DifferentialCurve::setFunction";
+    qDebug() << "DifferentialCurve::setFunction() -- "<<f->getName();
     //XXX: handle this properly
     if(f != 0) {
-
         FunctionCurve::setFunction(f);
         qDebug() << "connecting function";
         connect(f, SIGNAL(integralDataComputed()), this, SLOT(slotUpdateData()));

@@ -86,24 +86,6 @@ void DifferentialFunction::loadFromConfig(const QString &group)
     qDebug() << "";
     qDebug() << "";
     qDebug() << "DifferentialFunction::loadFromConfig -  " << group;
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
     AbstractFunction::loadFromConfig(group);
 
@@ -112,9 +94,11 @@ void DifferentialFunction::loadFromConfig(const QString &group)
     qDebug() << "id: "<<id;
     IntegralFunction* f = dynamic_cast<IntegralFunction *>(Singleton<FunctionsSingleton>::Instance().getFunctionById(id));
     if(f != 0) {
+        qDebug() << "f isn't null";
         DifferentialFunction::setFunction(f);
     }
     settings->endGroup();
+    if(mLinkedCurve != 0) mLinkedCurve->update(true);
 }
 
 void DifferentialFunction::setFunction(IntegralFunction *f)
@@ -123,6 +107,12 @@ void DifferentialFunction::setFunction(IntegralFunction *f)
         qDebug() << "DifferentialFunction::setFunction ";
         mFunction = f;
         connect(mFunction, SIGNAL(integralDataComputed()), this, SIGNAL(integralDataComputed()));
+        if(mLinkedCurve != 0) {
+            DifferentialCurve *c = dynamic_cast<DifferentialCurve*>(mLinkedCurve);
+            if(c!=0) {
+                c->setFunction(this);
+            }
+        }
     }
 }
 
