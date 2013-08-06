@@ -67,24 +67,7 @@ void DifferentialFunction::save(const QString &group)
 
 void DifferentialFunction::loadFromConfig(const QString &group)
 {
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "";
+    qDebug() << "==============================================";
     qDebug() << "DifferentialFunction::loadFromConfig -  " << group;
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
     AbstractFunction::loadFromConfig(group);
@@ -130,28 +113,22 @@ PlotData DifferentialFunction::differentiate()
 {
     PlotData derivate;
     if(mFunction != 0) {
-        qDebug() << "here";
         PlotData data = mFunction->getData();
         if(data.size() >2) {
-            qDebug() << "here2";
             derivate.reserve(data.size());
-            qDebug() << "here3";
-            double x0 = data.x[0];
-            double x1 = data.x[1];
-            double step = x1-x0;
-            if(step != 0) {
-                qDebug() << "here4";
-                double y0 = data.x[0];
-                double y1 = data.x[1];
-                for (int i = 2; i < data.size(); i+=2 ) {
-                    double d = (y1-y0)/step;
-                    derivate.x.append(x0);
-                    derivate.y.append(d);
-
-                    x0 = x1;
-                    y0 = y1;
-                    x1 = data.x[i];
-                    y1 = data.y[i];
+            for(int i=0; i<data.size()-1; i++) {
+                double x0 = data.x[i];
+                double x1 = data.x[i+1];
+                double y0 = data.y[i];
+                double y1 = data.y[i+1];
+                double h = x1-x0;
+                if(h != 0) {
+                double d = (y1-y0)/h;
+                derivate.x.append(x0);
+                derivate.y.append(d);
+                if(x0>0.48 && x0 < 0.52) {
+                    qDebug() << x0 << ", " << x1 << " => " << y0 << ", "<< y1 << ", x1-x0: "<<x1-x0<<", y1-y0: " << y1-y0 << ", h: "<< h <<" = " << d;
+                }
                 }
             }
         } else {
@@ -161,5 +138,34 @@ PlotData DifferentialFunction::differentiate()
         qDebug() << "DifferentialFunction::differentiate() - ERROR: NULL FUNCTION";
     }
     return derivate;
+    //PlotData derivate;
+    //if(mFunction != 0) {
+    //    PlotData data = mFunction->getData();
+    //    if(data.size() >2) {
+    //        derivate.reserve(data.size());
+    //        double x0 = data.x[0];
+    //        double x1 = data.x[1];
+    //        double step = x1-x0;
+    //        if(step != 0) {
+    //            double y0 = data.x[0];
+    //            double y1 = data.x[1];
+    //            for (int i = 2; i < data.size(); i+=2 ) {
+    //                double d = (y1-y0)/step;
+    //                derivate.x.append(x0);
+    //                derivate.y.append(d);
+
+    //                x0 = x1;
+    //                y0 = y1;
+    //                x1 = data.x[i];
+    //                y1 = data.y[i];
+    //            }
+    //        }
+    //    } else {
+    //        qDebug() << "DifferentialCurve::updateData() -- ERROR: invalid data set: size < 2";
+    //    }
+    //} else {
+    //    qDebug() << "DifferentialFunction::differentiate() - ERROR: NULL FUNCTION";
+    //}
+    //return derivate;
 }
 

@@ -53,8 +53,10 @@ void DifferentialCurve::updateData()
         if(f != 0) {
             PlotData data = f->differentiate();
            // qDebug() << "differential data";
-            //qDebug() << "V: " <<data.x;
-            //qDebug() << "f'(V): " <<data.y;
+            for(int i=0; i<data.size(); i++) {
+                if(data.x[i] > 0.495 && data.x[i] < 0.505)
+                    qDebug() << "("<<data.x[i] << ", " <<data.y[i]<<")";
+            }
             mXData = data.x;
             mYData = data.y;
         } else {
