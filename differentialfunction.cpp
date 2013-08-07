@@ -108,7 +108,6 @@ void DifferentialFunction::setCurve(DifferentialCurve *curve)
 }
 
 
-
 PlotData DifferentialFunction::differentiate()
 {
     PlotData derivate;
@@ -123,12 +122,9 @@ PlotData DifferentialFunction::differentiate()
                 double y1 = data.y[i+1];
                 double h = x1-x0;
                 if(h != 0) {
-                double d = (y1-y0)/h;
-                derivate.x.append(x0);
-                derivate.y.append(d);
-                if(x0>0.48 && x0 < 0.52) {
-                    qDebug() << x0 << ", " << x1 << " => " << y0 << ", "<< y1 << ", x1-x0: "<<x1-x0<<", y1-y0: " << y1-y0 << ", h: "<< h <<" = " << d;
-                }
+                    double d = (y1-y0)/h;
+                    derivate.x.append(x0);
+                    derivate.y.append(d);
                 }
             }
         } else {
@@ -138,34 +134,5 @@ PlotData DifferentialFunction::differentiate()
         qDebug() << "DifferentialFunction::differentiate() - ERROR: NULL FUNCTION";
     }
     return derivate;
-    //PlotData derivate;
-    //if(mFunction != 0) {
-    //    PlotData data = mFunction->getData();
-    //    if(data.size() >2) {
-    //        derivate.reserve(data.size());
-    //        double x0 = data.x[0];
-    //        double x1 = data.x[1];
-    //        double step = x1-x0;
-    //        if(step != 0) {
-    //            double y0 = data.x[0];
-    //            double y1 = data.x[1];
-    //            for (int i = 2; i < data.size(); i+=2 ) {
-    //                double d = (y1-y0)/step;
-    //                derivate.x.append(x0);
-    //                derivate.y.append(d);
-
-    //                x0 = x1;
-    //                y0 = y1;
-    //                x1 = data.x[i];
-    //                y1 = data.y[i];
-    //            }
-    //        }
-    //    } else {
-    //        qDebug() << "DifferentialCurve::updateData() -- ERROR: invalid data set: size < 2";
-    //    }
-    //} else {
-    //    qDebug() << "DifferentialFunction::differentiate() - ERROR: NULL FUNCTION";
-    //}
-    //return derivate;
 }
 
