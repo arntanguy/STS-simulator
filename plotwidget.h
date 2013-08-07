@@ -13,6 +13,7 @@
 class LegendItem;
 class QwtPlotGrid;
 class Curve;
+class GlobalSettingsSingleton;
 
 namespace Ui {
 class PlotWidget;
@@ -52,6 +53,8 @@ public Q_SLOTS:
     void loadFromSettings();
     void configurationChanged();
 
+    void plotAutoYChanged(bool);
+
 public:
     virtual void replot();
     void setPrecision(int precision);
@@ -68,6 +71,8 @@ private:
 
     QString mName;
     unsigned int mId;
+
+    GlobalSettingsSingleton *mGlobalSettings;
 };
 
 #endif // PLOTWIDGET_H

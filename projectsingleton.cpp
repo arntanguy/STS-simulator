@@ -52,6 +52,7 @@ void ProjectSingleton::openProject(const QString& fileName)
     delete mSettings;
     mSettings = new QSettings(fileName, QSettings::IniFormat);
 
+    Singleton<GlobalSettingsSingleton>::Instance().loadFromSettings();
     // Load all curves
     qDebug() << "\n\n";
     Singleton<PlotSingleton>::Instance().loadFromSettings();

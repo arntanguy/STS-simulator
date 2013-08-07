@@ -49,10 +49,6 @@ PlotControlWindow::PlotControlWindow(const unsigned int plotId, PlotArea *parent
     connect(this->ui->buttonBox, SIGNAL(accepted()), parent, SLOT(plotConfigChanged()));
     connect(this->ui->buttonBox, SIGNAL(rejected()), this, SLOT(close()));
 
-    // Plot page
-    connect(this->ui->autoAbscissa, SIGNAL(toggled(bool)), this, SLOT(autoAbscissaChecked(bool)));
-    connect(this->ui->autoOrdinate, SIGNAL(toggled(bool)), this, SLOT(autoOrdinateChecked(bool)));
-
     // Curve page
     connect(ui->newCurveButton, SIGNAL(clicked()), this, SLOT(newCurve()));
     connect(ui->curveSelection, SIGNAL(doubleClicked ( const QModelIndex &)), this, SLOT(editCurve(const QModelIndex &)));
@@ -122,6 +118,8 @@ void PlotControlWindow::init()
     // TODO: load from config
     newCurveAvailable();
     newFunctionAvailable();
+
+    setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
 }
 
 /*!
@@ -222,17 +220,6 @@ void PlotControlWindow::initFromConfig()
         }
     }
 
-    // ========= Plot range ===========
-    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/range");
-    autoAbscissaChecked(mSettings->value("autoAbscissa", true).toBool());
-    ui->minAbscissaRange->setValue(mSettings->value("minAbscissa", 0).toDouble());
-    ui->maxAbscissaRange->setValue(mSettings->value("maxAbscissa", 1000).toDouble());
-
-    autoOrdinateChecked(mSettings->value("autoOrdinate", true).toBool());
-    ui->minOrdinateRange->setValue(mSettings->value("minOrdinate", 0).toDouble());
-    ui->maxOrdinateRange->setValue(mSettings->value("maxOrdinate", 1000).toDouble());
-    mSettings->endGroup();
-
     // =============== Plot Grid ==================
     mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/grid");
     ui->gridEnabled->setChecked(mSettings->value("isEnabled", true).toBool());
@@ -275,7 +262,6 @@ FunctionCurve* PlotControlWindow::manageFunctionCurveFromItem(QStandardItem *ite
             } else {
                 qDebug() << "PlotControlWindow::manageFunctionCurveFromItem() - Function doesn't have a curve, create it";
                 FunctionCurve *fcurve = function->createCurve();
-                fcurve->setComputeRange(ui->minAbscissaRange->value(), ui->maxAbscissaRange->value(), ui->plotResolution->value());
                 // TODO: save which curve is attached.
                 function->setCurve(fcurve);
                 fcurve->attach(mPlot);
@@ -323,15 +309,6 @@ void PlotControlWindow::accept()
     mSettings->setValue("verticalPosition", verticalPos);
     mSettings->setValue("alignment", static_cast<int>(aX|aY));
     mSettings->setValue("numCurves", 3);
-    mSettings->endGroup();
-
-    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/range");
-    mSettings->setValue("autoAbscissa", ui->autoAbscissa->isChecked());
-    mSettings->setValue("minAbscissa", ui->minAbscissaRange->value());
-    mSettings->setValue("maxAbscissa", ui->maxAbscissaRange->value());
-    mSettings->setValue("autoOrdinate", ui->autoOrdinate->isChecked());
-    mSettings->setValue("minOrdinate", ui->minOrdinateRange->value());
-    mSettings->setValue("maxOrdinate", ui->maxOrdinateRange->value());
     mSettings->endGroup();
 
     mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/info");
@@ -395,20 +372,6 @@ void PlotControlWindow::accept()
 
 
 // =========================== SLOTS =================================
-void PlotControlWindow::autoAbscissaChecked(bool checked)
-{
-    ui->autoAbscissa->setChecked(checked);
-    ui->minAbscissaRange->setEnabled(!checked);
-    ui->maxAbscissaRange->setEnabled(!checked);
-}
-
-void PlotControlWindow::autoOrdinateChecked(bool checked)
-{
-    ui->autoOrdinate->setChecked(checked);
-    ui->minOrdinateRange->setEnabled(!checked);
-    ui->maxOrdinateRange->setEnabled(!checked);
-}
-
 void PlotControlWindow::newCurve()
 {
     NewCurveDialog dialog(this);
@@ -629,7 +592,6 @@ void PlotControlWindow::editFunctionCurve()
     FunctionCurve *curve = f->getCurve();
     if(curve == 0) {
         curve = f->createCurve();
-        curve->setComputeRange(ui->minAbscissaRange->value(), ui->maxAbscissaRange->value(), ui->plotResolution->value());
     }
     NewCurveDialog dialog;
     dialog.loadFromCurve(curve);

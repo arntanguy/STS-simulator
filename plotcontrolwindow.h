@@ -39,8 +39,6 @@ Q_SIGNALS:
     void accepted();
 
 public slots:
-    void autoAbscissaChecked(bool checked);
-    void autoOrdinateChecked(bool checked);
     void newCurve();
     void editCurve(const QModelIndex &);
     void newCurveAvailable();

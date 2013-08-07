@@ -10,6 +10,7 @@
 #include "legenditem.h"
 #include "projectsingleton.h"
 #include "curve.h"
+#include "globalsettingssingleton.h"
 
 #include <QPushButton>
 #include <qwt_widget_overlay.h>
@@ -34,7 +35,11 @@ PlotWidget::PlotWidget(QWidget *parent) :
     initZoom();
     initGrid();
 
+    mGlobalSettings = &Singleton<GlobalSettingsSingleton>::Instance();
     connect(&Singleton<ProjectSingleton>::Instance(), SIGNAL(projectChanged()), this, SLOT(configurationChanged()));
+    connect(mGlobalSettings, SIGNAL(plotAutoYChanged(bool)), this, SLOT(plotAutoYChanged(bool)));
+
+    plotAutoYChanged(mGlobalSettings->isAutoY());
 
     replot();
 }
@@ -213,25 +218,9 @@ void PlotWidget::loadFromSettings()
     mSettings->endGroup();
 
 
-    mSettings->beginGroup("Plot/"+QString::number(mId)+"/range");
-    if(!mSettings->value("autoAbscissa", true).toBool()) {
-        double min = mSettings->value("minAbscissa", -10.d).toDouble();
-        double max = mSettings->value("maxAbscissa", 10.d).toDouble();
-        this->setAxisScale(QwtPlot::xBottom, min, max);
-    } else {
-        this->setAxisAutoScale(QwtPlot::xBottom, true);
-    }
-    if(!mSettings->value("autoOrdinate", true).toBool()) {
-        double min = mSettings->value("minOrdinate", -10.d).toDouble();
-        double max = mSettings->value("maxOrdinate", 10.d).toDouble();
-        this->setAxisScale(QwtPlot::yLeft, min, max);
-    } else {
-        this->setAxisAutoScale(QwtPlot::yLeft, true);
-    }
     // Replot and then set zoom base to the current axis scale.
     QwtPlot::replot();
     mPlotZoomer->setZoomBase();
-    mSettings->endGroup();
 
     mSettings->beginGroup("Plot/"+QString::number(mId)+"/grid");
     if(mSettings->value("isEnabled", true).toBool())
@@ -268,5 +257,18 @@ unsigned int PlotWidget::getId() const
 
 void PlotWidget::replot()
 {
+    QwtPlot::replot();
+}
+
+
+
+// =========================== PLOTS =======================================
+void PlotWidget::plotAutoYChanged(bool state)
+{
+    if(state) {
+        this->setAxisAutoScale(QwtPlot::yLeft, true);
+    } else {
+        this->setAxisScale(QwtPlot::yLeft, mGlobalSettings->getYMin(), mGlobalSettings->getYMax());
+    }
     QwtPlot::replot();
 }
