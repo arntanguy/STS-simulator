@@ -98,7 +98,9 @@ void Curve::setMinMax(double min, double max)
         mMax = max;
         mNeedsUpdate = true;
         foreach(Curve *curve, mPlots) {
-            curve->setMinMax(min, max);
+            if(curve != 0) {
+                curve->setMinMax(min, max);
+            }
         }
     }
 
