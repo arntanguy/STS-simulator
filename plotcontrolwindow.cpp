@@ -120,8 +120,6 @@ void PlotControlWindow::init()
     // TODO: load from config
     newCurveAvailable();
     newFunctionAvailable();
-
-    setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
 }
 
 /*!

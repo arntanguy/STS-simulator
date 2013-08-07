@@ -49,6 +49,7 @@ void PlotArea::openConfigDialog()
     mConfigWindow->newCurveAvailable();
     mConfigWindow->newFunctionAvailable();
     mConfigWindow->show();
+    mConfigWindow->raise();
 }
 
 /*!
