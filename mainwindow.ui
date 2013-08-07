@@ -141,7 +141,14 @@
     </property>
     <addaction name="actionGlobal_Settings"/>
    </widget>
+   <widget class="QMenu" name="menuFunction">
+    <property name="title">
+     <string>Function</string>
+    </property>
+    <addaction name="actionNew_Base_Function"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuFunction"/>
    <addaction name="menuSettings"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -192,6 +199,11 @@
   <action name="actionGlobal_Settings">
    <property name="text">
     <string>Global Settings</string>
+   </property>
+  </action>
+  <action name="actionNew_Base_Function">
+   <property name="text">
+    <string>New Base Function</string>
    </property>
   </action>
  </widget>

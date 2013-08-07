@@ -34,6 +34,8 @@ public slots:
     void actionGlobalSettings(bool);
     void slotNewProject();
     void slotOpenProject(QString &fileName);
+    void newBaseFunction(bool);
+
 
 private:
     Ui::MainWindow *ui;

@@ -4,6 +4,7 @@
 #include "plotwidget.h"
 #include "plotarea.h"
 #include "globalconfigdialog.h"
+#include "newfunctiondialog.h"
 
 #include "globalsettingssingleton.h"
 #include "projectsingleton.h"
@@ -61,6 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionSave, SIGNAL(triggered(bool)), this, SLOT(actionSave(bool)));
     connect(ui->actionNew_Project, SIGNAL(triggered(bool)), this, SLOT(actionNewProject(bool)));
     connect(ui->actionLoad_Project, SIGNAL(triggered(bool)), this, SLOT(actionLoadProject(bool)));
+    connect(ui->actionNew_Base_Function, SIGNAL(triggered(bool)), this, SLOT(newBaseFunction(bool)));
 
     connect(ui->actionGlobal_Settings, SIGNAL(triggered(bool)), this, SLOT(actionGlobalSettings(bool)));
 }
@@ -230,4 +232,10 @@ void MainWindow::slotOpenProject(QString &fileName)
 {
     qDebug() << "MainWindow::slotOpenProject("<<fileName<<")";
     openProject(fileName);
+}
+
+void MainWindow::newBaseFunction(bool)
+{
+    NewFunctionDialog dialog(this);
+    dialog.exec();
 }
