@@ -50,7 +50,7 @@ void NewFunctionDialog::init()
 
     mSettings = &Singleton<GlobalSettingsSingleton>::Instance();
     connect(mSettings, SIGNAL(overlayOpacityUpdated()), this, SLOT(updateOpacity()));
-    //setWindowOpacity(mSettings->getOverlayOpacity());
+    setWindowOpacity(mSettings->getOverlayOpacity());
     setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
 }
 
