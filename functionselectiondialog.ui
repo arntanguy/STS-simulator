@@ -65,19 +65,39 @@
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
         <widget class="QGroupBox" name="functionGroupBox">
+         <property name="minimumSize">
+          <size>
+           <width>300</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="title">
           <string>Function</string>
          </property>
          <layout class="QFormLayout" name="formLayout_2">
-          <item row="0" column="0">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+          </property>
+          <item row="1" column="0">
            <widget class="QLabel" name="functionExpression">
             <property name="text">
              <string>Expression</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <layout class="QVBoxLayout" name="functionVariablesLayout"/>
+          <item row="3" column="0">
+           <widget class="QLabel" name="functionVariables">
+            <property name="text">
+             <string>Variables: </string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="functionType">
+            <property name="text">
+             <string>Type: </string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>

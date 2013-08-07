@@ -11,8 +11,9 @@
 #include <QDebug>
 #include <QModelIndex>
 
-FunctionSelectionDialog::FunctionSelectionDialog(QWidget *parent) :
+FunctionSelectionDialog::FunctionSelectionDialog(QWidget *parent, AbstractFunction::FunctionType flags) :
     QDialog(parent),
+    mFlags(flags),
     ui(new Ui::FunctionSelectionDialog)
 {
     ui->setupUi(this);
@@ -38,8 +39,11 @@ void FunctionSelectionDialog::init()
         int row = 0;
         foreach(int id, fIds) {
             Function *f = dynamic_cast<Function*>(singleton->getFunctionById(id));
-            if(f != 0)
-                model->setItem(row++, createItem(f));
+            if(f != 0) {
+                if(f->getType() & mFlags) {
+                    model->setItem(row++, createItem(f));
+                }
+            }
         }
     } else {
         qDebug() << "null model";
@@ -60,14 +64,12 @@ void FunctionSelectionDialog::useFunction(Function *f)
     ui->functionExpression->setText("<b>"+f->getName()+ "</b>(" + f->getVariable() + ") = " + f->getExpression());
     QStringList variables = f->getVariableFactory()->getVariableNames();
     qDebug() << "Function variables: " << variables;
-    foreach(QString var, variables) {
-        // If it's not the function variable
-        if(var != f->getVariable()) {
-            ValueSelector *valueSelector = new ValueSelector(var, f, this);
-            connect(valueSelector, SIGNAL(valueChanged(QString,double)), this, SLOT(variableValueChanged(QString, double)));
-            // Creates a widget to control it
-            ui->functionVariablesLayout->addWidget(valueSelector);
-        }
+    ui->functionType->setText(tr("Type: ")+f->getTypeStr());
+    if(f->getType() == AbstractFunction::Function) {
+        ui->functionVariables->setText(tr("Variables: ")+variables.join(", "));
+        ui->functionVariables->show();
+    } else {
+        ui->functionVariables->hide();
     }
 }
 

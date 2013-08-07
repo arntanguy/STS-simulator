@@ -8,6 +8,11 @@
 #include "functioncurve.h"
 
 int AbstractFunction::mFunctionStaticId = 0;
+AbstractFunction::FunctionType operator|(AbstractFunction::FunctionType a, AbstractFunction::FunctionType b)
+{
+    return static_cast<AbstractFunction::FunctionType>(static_cast<int>(a) | static_cast<int>(b));
+}
+
 
 AbstractFunction::AbstractFunction(QObject *parent) : QObject(parent)
 {
@@ -57,6 +62,22 @@ AbstractFunction::FunctionType AbstractFunction::getType() const
     return mType;
 }
 
+QString AbstractFunction::getTypeStr() const
+{
+    switch(getType()) {
+        case Function:
+            return tr("Base Function");
+        case Integral:
+            return tr("Integral Function");
+        case Differential:
+            return tr("Differential Function");
+        case HierarchicalFunction:
+            return tr("Hierarchical Function");
+        default:
+            return tr("Invalid");
+    }
+}
+
 QString AbstractFunction::getVariable() const
 {
     return mVariable;
@@ -88,6 +109,7 @@ unsigned int AbstractFunction::getCurveId() const
     if(mLinkedCurve != 0) {
         return mLinkedCurve->getId();
     }
+    return -1;
 }
 
 void AbstractFunction::updateLinkedCurve(bool forceUpdate)

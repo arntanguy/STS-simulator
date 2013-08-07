@@ -77,7 +77,7 @@ void HierarchicalFunctionDialog::addFunctionItem(Function *f)
 
 void HierarchicalFunctionDialog::addFunction()
 {
-    FunctionSelectionDialog dialog(this);
+    FunctionSelectionDialog dialog(this, AbstractFunction::Function | AbstractFunction::HierarchicalFunction);
     if(dialog.exec() == QDialog::Accepted) {
         // XXX: check if copy is allright
         addFunction(FunctionFactory::createFromFunction(dialog.getSelectedFunction()));

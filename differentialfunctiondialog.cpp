@@ -65,7 +65,7 @@ void DifferentialFunctionDialog::selectFunction()
     if(mFunction == 0) {
         mFunction = new DifferentialFunction();
     }
-    FunctionSelectionDialog dialog(this);
+    FunctionSelectionDialog dialog(this, AbstractFunction::Integral);
     Function *f = 0;
     if(dialog.exec() == QDialog::Accepted) {
         // Do not copy as we're linking the real funciton to the derivate

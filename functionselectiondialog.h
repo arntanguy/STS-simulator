@@ -2,6 +2,7 @@
 #define FUNCTIONSELECTIONDIALOG_H
 
 #include <QDialog>
+#include "abstractfunction.h"
 
 class QModelIndex;
 class Function;
@@ -11,12 +12,13 @@ namespace Ui {
 class FunctionSelectionDialog;
 }
 
+
 class FunctionSelectionDialog : public QDialog
 {
     Q_OBJECT
-    
+
 public:
-    explicit FunctionSelectionDialog(QWidget *parent = 0);
+    explicit FunctionSelectionDialog(QWidget *parent = 0, AbstractFunction::FunctionType flags = AbstractFunction::All);
     ~FunctionSelectionDialog();
 
     Function* getSelectedFunction();
@@ -29,6 +31,7 @@ private:
 private:
     Ui::FunctionSelectionDialog *ui;
     Function *mCurrentFunction;
+    AbstractFunction::FunctionType mFlags;
 
 public Q_SLOTS:
     void functionSelected(const QModelIndex &);

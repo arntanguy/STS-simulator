@@ -131,7 +131,7 @@ void IntegralFunctionDialog::useFunction(Function *f)
 
 void IntegralFunctionDialog::addFunction()
 {
-    FunctionSelectionDialog dialog(this);
+    FunctionSelectionDialog dialog(this, AbstractFunction::Function | AbstractFunction::HierarchicalFunction);
     if(dialog.exec() == QDialog::Accepted) {
         // Don't copy for integral, it has to be updated to the parent curve
         // XXX: link any change to parent to integral
