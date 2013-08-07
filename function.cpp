@@ -3,6 +3,7 @@
 #include "variablefactory.h"
 #include "muParser.h"
 #include "functioncurve.h"
+#include "helperfunctions.h"
 
 #include <QDebug>
 #include <iostream>
@@ -67,13 +68,12 @@ void Function::init()
 {
     setType(AbstractFunction::Function);
 
-    mParser = new mu::Parser();
+    mParser = HelperFunctions::createParser();
     mImplicitVarFactory = new VariableFactory();
     mVariable = "V";
 
     // Defines the variable factory used for implicit variable declaration.
     mParser->SetVarFactory(addVariable, mImplicitVarFactory);
-    mParser->DefineConst("_pi", (double)3.14159);
 
     mBaseGroup = "Functions/Function/";
 }
@@ -209,11 +209,11 @@ double Function::computeWithParameters(const QString &parameters, const QString 
     /**
      * Create a parser for the parameters
      **/
-    mu::Parser pParser;
-    pParser.SetExpr(parameters.toStdString());
+    mu::Parser *pParser = HelperFunctions::createParser();
+    pParser->SetExpr(parameters.toStdString());
     VariableFactory pVarFact;
-    pParser.SetVarFactory(addVariable, &pVarFact);
-    pParser.Eval();
+    pParser->SetVarFactory(addVariable, &pVarFact);
+    pParser->Eval();
 
 
     /**
@@ -222,7 +222,7 @@ double Function::computeWithParameters(const QString &parameters, const QString 
      * Otherwise an exception is (XXX) thrown
      **/
     // Get the map with the variables
-    varmap_type variables = pParser.GetVar();
+    varmap_type variables = pParser->GetVar();
     varmap_type::const_iterator item = variables.begin();
     // Query the variables
     for (; item!=variables.end(); ++item)
@@ -230,7 +230,7 @@ double Function::computeWithParameters(const QString &parameters, const QString 
         double* pVal = 0;
         pVal = getVariable(item->first.c_str());
         if(pVal != 0) {
-            pParser.DefineVar(item->first, pVal);
+            pParser->DefineVar(item->first, pVal);
         } else {
             std::cout << "ERROR: " << item->first << std::endl;
             // XXX: throw error!
@@ -239,7 +239,8 @@ double Function::computeWithParameters(const QString &parameters, const QString 
         //std::cout << "Variable " << item->first << ", value: " << pParser.GetVar()[item->first] << std::endl;
     }
 
-    double parameterValue = pParser.Eval();
+    double parameterValue = pParser->Eval();
+    delete pParser;
     //qDebug() << "parameter value for x="<<x<< ": " << parameterValue;
     return compute(mVariable, parameterValue);
 

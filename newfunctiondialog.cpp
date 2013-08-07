@@ -4,6 +4,7 @@
 #include "functionssingleton.h"
 #include "functionvariableswidget.h"
 #include "globalsettingssingleton.h"
+#include "functionhelpdialog.h"
 
 #include <QMessageBox>
 #include <QDebug>
@@ -50,8 +51,12 @@ void NewFunctionDialog::init()
 
     mSettings = &Singleton<GlobalSettingsSingleton>::Instance();
     connect(mSettings, SIGNAL(overlayOpacityUpdated()), this, SLOT(updateOpacity()));
+
+    connect(ui->functionHelp, SIGNAL(clicked()), this, SLOT(help()));
+
     setWindowOpacity(mSettings->getOverlayOpacity());
     setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
+
 }
 
 bool NewFunctionDialog::setupFunction()
@@ -111,4 +116,10 @@ void NewFunctionDialog::pageChanged(int index)
 void NewFunctionDialog::updateOpacity()
 {
     setWindowOpacity(mSettings->getOverlayOpacity());
+}
+
+void NewFunctionDialog::help()
+{
+    FunctionHelpDialog dialog(this);
+    dialog.exec();
 }

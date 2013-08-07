@@ -1,5 +1,6 @@
 #include "helperfunctions.h"
 #include "abstractfunction.h"
+#include "muParser.h"
 
 #include <QStandardItem>
 #include <QLayout>
@@ -36,4 +37,11 @@ void HelperFunctions::clearLayout(QLayout *layout)
         layout->removeItem(item);
         delete item;
     }
+}
+
+mu::Parser* HelperFunctions::createParser()
+{
+    mu::Parser* parser = new mu::Parser();
+    parser->DefineConst("_pi", (double)3.14159);
+    return parser;
 }

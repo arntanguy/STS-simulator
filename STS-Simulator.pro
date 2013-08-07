@@ -72,7 +72,8 @@ SOURCES += main.cpp\
     plotcontrolwindow.cpp \
     differentialcurve.cpp \
     differentialfunction.cpp \
-    differentialfunctiondialog.cpp
+    differentialfunctiondialog.cpp \
+    functionhelpdialog.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -117,7 +118,8 @@ HEADERS  += mainwindow.h \
     differentialcurve.h \
     PlotData.h \
     differentialfunction.h \
-    differentialfunctiondialog.h
+    differentialfunctiondialog.h \
+    functionhelpdialog.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
@@ -132,7 +134,8 @@ FORMS    += mainwindow.ui \
     integralfunctiondialog.ui \
     globalconfigdialog.ui \
     plotcontrolwindow.ui \
-    differentialfunctiondialog.ui
+    differentialfunctiondialog.ui \
+    functionhelpdialog.ui
 
 QMAKE_CXXFLAGS += -std=c++0x
 

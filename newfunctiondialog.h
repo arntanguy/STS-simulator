@@ -32,10 +32,11 @@ private:
 Q_SIGNALS:
     void accepted();
 
-public slots:
+public Q_SLOTS:
     void accept();
     void pageChanged(int);
     void updateOpacity();
+    void help();
 
 private:
     Ui::NewFunctionDialog *ui;
