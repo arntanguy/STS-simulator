@@ -14,11 +14,11 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
+   <layout class="QGridLayout" name="gridLayout_8">
+    <item row="0" column="0">
      <widget class="QTabWidget" name="functionsPage">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -309,36 +309,43 @@
       </widget>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
-        <string>Curves</string>
+        <string>Experimental Curves</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_8">
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="1" column="0">
+         <widget class="QListView" name="curveSelection">
+          <property name="frameShape">
+           <enum>QFrame::WinPanel</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QWidget" name="widget" native="true">
+          <layout class="QGridLayout" name="gridLayout_2">
+           <property name="sizeConstraint">
+            <enum>QLayout::SetMinimumSize</enum>
+           </property>
+           <item row="0" column="0">
+            <widget class="QPushButton" name="newCurveButton">
+             <property name="text">
+              <string>New Curve</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="editCurveButton">
+             <property name="text">
+              <string>Edit Curve</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
         <item row="0" column="0" colspan="2">
          <widget class="QLabel" name="label_13">
           <property name="text">
            <string>Select the curves to be displayed</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0" colspan="2">
-         <widget class="QListView" name="curveSelection"/>
-        </item>
-        <item row="3" column="0">
-         <widget class="QPushButton" name="editCurveButton">
-          <property name="text">
-           <string>Edit Curve</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QPushButton" name="newCurveButton">
-          <property name="minimumSize">
-           <size>
-            <width>695</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>New Curve</string>
           </property>
          </widget>
         </item>
@@ -349,55 +356,65 @@
         <string>Functions</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_9">
-        <item row="0" column="0" colspan="7">
+        <item row="1" column="1">
+         <widget class="QTreeView" name="functionView">
+          <property name="frameShape">
+           <enum>QFrame::WinPanel</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="7">
+         <widget class="QWidget" name="widget_2" native="true">
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="1" column="0">
+            <widget class="QPushButton" name="functionIntegralNew">
+             <property name="text">
+              <string>New Integral Function</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QPushButton" name="functionNew">
+             <property name="text">
+              <string>New Function</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QPushButton" name="functionEditCurve">
+             <property name="text">
+              <string>Edit Curve</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="functionDifferentialNew">
+             <property name="text">
+              <string>New Differential Function</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QPushButton" name="functionHierarchicalNew">
+             <property name="text">
+              <string>New Hierarchical Function</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QPushButton" name="functionDelete">
+             <property name="text">
+              <string>Delete</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="1">
          <widget class="QLabel" name="label_14">
           <property name="text">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Selectect the functions you wish to display.&lt;/p&gt;&lt;p&gt;Double click on any function to view or change its expression.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QPushButton" name="functionHierarchicalNew">
-          <property name="text">
-           <string>New Hierarchical Function</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="5">
-         <widget class="QPushButton" name="functionDelete">
-          <property name="text">
-           <string>Delete</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="3">
-         <widget class="QPushButton" name="functionNew">
-          <property name="text">
-           <string>New Function</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0" colspan="7">
-         <widget class="QTreeView" name="functionView"/>
-        </item>
-        <item row="2" column="1">
-         <widget class="QPushButton" name="functionIntegralNew">
-          <property name="text">
-           <string>New Integral Function</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QPushButton" name="functionDifferentialNew">
-          <property name="text">
-           <string>New Differential Function</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="4">
-         <widget class="QPushButton" name="functionEditCurve">
-          <property name="text">
-           <string>Edit Curve</string>
           </property>
          </widget>
         </item>
@@ -405,7 +422,7 @@
       </widget>
      </widget>
     </item>
-    <item>
+    <item row="1" column="0">
      <widget class="QDialogButtonBox" name="buttonBox">
       <property name="standardButtons">
        <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
