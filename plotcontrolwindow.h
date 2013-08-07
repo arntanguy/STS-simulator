@@ -52,6 +52,7 @@ public slots:
     void editFunctionCurve();
     void deleteFunction();
 
+    void apply();
     void accept();
 
     void functionDialogAccepted();

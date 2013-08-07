@@ -48,6 +48,8 @@ PlotControlWindow::PlotControlWindow(const unsigned int plotId, PlotArea *parent
     connect(this->ui->buttonBox, SIGNAL(accepted()), this, SLOT(close()));
     connect(this->ui->buttonBox, SIGNAL(accepted()), parent, SLOT(plotConfigChanged()));
     connect(this->ui->buttonBox, SIGNAL(rejected()), this, SLOT(close()));
+    QPushButton* applyButton = ui->buttonBox->button(QDialogButtonBox::Apply);
+    connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
 
     // Curve page
     connect(ui->newCurveButton, SIGNAL(clicked()), this, SLOT(newCurve()));
@@ -165,10 +167,6 @@ void PlotControlWindow::initFromConfig()
         ui->verticalAxisScale->setCurrentIndex(index);
     mSettings->endGroup();
 
-    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/precision");
-    ui->plotResolution->setValue(mSettings->value("resolution", 1000).toDouble());
-    mSettings->endGroup();
-
     Curve *curve = 0;
     foreach(QStandardItem *item, mCurveItems) {
         // Only show selected curves
@@ -281,16 +279,8 @@ FunctionCurve* PlotControlWindow::manageFunctionCurveFromItem(QStandardItem *ite
     return 0;
 }
 
-
-// ================================================================================
-// ============================== PUBLIC ==========================================
-// ================================================================================
-/*!
- * \brief PlotControlWindow::accept
- *  Saves all the parameters set within the config dialog (QSettings)
- *  Discards config dialog
- */
-void PlotControlWindow::accept()
+// =========================== SLOTS =================================
+void PlotControlWindow::apply()
 {
     QSettings *mSettings = Singleton<ProjectSingleton>::Instance().getSettings();
     qDebug() << "PlotControlWindow::accept()";
@@ -320,10 +310,6 @@ void PlotControlWindow::accept()
     mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/axisScale");
     mSettings->setValue("horizontalAxisScale", ui->horizontalAxisScale->itemData(ui->horizontalAxisScale->currentIndex()));
     mSettings->setValue("verticalAxisScale", ui->verticalAxisScale->itemData(ui->verticalAxisScale->currentIndex()));
-    mSettings->endGroup();
-
-    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/precision");
-    mSettings->setValue("resolution", ui->plotResolution->value());
     mSettings->endGroup();
 
     mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/grid");
@@ -367,11 +353,20 @@ void PlotControlWindow::accept()
     }
 
     mSettings->sync();
+    mPlot->loadFromSettings();
+
+}
+/*!
+ * \brief PlotControlWindow::accept
+ *  Saves all the parameters set within the config dialog (QSettings)
+ *  Discards config dialog
+ */
+void PlotControlWindow::accept()
+{
+    apply();
     emit accepted();
 }
 
-
-// =========================== SLOTS =================================
 void PlotControlWindow::newCurve()
 {
     NewCurveDialog dialog(this);

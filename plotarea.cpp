@@ -46,6 +46,7 @@ unsigned int PlotArea::getId() const
 void PlotArea::openConfigDialog()
 {
     qDebug() << "Opening Graph control dialog";
+    mConfigWindow->newCurveAvailable();
     mConfigWindow->newFunctionAvailable();
     mConfigWindow->show();
 }
