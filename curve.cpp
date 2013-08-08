@@ -29,7 +29,7 @@ Curve::Curve(const QString &name)
 Curve::~Curve()
 {
     qDebug() << "Curve::~Curve - Destroying curve: id="<<getId()<< ", name=" << title().text();
-    mData->deleteLater();
+    detachFromAll();
 }
 
 void Curve::abstractCopyFromCurve(Curve *curve)
@@ -257,6 +257,7 @@ void Curve::detachFromAll()
             c->QwtPlotItem::detach();
             delete c;
             mPlots.remove(p);
+            p->replot();
         }
     }
 }

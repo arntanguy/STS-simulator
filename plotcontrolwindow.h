@@ -51,6 +51,7 @@ public slots:
     void editFunction(const QModelIndex &);
     void editFunctionCurve();
     void deleteFunction();
+    void deleteSelectedCurve();
 
     void apply();
     void accept();

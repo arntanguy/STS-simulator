@@ -54,6 +54,7 @@ PlotControlWindow::PlotControlWindow(const int plotId, PlotArea *parent) :
     // Curve page
     connect(ui->newCurveButton, SIGNAL(clicked()), this, SLOT(newCurve()));
     connect(ui->curveSelection, SIGNAL(doubleClicked ( const QModelIndex &)), this, SLOT(editCurve(const QModelIndex &)));
+    connect(ui->deleteCurveButton, SIGNAL(clicked()), this, SLOT(deleteSelectedCurve()));
 
     // Function page
     connect(ui->functionNew, SIGNAL(clicked()), this, SLOT(newFunction()));
@@ -593,6 +594,21 @@ void PlotControlWindow::editFunctionCurve()
     }
 }
 
+void PlotControlWindow::deleteSelectedCurve()
+{
+    qDebug() << "PlotControlWindow::deleteCurve()";
+
+    // XXX: More appropriate call?
+    newFunctionAvailable();
+    QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->curveSelection->model());
+    QModelIndex index = ui->curveSelection->currentIndex();
+    Curve *c = index.data(Qt::UserRole).value<Curve *>();
+    if(c != 0) {
+        mCurveItems.removeOne(model->itemFromIndex(index));
+        Singleton<CurveSingleton>::Instance().removeCurve(c);
+        model->removeRow(index.row());
+    }
+}
 
 
 void PlotControlWindow::functionDialogAccepted()
