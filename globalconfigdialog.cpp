@@ -3,6 +3,8 @@
 
 #include "globalsettingssingleton.h"
 
+#include "qsciencespinbox.h"
+
 #include <QPushButton>
 
 GlobalConfigDialog::GlobalConfigDialog(QWidget *parent) :

@@ -2,7 +2,7 @@
 #define FUNCTIONVARIABLESWIDGET_H
 
 #include <QWidget>
-#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 
 namespace Ui {
@@ -36,7 +36,7 @@ private:
     Function *mFunction;
     Ui::FunctionVariablesWidget *ui;
 
-    QVBoxLayout *mVariabesLayout;
+    QHBoxLayout *mVariabesLayout;
     QList<ValueSelector *> mValueSelectors;
 
 };

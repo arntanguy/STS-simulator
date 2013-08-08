@@ -613,5 +613,5 @@ void PlotControlWindow::deleteSelectedCurve()
 void PlotControlWindow::functionDialogAccepted()
 {
     qDebug() << "accepted!";
-//    newFunctionAvailable();
+    newFunctionAvailable();
 }

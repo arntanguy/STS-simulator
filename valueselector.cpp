@@ -15,8 +15,8 @@ ValueSelector::ValueSelector(const QString &name, Function *f, QWidget *parent) 
     ui->setupUi(this);
     mFunction = f;
 
-    minValueChanged(ui->variableMin->value());
-    maxValueChanged(ui->variableMax->value());
+    //minValueChanged(ui->variableMin->value());
+    //maxValueChanged(ui->variableMax->value());
 
     mName = name;
 
@@ -25,8 +25,12 @@ ValueSelector::ValueSelector(const QString &name, Function *f, QWidget *parent) 
 
     ui->variableName->setText(name + " = ");
 
-    connect(ui->variableMin, SIGNAL(valueChanged(double)), this, SLOT(minValueChanged(double)));
-    connect(ui->variableMax, SIGNAL(valueChanged(double)), this, SLOT(maxValueChanged(double)));
+    //double minSliderValue = Singleton<GlobalSettingsSingleton>::Instance().getSliderMin();
+    //double maxSliderValue = Singleton<GlobalSettingsSingleton>::Instance().getSliderMax();
+    double minSliderValue = 0;
+    double maxSliderValue = 100;
+    sliderRangeChanged(minSliderValue, maxSliderValue);
+
     connect(ui->variableValue, SIGNAL(valueChanged(double)), this, SLOT(variableValueChanged(double)));
     connect(ui->variableSlider, SIGNAL(valueChanged(double)), this, SLOT(sliderValueChanged(double)));
 }
@@ -42,8 +46,6 @@ void ValueSelector::save()
     settings->beginGroup(mName);
     settings->setValue("name", mName);
     settings->setValue("value", ui->variableValue->value());
-    settings->setValue("min", ui->variableMin->value());
-    settings->setValue("max", ui->variableMax->value());
     settings->endGroup();
 }
 
@@ -53,38 +55,16 @@ void ValueSelector::loadFromConfig()
     settings->beginGroup("Variables/"+QString::number(mFunction->getId())+"/"+mName);
     qDebug() << "ValueSelector::loadFromConfig() - loading from " << settings->group();
     ui->variableValue->setValue(settings->value("value", 0).toDouble());
-    ui->variableMin->setValue(settings->value("min", 0).toDouble());
-    ui->variableMax->setValue(settings->value("max", 100).toDouble());
+    //double minSliderValue = Singleton<GlobalSettingsSingleton>::Instance().getSliderMin();
+    //double maxSliderValue = Singleton<GlobalSettingsSingleton>::Instance().getSliderMax();
+    //sliderRangeChanged(minSliderValue, maxSliderValue);
     settings->endGroup();
 }
 
 // ===================== SLOTS ===========================
-void ValueSelector::minValueChanged(double min)
-{
-    ui->variableSlider->setScale(min, ui->variableMax->value());
-    ui->variableValue->setMinimum(min);
-    if(ui->variableValue->value() < min) {
-        ui->variableValue->setValue(min);
-        ui->variableSlider->setValue(min);
-    }
-}
-void ValueSelector::maxValueChanged(double max)
-{
-    ui->variableSlider->setScale(ui->variableMin->value(), max);
-    ui->variableValue->setMaximum(max);
-    if(ui->variableValue->value() > max) {
-        ui->variableValue->setValue(max);
-        ui->variableSlider->setValue(max);
-    }
-}
 void ValueSelector::variableValueChanged(double val)
 {
     qDebug() << "value changed";
-    if(val > ui->variableMax->value()) {
-        ui->variableMax->setValue(val);
-    } else if(val < ui->variableMin->value()) {
-        ui->variableMin->setValue(val);
-    }
     ui->variableSlider->setValue(val);
     *mVariable = val;
 
@@ -96,4 +76,10 @@ void ValueSelector::sliderValueChanged(double val)
 {
     ui->variableValue->setValue(val);
     *mVariable = val;
+}
+
+void ValueSelector::sliderRangeChanged(double min, double max)
+{
+    ui->variableSlider->setValue(min);
+    ui->variableSlider->setValue(max);
 }

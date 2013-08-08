@@ -21,8 +21,7 @@ public:
     void loadFromConfig();
 
 public Q_SLOTS:
-    void minValueChanged(double);
-    void maxValueChanged(double);
+    void sliderRangeChanged(double, double);
     void variableValueChanged(double);
     void sliderValueChanged(double);
 

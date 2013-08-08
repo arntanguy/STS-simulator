@@ -22,7 +22,7 @@ FunctionVariablesWidget::FunctionVariablesWidget(QWidget *parent) :
 
 void FunctionVariablesWidget::init()
 {
-    mVariabesLayout = new QVBoxLayout();
+    mVariabesLayout = new QHBoxLayout();
     QWidget *w = new QWidget(this);
     w->setLayout(mVariabesLayout);
     ui->variablesScrollArea->setWidget(w);

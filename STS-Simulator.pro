@@ -73,7 +73,8 @@ SOURCES += main.cpp\
     differentialcurve.cpp \
     differentialfunction.cpp \
     differentialfunctiondialog.cpp \
-    functionhelpdialog.cpp
+    functionhelpdialog.cpp \
+    qsciencespinbox.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -119,7 +120,8 @@ HEADERS  += mainwindow.h \
     PlotData.h \
     differentialfunction.h \
     differentialfunctiondialog.h \
-    functionhelpdialog.h
+    functionhelpdialog.h \
+    qsciencespinbox.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \

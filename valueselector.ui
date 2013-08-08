@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>786</width>
+    <width>218</width>
     <height>159</height>
    </rect>
   </property>
@@ -14,6 +14,21 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>0</number>
+   </property>
    <item row="0" column="0" alignment="Qt::AlignHCenter">
     <widget class="QLabel" name="variableName">
      <property name="text">
@@ -21,34 +36,11 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QDoubleSpinBox" name="variableMin">
-     <property name="minimum">
-      <double>-999999999.000000000000000</double>
-     </property>
-     <property name="maximum">
-      <double>999999999.000000000000000</double>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <widget class="QDoubleSpinBox" name="variableMax">
-     <property name="minimum">
-      <double>-1000000000.000000000000000</double>
-     </property>
-     <property name="maximum">
-      <double>1000000000.000000000000000</double>
-     </property>
-     <property name="value">
-      <double>100.000000000000000</double>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="1" colspan="2">
-    <widget class="QDoubleSpinBox" name="variableValue">
+    <widget class="QScienceSpinBox" name="variableValue">
      <property name="minimumSize">
       <size>
-       <width>633</width>
+       <width>0</width>
        <height>0</height>
       </size>
      </property>
@@ -61,15 +53,16 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QwtSlider" name="variableSlider">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
+    <widget class="QwtSlider" name="variableSlider" native="true"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>QScienceSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header location="global">qsciencespinbox.h</header>
+  </customwidget>
   <customwidget>
    <class>QwtSlider</class>
    <extends>QWidget</extends>

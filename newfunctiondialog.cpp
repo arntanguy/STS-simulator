@@ -98,7 +98,7 @@ void NewFunctionDialog::setFunction(Function *f)
 void NewFunctionDialog::accept()
 {
     bool mMayClose = false;
-    if(Singleton<FunctionsSingleton>::Instance().functionNameExists(ui->functionName->text())) {
+    if(!mEditFunction && Singleton<FunctionsSingleton>::Instance().functionNameExists(ui->functionName->text())) {
         QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Name Conflict"), tr("Another curve with the name ") + ui->functionName->text() + tr(" already exists. Do you want to modify the name?"), QMessageBox::Yes|QMessageBox::No);
         if(reply == QMessageBox::Yes) {
             mMayClose = false;
