@@ -32,6 +32,7 @@ public:
 
 public Q_SLOTS:
     void update(AbstractFunction *);
+    void update();
 
 private:
     void init();

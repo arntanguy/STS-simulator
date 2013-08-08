@@ -580,7 +580,6 @@ void PlotControlWindow::editFunction(const QModelIndex &index)
 
 void PlotControlWindow::editFunctionCurve()
 {
-    QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
     QModelIndex index = ui->functionView->currentIndex();
     AbstractFunction *f = index.data(Qt::UserRole).value<AbstractFunction *>();
     FunctionCurve *curve = f->getCurve();

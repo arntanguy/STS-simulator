@@ -60,7 +60,7 @@ public:
 
 Q_SIGNALS:
     void nameUpdated();
-    void expressionChanged();
+    virtual void expressionChanged();
 
 private:
     void init();

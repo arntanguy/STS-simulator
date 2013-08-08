@@ -58,7 +58,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Connect Menu Events
     connect(ui->actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout(bool)));
-    connect(ui->actionLoad_Experimental_Data, SIGNAL(triggered(bool)), this, SLOT(actionLoadExperimentalData(bool)));
     connect(ui->actionSave_As, SIGNAL(triggered(bool)), this, SLOT(actionSaveAs(bool)));
     connect(ui->actionSave, SIGNAL(triggered(bool)), this, SLOT(actionSave(bool)));
     connect(ui->actionNew_Project, SIGNAL(triggered(bool)), this, SLOT(actionNewProject(bool)));
