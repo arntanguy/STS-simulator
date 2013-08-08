@@ -39,7 +39,6 @@ void DataSingleton::loadFromSettings()
     settings->endGroup();
 
     foreach(QString path, paths) {
-        // XXX: take into account functions as well
         ExperimentalData *data = new ExperimentalData();
         data->loadFromFile(path);
         Singleton<DataSingleton>::Instance().addData(data);

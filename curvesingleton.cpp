@@ -37,7 +37,6 @@ void CurveSingleton::clear()
 {
     qDebug() << "CurveSingleton::clear()";
     foreach(int id, mCurves.keys()) {
-        qDebug() << "Curve id "<< id;
         removeCurveFromId(id);
     }
     Curve::resetStaticId();
@@ -75,27 +74,22 @@ void CurveSingleton::loadFromSettings()
     settings->endGroup();
 
     foreach(QString curveId, groups) {
-        qDebug() << "Current group " << settings->group();
         int id = settings->value("Curves/"+curveId+"/id", -1).toUInt();
         Curve::Type type= static_cast<Curve::Type>(settings->value("Curves/"+curveId+"/type", Curve::Experimental).toUInt());
         if(type == Curve::Experimental) {
             Curve *curve = new Curve(id);
-            qDebug() << "Loading experimental curve " << curve->getId();
             curve->loadFromSettings();
             addCurve(curve);
         } else if(type == Curve::Function){
             FunctionCurve *curve = new FunctionCurve(id);
-            qDebug() << "Loading Function curve " << curve->getId();
             curve->loadFromSettings();
             addCurve(curve);
         } else if(type == Curve::Integral) {
             IntegralCurve *curve = new IntegralCurve(id);
-            qDebug() << "Loading Integral curve " << curve->getId();
             curve->loadFromSettings();
             addCurve(curve);
         } else {
             DifferentialCurve *curve = new DifferentialCurve(id);
-            qDebug() << "Loading Differential curve " << curve->getId();
             curve->loadFromSettings();
             addCurve(curve);
         }

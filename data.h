@@ -21,7 +21,7 @@ public:
     virtual DataColumn<double> getColumn(const QString &column) = 0;
     virtual QString getId() const = 0;
 
-    void save();
+    virtual void save();
 
     Type getType() const {
         return mType;

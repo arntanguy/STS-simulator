@@ -175,7 +175,6 @@ void MainWindow::slotNewProject()
     QString fileName = QFileDialog::getSaveFileName(this, tr("Project location"),
                                                     startDir,
                                                     tr("STS-Project (*.sts);;All Files (*.*)"));
-    qDebug() << fileName;
     if(!fileName.isEmpty()) {
         if(!(fileName.endsWith(".sts") || fileName.endsWith(".STS"))) {
             fileName = fileName + ".sts";
@@ -187,7 +186,6 @@ void MainWindow::slotNewProject()
         }
 
         ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
-        //XXX: clear interface of the old project!!
         singleton->createNewProject(fileName);
     }
 }

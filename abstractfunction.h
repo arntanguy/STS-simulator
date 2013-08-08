@@ -49,12 +49,6 @@ class AbstractFunction : public QObject
         virtual QString getExpression() const = 0;
         virtual void save(const QString &group);
         virtual void loadFromConfig(const QString &group);
-        virtual void setGroup(const QString &group) {
-            mBaseGroup = group;
-        }
-        virtual QString getGroup() const;
-        QString getFunctionId() const;
-
         virtual FunctionCurve* createCurve();
         void setCurve(FunctionCurve *curve);
         FunctionCurve* getCurve();

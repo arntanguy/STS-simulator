@@ -59,7 +59,6 @@ void Curve::init()
 
 void Curve::setId(int id)
 {
-    qDebug() << "set id " << id;
     if(id >= mCurveStaticId) {
         mCurveId = id;
         mCurveStaticId = std::max(id, mCurveStaticId) + 1;
@@ -165,7 +164,6 @@ void Curve::save()
     qDebug() << "Saving curve "<<mCurveId<<","<<title().text();
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
     settings->beginGroup("Curves/"+QString::number(mCurveId)+"/");
-    qDebug() << "current group: " << settings->group();
     settings->setValue("id", mCurveId);
     settings->setValue("title", title().text());
 
@@ -189,7 +187,6 @@ void Curve::save()
         if(isAttached(plot)) plots << QString::number(plot->getId());
     }
     settings->setValue("attachedToPlots", plots);
-    qDebug() << "Curve::save() - curve is attached to plots: " << plots;
 
     settings->endGroup();
 }

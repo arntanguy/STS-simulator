@@ -272,7 +272,6 @@ void IntegralFunction::save(const QString &group)
     QStringList parameters;
     foreach(Function *f, mFunctions) {
         if(f != 0) {
-            qDebug() << "+++++++++++ adding function "<<f->getName() << " with group "<< f->getGroup();
             functionIds << QString::number(f->getId()) ;
             parameters << mParameters[f];
         }

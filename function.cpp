@@ -130,7 +130,6 @@ QString Function::getExpression() const {
 
 bool Function::isValidExpression() const {
     try {
-        qDebug() << "++++++++++++ "<< getFunctionId() << " eval expression";
         mParser->Eval();
     } catch (...) {
         return false;
@@ -149,13 +148,9 @@ QString Function::getError() const {
 
 void Function::setImplicitVariable(const QString &varName, double value)
 {
-    //if(mImplicitVarFactory->hasVariable(varName)) {
-    //    qDebug() << "Warning: redifning variable "+varName;
-    //}
     double *var = mImplicitVarFactory->getVariableAddress(varName);
     if(var != 0 && *var != value) {
         mImplicitVarFactory->setValue(varName, value);
-        // XXX: don't emit unless necessary
         emit needsRecompute();
     }
 }

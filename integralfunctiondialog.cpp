@@ -16,7 +16,6 @@ IntegralFunctionDialog::IntegralFunctionDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //XXX small memory leak
     mFunction = new IntegralFunction();
 
     init();
@@ -50,6 +49,7 @@ void IntegralFunctionDialog::init()
 void IntegralFunctionDialog::setFunction(IntegralFunction *f)
 {
     qDebug() << "IntegralFunctionDialog::setFunction("<<f->getName()<<")";
+    if(mFunction != 0) delete mFunction;
     mFunction = f;
     ui->integralName->setText(f->getName());
     ui->integralIntegrationVariable->setText(f->getIntegrationVariable());

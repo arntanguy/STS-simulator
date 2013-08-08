@@ -11,7 +11,7 @@ public:
     CSVExperimentalDataReader();
     virtual ~CSVExperimentalDataReader();
 
-    DataColumn<double> getColumn(const QString &column, int precision);
+    DataColumn<double> getColumn(const QString &column);
     QMap<QString, DataColumn<double>> getData() const {
                                  return mData;
 };

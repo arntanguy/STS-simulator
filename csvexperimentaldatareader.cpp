@@ -24,7 +24,6 @@ void CSVExperimentalDataReader::processTitleLine(const QString &line)
 void CSVExperimentalDataReader::processLine(const QString &line)
 {
     QStringList split = splitLine(line);
-    //qDebug() << split;
 
     for(int i=0; i<mData.size(); i++) {
         if(i < split.size()) {
@@ -35,10 +34,8 @@ void CSVExperimentalDataReader::processLine(const QString &line)
 }
 
 
-//XXX: precision is ignored for now
-DataColumn<double> CSVExperimentalDataReader::getColumn(const QString& column, int precision)
+DataColumn<double> CSVExperimentalDataReader::getColumn(const QString& column)
 {
-    // XXX take care of precision
     return mData[column];
 }
 
