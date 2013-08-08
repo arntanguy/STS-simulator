@@ -26,6 +26,8 @@ HierarchicalFunctionDialog::~HierarchicalFunctionDialog()
 
 void HierarchicalFunctionDialog::init()
 {
+    mEdit = false;
+
     ui->functionView->setModel(new QStandardItemModel());
     connect(ui->functionAdd, SIGNAL(clicked()), this, SLOT(addFunction()));
     connect(ui->functionRemove, SIGNAL(clicked()), this, SLOT(removeFunction()));
@@ -37,6 +39,7 @@ void HierarchicalFunctionDialog::init()
 void HierarchicalFunctionDialog::setFunction(HierarchicalFunction *f)
 {
     qDebug() << "HierarchicalFunctionDialog::setFunction("<<f->getName()<<")";
+    mEdit = true;
     mFunction = f;
     ui->functionName->setText(f->getName());
     setWindowTitle(tr("Edit Function ") + f->getName());
@@ -99,7 +102,7 @@ void HierarchicalFunctionDialog::removeFunction()
 void HierarchicalFunctionDialog::accept()
 {
     bool mayClose = false;
-    if(Singleton<FunctionsSingleton>::Instance().functionNameExists(ui->functionName->text())) {
+    if(!mEdit && Singleton<FunctionsSingleton>::Instance().functionNameExists(ui->functionName->text())) {
         QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Name Conflict"), tr("Another curve with the name ") + ui->functionName->text() + tr(" already exists. Do you want to modify the name?"), QMessageBox::Yes|QMessageBox::No);
         if(reply == QMessageBox::Yes) {
             mayClose = false;

@@ -28,6 +28,7 @@ IntegralFunctionDialog::~IntegralFunctionDialog()
 
 void IntegralFunctionDialog::init()
 {
+    mEdit = false;
     mFunctionInUse = 0;
     ui->functionConfigWidget->hide();
 
@@ -48,6 +49,7 @@ void IntegralFunctionDialog::init()
 
 void IntegralFunctionDialog::setFunction(IntegralFunction *f)
 {
+    mEdit = true;
     qDebug() << "IntegralFunctionDialog::setFunction("<<f->getName()<<")";
     if(mFunction != 0) delete mFunction;
     mFunction = f;
@@ -158,7 +160,7 @@ void IntegralFunctionDialog::accept()
 {
     qDebug() << "IntegralFunctionDialog::accept()";
     bool mayClose = false;
-    if(Singleton<FunctionsSingleton>::Instance().functionNameExists(ui->integralName->text())) {
+    if(!mEdit && Singleton<FunctionsSingleton>::Instance().functionNameExists(ui->integralName->text())) {
         QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Name Conflict"), tr("Another curve with the name ") + ui->integralName->text() + tr(" already exists. Do you want to modify the name?"), QMessageBox::Yes|QMessageBox::No);
         if(reply == QMessageBox::Yes) {
             mayClose = false;

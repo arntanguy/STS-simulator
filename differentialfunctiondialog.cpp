@@ -27,6 +27,7 @@ DifferentialFunctionDialog::DifferentialFunctionDialog(DifferentialFunction *f, 
     ui(new Ui::DifferentialFunctionDialog)
 {
     ui->setupUi(this);
+    init();
 
     if(f != 0) {
         setFunction(f);
@@ -34,17 +35,18 @@ DifferentialFunctionDialog::DifferentialFunctionDialog(DifferentialFunction *f, 
         mFunction = new DifferentialFunction();
     }
 
-    init();
 }
 
 void DifferentialFunctionDialog::init()
 {
+    mEdit = false;
     connect(ui->functionSelect, SIGNAL(clicked()), this, SLOT(selectFunction()));
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
 }
 
 void DifferentialFunctionDialog::setFunction(DifferentialFunction* f)
 {
+    mEdit = true;
     mFunction = f;
     ui->differentialName->setText(mFunction->getName());
     functionSelected();
@@ -83,7 +85,7 @@ void DifferentialFunctionDialog::accept()
 {
     qDebug() << "DifferentialFunctionDialog::accept()";
     bool mayClose = false;
-    if(Singleton<FunctionsSingleton>::Instance().functionNameExists(ui->differentialName->text())) {
+    if(!mEdit && Singleton<FunctionsSingleton>::Instance().functionNameExists(ui->differentialName->text())) {
         QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Name Conflict"), tr("Another curve with the name ") + ui->differentialName->text() + tr(" already exists. Do you want to modify the name?"), QMessageBox::Yes|QMessageBox::No);
         if(reply == QMessageBox::Yes) {
             mayClose = false;

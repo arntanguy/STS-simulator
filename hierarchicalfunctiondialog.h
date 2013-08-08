@@ -44,6 +44,8 @@ private:
     Ui::HierarchicalFunctionDialog *ui;
 
     HierarchicalFunction *mFunction;
+
+    bool mEdit;
 };
 
 #endif // HIERACHICALFUNCTIONDIALOG_H

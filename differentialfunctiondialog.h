@@ -33,6 +33,8 @@ private:
 
 
     DifferentialFunction *mFunction;
+
+    bool mEdit;
 };
 
 #endif // DIFFERENTIALCURVEDIALOG_H

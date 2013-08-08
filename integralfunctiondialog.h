@@ -49,6 +49,8 @@ private:
 
     IntegralFunction *mFunction;
     Function *mFunctionInUse;
+
+    bool mEdit;
 };
 
 #endif // INTEGRALFUNCTIONDIALOG_H
