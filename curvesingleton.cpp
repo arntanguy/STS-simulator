@@ -21,18 +21,34 @@ void CurveSingleton::addCurve(Curve *curve)
     emit newCurveAvailable(curve);
 }
 
+void CurveSingleton::removeCurveFromId(int id)
+{
+    if(mCurves.contains(id))
+        removeCurve(mCurves[id]);
+}
 void CurveSingleton::removeCurve(Curve *curve)
 {
     curve->detachFromAll();
     mCurves.remove(curve->getId());
+    delete curve;
 }
 
-QMap<unsigned int, Curve *> CurveSingleton::getCurves() const
+void CurveSingleton::clear()
+{
+    qDebug() << "CurveSingleton::clear()";
+    foreach(int id, mCurves.keys()) {
+        qDebug() << "Curve id "<< id;
+        removeCurveFromId(id);
+    }
+    Curve::resetStaticId();
+}
+
+QMap<int, Curve *> CurveSingleton::getCurves() const
 {
     return mCurves;
 }
 
-Curve* CurveSingleton::getCurve(unsigned int id) const
+Curve* CurveSingleton::getCurve(int id) const
 {
     return mCurves[id];
 }
@@ -48,7 +64,7 @@ void CurveSingleton::loadFromSettings()
 
     foreach(QString curveId, groups) {
         qDebug() << "Current group " << settings->group();
-        unsigned int id = settings->value("Curves/"+curveId+"/id", -1).toUInt();
+        int id = settings->value("Curves/"+curveId+"/id", -1).toUInt();
         Curve::Type type= static_cast<Curve::Type>(settings->value("Curves/"+curveId+"/type", Curve::Experimental).toUInt());
         if(type == Curve::Experimental) {
             Curve *curve = new Curve(id);
@@ -86,7 +102,7 @@ void CurveSingleton::save()
 
 
     // Now save all the curves
-    QMapIterator<unsigned int, Curve*> i(mCurves);
+    QMapIterator<int, Curve*> i(mCurves);
     while (i.hasNext()) {
         i.next();
         i.value()->save();

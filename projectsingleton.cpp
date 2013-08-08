@@ -4,6 +4,7 @@
 #include "functionssingleton.h"
 #include "plotsingleton.h"
 #include "globalsettingssingleton.h"
+#include "globalconstants.h"
 #include <QDebug>
 #include <QStringList>
 
@@ -29,29 +30,52 @@ void ProjectSingleton::loadDefaultConfig()
 
 void ProjectSingleton::createNewProject(const QString &fileName)
 {
+    qDebug() << "ProjectSingleton::createNewProject() - "<<fileName;
     if(!mFileName.isEmpty()) {
         // XXX
-        qDebug() << "filename isn't empty, a project is open, manage it!";
-    } else {
-        mFileName = fileName;
-        delete mSettings;
-        mSettings = new QSettings(fileName, QSettings::IniFormat);
-        qDebug() << "Creating new configuration for project " << fileName;
-        emit projectChanged();
+        qDebug() << "ProjectSingleton::createNewProject() - filename isn't empty, a project is open, manage it!";
+        qDebug() << "XXX: saving by default";
+        save();
     }
-}
 
-void ProjectSingleton::openProject(const QString& fileName)
-{
-    if(!mFileName.isEmpty()) {
-        // XXX
-        qDebug() << "filename isn't empty, a project is open, manage it!";
-    }
+    // First clear the old project
+    clearAll();
 
     mFileName = fileName;
     delete mSettings;
     mSettings = new QSettings(fileName, QSettings::IniFormat);
+    qDebug() << "Creating new configuration for project " << fileName;
+    initFromDefaultProject();
+    openProjectFromSettings();
+}
 
+void ProjectSingleton::initFromDefaultProject()
+{
+    qDebug() << "ProjectSingleton::initFromDefaultProject()";
+    mSettings->clear();
+
+    mFileName = DEFAULT_PROJECT;
+    QSettings defaultProject(DEFAULT_PROJECT, QSettings::IniFormat);
+    const QStringList keys = defaultProject.allKeys();
+    Q_FOREACH(QString key, keys) {
+        qDebug() << "Copying " << key << "\t" << defaultProject.value(key);
+        mSettings->setValue(key, defaultProject.value(key));
+    }
+}
+
+void ProjectSingleton::clearAll()
+{
+    qDebug() << "\n\n";
+    qDebug() << "Clearing all";
+    Singleton<DataSingleton>::Instance().clear();
+    Singleton<CurveSingleton>::Instance().clear();
+    Singleton<FunctionsSingleton>::Instance().clear();
+    qDebug() << "\n\n";
+}
+
+void ProjectSingleton::openProjectFromSettings()
+{
+    qDebug() << "ProjectSingleton::openProjectFromSettings()";
     Singleton<GlobalSettingsSingleton>::Instance().loadFromSettings();
     // Load all curves
     qDebug() << "\n\n";
@@ -64,9 +88,27 @@ void ProjectSingleton::openProject(const QString& fileName)
     Singleton<FunctionsSingleton>::Instance().loadFromSettings();
     qDebug() << "\n\n";
 
-    qDebug() << "ProjectSingleton:: opening configuration for project " << fileName << ", qsettings " << mSettings->fileName();
     emit projectChanged();
-    qDebug() << "Plot title: " << mSettings->value("Plot/Plot1/info/title", "error");
+}
+
+void ProjectSingleton::openProject(const QString& fileName)
+{
+    if(!mFileName.isEmpty()) {
+        // XXX
+        qDebug() << "filename isn't empty, a project is open, manage it!";
+        qDebug() << "XXX: saving by default";
+        save();
+    }
+
+    qDebug() << "ProjectSingleton:: opening configuration for project " << fileName << ", qsettings " << mSettings->fileName();
+
+    clearAll();
+
+    mFileName = fileName;
+    delete mSettings;
+    mSettings = new QSettings(fileName, QSettings::IniFormat);
+
+    openProjectFromSettings();
 }
 
 void ProjectSingleton::save()
@@ -124,3 +166,6 @@ QSettings *ProjectSingleton::getSettings()
 {
     return mSettings;
 }
+
+
+

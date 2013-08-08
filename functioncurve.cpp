@@ -19,6 +19,13 @@ FunctionCurve::FunctionCurve(int id) : Curve(id)
     init();
 }
 
+FunctionCurve::~FunctionCurve()
+{
+    qDebug() << "FunctionCurve::~FunctionCurve - Destroying curve: id="<<getId()<< ", name=" << title().text();
+    // XXX destroy data if not reference by any other curves
+    // delete mData;
+}
+
 void FunctionCurve::init()
 {
     mFunction = 0;

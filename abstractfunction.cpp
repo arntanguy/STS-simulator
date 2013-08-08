@@ -198,3 +198,23 @@ void AbstractFunction::updateLinkedCurve(QString var, double val, bool forceUpda
     updateLinkedCurve(forceUpdate);
     emit functionUpdated(this);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void AbstractFunction::resetStaticId()
+{
+    mFunctionStaticId = 0;
+}

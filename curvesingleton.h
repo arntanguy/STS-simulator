@@ -14,15 +14,17 @@ class CurveSingleton : public QObject
 public:
     CurveSingleton();
     void addCurve(Curve *curve);
+    void removeCurveFromId(int id);
     void removeCurve(Curve *curve);
-    QMap<unsigned int, Curve *> getCurves() const;
-    Curve* getCurve(unsigned int id) const;
+    QMap<int, Curve *> getCurves() const;
+    Curve* getCurve(int id) const;
 
     void save();
     void loadFromSettings();
+    void clear();
 
 private:
-    QMap<unsigned int, Curve *> mCurves;
+    QMap<int, Curve *> mCurves;
 
 signals:
     void newCurveAvailable(Curve *);

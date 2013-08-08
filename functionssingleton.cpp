@@ -16,6 +16,15 @@ FunctionsSingleton::FunctionsSingleton()
 }
 FunctionsSingleton::~FunctionsSingleton()
 {
+    clear();
+}
+
+void FunctionsSingleton::clear()
+{
+    qDebug() << "FunctionsSingleton::clear()";
+    qDeleteAll(mFunctions);
+    mFunctions.clear();
+    AbstractFunction::resetStaticId();
 }
 
 void FunctionsSingleton::addFunction(AbstractFunction *f)

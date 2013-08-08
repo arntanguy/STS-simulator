@@ -28,7 +28,7 @@ public slots:
     void actionAbout(bool);
     void actionNewProject(bool);
     void actionLoadProject(bool);
-    void actionLoadExperimentalData(bool);
+    void actionEditDefaultProjectTemplate(bool);
     void actionSaveAs(bool);
     void actionSave(bool);
     void actionGlobalSettings(bool);

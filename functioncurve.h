@@ -12,6 +12,8 @@ class FunctionCurve : public Curve
 public:
     FunctionCurve();
     FunctionCurve(int id);
+    virtual ~FunctionCurve();
+
     void setFunction(AbstractFunction *f);
     AbstractFunction* getFunction() {
         return mFunction;

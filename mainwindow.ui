@@ -126,6 +126,7 @@
     <addaction name="separator"/>
     <addaction name="actionNew_Project"/>
     <addaction name="actionLoad_Project"/>
+    <addaction name="actionEdit_Default_Project_Template"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -204,6 +205,11 @@
   <action name="actionNew_Base_Function">
    <property name="text">
     <string>New Base Function</string>
+   </property>
+  </action>
+  <action name="actionEdit_Default_Project_Template">
+   <property name="text">
+    <string>Edit Default Project Template</string>
    </property>
   </action>
  </widget>

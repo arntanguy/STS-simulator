@@ -1,6 +1,8 @@
 #include "experimentaldata.h"
 #include "csvexperimentaldatareader.h"
 
+#include <QDebug>
+
 
 ExperimentalData::ExperimentalData()
 {
@@ -9,6 +11,7 @@ ExperimentalData::ExperimentalData()
 
 ExperimentalData::~ExperimentalData()
 {
+    qDebug() << "ExperimentalData::~ExperimentalData() - Removing all data";
 }
 
 void ExperimentalData::loadFromFile(const QString &file)

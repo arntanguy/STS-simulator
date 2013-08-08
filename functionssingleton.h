@@ -23,6 +23,7 @@ public:
 
     void loadFromSettings();
     void save();
+    void clear();
 
 private:
     // Function name, function

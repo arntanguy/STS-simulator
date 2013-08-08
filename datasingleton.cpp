@@ -45,3 +45,9 @@ void DataSingleton::loadFromSettings()
         Singleton<DataSingleton>::Instance().addData(data);
     }
 }
+
+void DataSingleton::clear()
+{
+    qDeleteAll(mData);
+    mData.clear();
+}

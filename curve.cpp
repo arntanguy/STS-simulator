@@ -26,6 +26,13 @@ Curve::Curve(const QString &name)
     setId(mCurveStaticId);
 }
 
+Curve::~Curve()
+{
+    qDebug() << "Curve::~Curve - Destroying curve: id="<<getId()<< ", name=" << title().text();
+    // XXX destroy data if not reference by any other curves
+    // delete mData;
+}
+
 void Curve::abstractCopyFromCurve(Curve *curve)
 {
     qDebug() << "Curve::abstractCopyFromCurve() - name " << curve->title().text();
@@ -263,4 +270,12 @@ bool Curve::isAttached(PlotWidget *plot) const
 bool Curve::isAttached(unsigned int plotId) const
 {
     return isAttached(Singleton<PlotSingleton>::Instance().getPlot(plotId));
+}
+
+
+
+
+void Curve::resetStaticId()
+{
+    mCurveStaticId = 0;
 }

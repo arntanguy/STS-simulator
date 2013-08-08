@@ -25,11 +25,17 @@ public:
     void openProject(const QString& fileName);
     void saveAs(const QString& newPath);
     void save();
+    void clearAll();
 
     QSettings *getSettings();
     bool hasProject() const {
         return !mFileName.isEmpty();
     }
+
+private:
+    void initFromDefaultProject();
+    void openProjectFromSettings();
+    void resetFunctionStaticId();
 
 private:
     QString mFileName;

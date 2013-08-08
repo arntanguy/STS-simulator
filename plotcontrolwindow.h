@@ -19,12 +19,12 @@ class PlotControlWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit PlotControlWindow(unsigned int plotId, PlotArea *parent = 0);
+    explicit PlotControlWindow(int plotId, PlotArea *parent = 0);
     ~PlotControlWindow();
 
 private:
     Ui::PlotControlWindow *ui;
-    unsigned int mPlotId;
+    int mPlotId;
     PlotWidget *mPlot;
 
     QList<QStandardItem *> mCurveItems;

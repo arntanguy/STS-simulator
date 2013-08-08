@@ -32,7 +32,7 @@
 #include <QStandardItem>
 #include <QStandardItemModel>
 
-PlotControlWindow::PlotControlWindow(const unsigned int plotId, PlotArea *parent) :
+PlotControlWindow::PlotControlWindow(const int plotId, PlotArea *parent) :
     QMainWindow(parent),
     ui(new Ui::PlotControlWindow)
 {
@@ -398,8 +398,8 @@ void PlotControlWindow::newCurveAvailable()
     model->clear();
     mCurveItems.clear();
 
-    QMap<unsigned int, Curve *> map = Singleton<CurveSingleton>::Instance().getCurves();
-    QMapIterator<unsigned int, Curve*> i(map);
+    QMap<int, Curve *> map = Singleton<CurveSingleton>::Instance().getCurves();
+    QMapIterator<int, Curve*> i(map);
     int j=0;
     while (i.hasNext()) {
         i.next();

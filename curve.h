@@ -18,6 +18,7 @@ public:
     Curve();
     Curve(int id);
     Curve( const QString &name );
+    virtual ~Curve();
 
     virtual void copyFromCurve(Curve *curve);
 
@@ -68,6 +69,8 @@ public:
     bool isAttached(PlotWidget *plot) const;
     bool isAttached(unsigned int plotId) const;
 
+    // XXX: should be hidden (friend?)
+    static void resetStaticId();
 private:
     void init();
     void setId(int id);

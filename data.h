@@ -13,6 +13,7 @@ class Data : public QObject
 public:
     enum Type {Experimental, Function};
     Data();
+    virtual ~Data();
 
     virtual void setData(const QMap<QString, DataColumn<double>> &) {
     }

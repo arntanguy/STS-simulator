@@ -38,6 +38,7 @@ public:
 
     void loadFromSettings();
     void save();
+    void clear();
 
 signals:
     void newDataAvailable(Data *);

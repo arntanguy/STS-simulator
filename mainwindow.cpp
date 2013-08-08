@@ -9,6 +9,7 @@
 #include "globalsettingssingleton.h"
 #include "projectsingleton.h"
 #include "plotsingleton.h"
+#include "globalconstants.h"
 
 
 #include <QCloseEvent>
@@ -63,6 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionNew_Project, SIGNAL(triggered(bool)), this, SLOT(actionNewProject(bool)));
     connect(ui->actionLoad_Project, SIGNAL(triggered(bool)), this, SLOT(actionLoadProject(bool)));
     connect(ui->actionNew_Base_Function, SIGNAL(triggered(bool)), this, SLOT(newBaseFunction(bool)));
+    connect(ui->actionEdit_Default_Project_Template, SIGNAL(triggered(bool)), this, SLOT(actionEditDefaultProjectTemplate(bool)));
 
     connect(ui->actionGlobal_Settings, SIGNAL(triggered(bool)), this, SLOT(actionGlobalSettings(bool)));
 }
@@ -99,47 +101,6 @@ void MainWindow::actionAbout(bool)
 {
     AboutDialog dialog(this);
     dialog.exec();
-}
-
-void MainWindow::actionLoadExperimentalData(bool)
-{
- //   // Load previously used directory when loading experimental data
- //   QString startDir = mSettings.value("Save/experimentalDataDirectory", "").toString();
-
- //   QString fileName = QFileDialog::getOpenFileName(this,
- //    tr("Open Experimental Data"), startDir, tr("Experimental Data Files(*.csv *.txt);;All Files (*.*)"));
-
-
- //   CSVExperimentalDataReader<double> reader;
- //   reader.parseFile(fileName, "\t");
-
-
- //   const char *colors[] =
- //   {
- //       "LightSalmon",
- //       "SteelBlue",
- //       "Yellow",
- //       "Fuchsia",
- //       "PaleGreen",
- //       "PaleTurquoise",
- //       "Cornsilk",
- //       "HotPink",
- //       "Peru",
- //       "Maroon"
- //   };
- //   const int numColors = sizeof( colors ) / sizeof( colors[0] );
- //   Curve *curve = new Curve( QString("Experimental DZ2") );
- //   curve->setPen( QColor( colors[ numColors ] ), 2 );
- //   curve->setSamples(reader.getColumn("V", 1000).getData(), reader.getColumn("DZ1", 1000).getData());
- //   curve->attach( mPlotArea3->getPlotWidget() );
- //   mPlotArea3->getPlotWidget()->replot();
-
-
-
- //   // Save currently used directory for later use
- //   if(!fileName.isNull()) {
- //       mSettings.setValue("Save/experimentalDataDirectory", QFileInfo(fileName).absoluteDir().absolutePath());
- //   }
 }
 
 void MainWindow::actionLoadProject(bool)
@@ -189,6 +150,12 @@ void MainWindow::actionSaveAs(bool)
     singleton->saveAs(fileName);
 }
 
+void MainWindow::actionEditDefaultProjectTemplate(bool)
+{
+    qDebug() << "Loading Default Project : " << DEFAULT_PROJECT;
+    openProject(DEFAULT_PROJECT);
+}
+
 void MainWindow::actionNewProject(bool)
 {
     slotNewProject();
@@ -210,22 +177,20 @@ void MainWindow::slotNewProject()
                                                     startDir,
                                                     tr("STS-Project (*.sts);;All Files (*.*)"));
     qDebug() << fileName;
-    if(!(fileName.endsWith(".sts") || fileName.endsWith(".STS"))) {
-        fileName = fileName + ".sts";
+    if(!fileName.isEmpty()) {
+        if(!(fileName.endsWith(".sts") || fileName.endsWith(".STS"))) {
+            fileName = fileName + ".sts";
+        }
+
+        // Save currently used directory for later use
+        if(!fileName.isNull()) {
+            mSettings.setValue("Save/newProjectDirectory", QFileInfo(fileName).absoluteDir().absolutePath());
+        }
+
+        ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
+        //XXX: clear interface of the old project!!
+        singleton->createNewProject(fileName);
     }
-
-    // Save currently used directory for later use
-    if(!fileName.isNull()) {
-        mSettings.setValue("Save/newProjectDirectory", QFileInfo(fileName).absoluteDir().absolutePath());
-    }
-
-    ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
-    singleton->createNewProject(fileName);
-
-    QSettings settings;
-    settings.beginGroup("project");
-    settings.setValue("recentList",settings.value("recentList", "").toString()+","+fileName);
-    settings.endGroup();
 }
 
 void MainWindow::slotOpenProject(QString &fileName)

@@ -8,6 +8,11 @@ Data::Data()
 {
 }
 
+Data::~Data()
+{
+    qDebug() << "Data::~Data";
+}
+
 void Data::save()
 {
     qDebug() << "Saving data "<<getId();

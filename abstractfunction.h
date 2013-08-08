@@ -69,6 +69,8 @@ class AbstractFunction : public QObject
             return mFunctionId;
         }
 
+
+        static void resetStaticId();
 Q_SIGNALS:
         void nameUpdated(const QString &);
         virtual void curveUpdated(AbstractFunction *);
