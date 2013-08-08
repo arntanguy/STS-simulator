@@ -48,6 +48,8 @@ void DataSingleton::loadFromSettings()
 
 void DataSingleton::clear()
 {
-    qDeleteAll(mData);
+    foreach(QString key, mData.keys()) {
+        mData[key]->deleteLater();
+    }
     mData.clear();
 }

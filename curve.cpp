@@ -29,8 +29,7 @@ Curve::Curve(const QString &name)
 Curve::~Curve()
 {
     qDebug() << "Curve::~Curve - Destroying curve: id="<<getId()<< ", name=" << title().text();
-    // XXX destroy data if not reference by any other curves
-    // delete mData;
+    mData->deleteLater();
 }
 
 void Curve::abstractCopyFromCurve(Curve *curve)

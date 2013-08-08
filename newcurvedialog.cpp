@@ -169,7 +169,7 @@ void NewCurveDialog::dataFileChanged(int index)
 
 
     // Fill in the QComboBox for choosing abscissia and ordinate
-    Data *data = Singleton<DataSingleton>::Instance().getData(fileName);
+    QSharedPointer<Data> data = Singleton<DataSingleton>::Instance().getData(fileName);
     if(data != 0) {
         QStringList columns = data->getAvailableColumns();
         foreach(QString column, columns) {

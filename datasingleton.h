@@ -6,6 +6,7 @@
 
 #include "singleton.h"
 #include "data.h"
+#include <QSharedPointer>
 
 
 class DataSingleton : public QObject
@@ -16,8 +17,9 @@ public:
 
     void addData(Data *data)
     {
-        mData[data->getId()] = data;
-        emit newDataAvailable(data);
+        QSharedPointer<Data> d(data);
+        mData[data->getId()] = d;
+        emit newDataAvailable(d);
     }
 
     QStringList getExperimentalDataPaths() {
@@ -32,7 +34,7 @@ public:
         return paths;
     }
 
-    Data* getData(const QString& id) {
+    QSharedPointer<Data> getData(const QString& id) {
         return mData[id];
     }
 
@@ -41,12 +43,12 @@ public:
     void clear();
 
 signals:
-    void newDataAvailable(Data *);
+    void newDataAvailable(QSharedPointer<Data>);
 
 public slots:
 
 private:
-    QMap<QString, Data *>	mData;
+    QMap<QString, QSharedPointer<Data>>	mData;
 };
 
 #endif // DATASINGLETON_H

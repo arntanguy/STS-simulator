@@ -2,6 +2,7 @@
 #define CURVE_H
 
 #include <qwt_plot_curve.h>
+#include <QSharedPointer>
 #include "data.h"
 
 class PlotWidget;
@@ -34,8 +35,11 @@ public:
         return mCurveId;
     }
 
+    /**
+     * DO NOT DELETE THE RETURNED POINTER!!
+     **/
     Data *getData() {
-        return mData;
+        return mData.data();
     }
 
     void setType(Type t) {
@@ -80,7 +84,7 @@ protected:
 
 
 private:
-    Data *mData;
+    QSharedPointer<Data> mData;
     QString mExperimentalAbscissia, mExperimentalOrdinate;
     QString mExperimentalId;
 
