@@ -6,6 +6,7 @@
 #include "functionssingleton.h"
 
 #include <QStandardItemModel>
+#include <QMessageBox>
 #include <QDebug>
 
 
@@ -38,15 +39,12 @@ void IntegralFunctionDialog::init()
 
     connect(ui->integralAddFunction, SIGNAL(clicked()), this, SLOT(addFunction()));
     connect(ui->integralRemoveFunction, SIGNAL(clicked()), this, SLOT(removeFunction()));
-    //connect(ui->integralView, SIGNAL(clicked ( const QModelIndex &)), this, SLOT(functionSelected(const QModelIndex &)));
+    // TODO: use that one for the other function selection stuff
     connect(ui->integralView->selectionModel(), SIGNAL(currentChanged (const QModelIndex & , const QModelIndex & )), this, SLOT(functionSelectionChanged(const QModelIndex& , const QModelIndex& )));
     connect(ui->functionParameters, SIGNAL(editingFinished()), this, SLOT(parametersEdited()));
     connect(ui->integralIntegrationVariable, SIGNAL(editingFinished()), this, SLOT(integrationVariableEdited()));
 
     connect(this, SIGNAL(expressionChanged()), this, SLOT(updateExpression()));
-
-
-    connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
 }
 
 void IntegralFunctionDialog::setFunction(IntegralFunction *f)
@@ -159,13 +157,26 @@ void IntegralFunctionDialog::removeFunction()
 void IntegralFunctionDialog::accept()
 {
     qDebug() << "IntegralFunctionDialog::accept()";
-    mFunction->setName(ui->integralName->text());
-    mFunction->setRange(static_cast<IntegralFunction::Range>(ui->integralRange->itemData(ui->integralRange->currentIndex()).toUInt()));
+    bool mayClose = false;
+    if(Singleton<FunctionsSingleton>::Instance().functionNameExists(ui->integralName->text())) {
+        QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Name Conflict"), tr("Another curve with the name ") + ui->integralName->text() + tr(" already exists. Do you want to modify the name?"), QMessageBox::Yes|QMessageBox::No);
+        if(reply == QMessageBox::Yes) {
+            mayClose = false;
+            return;
+        } else {
+            mayClose = true;
+        }
+    } else {
+        mayClose = true;
+    }
+    if(mayClose) {
+        mFunction->setName(ui->integralName->text());
+        mFunction->setRange(static_cast<IntegralFunction::Range>(ui->integralRange->itemData(ui->integralRange->currentIndex()).toUInt()));
 
-    // Save current function parameters
-    QStandardItemModel *model = dynamic_cast<QStandardItemModel *>(ui->integralView->model());
-    if(model != 0) {
-        QModelIndex index = ui->integralView->currentIndex();
+        // Save current function parameters
+        QStandardItemModel *model = dynamic_cast<QStandardItemModel *>(ui->integralView->model());
+        if(model != 0) {
+            QModelIndex index = ui->integralView->currentIndex();
             QVariant item = model->data(index, Qt::UserRole);
             if(item.isValid()) {
                 Function *f = item.value<Function*>();
@@ -177,15 +188,16 @@ void IntegralFunctionDialog::accept()
             } else {
                 qDebug() << "invalid item";
             }
-    }else {
-        qDebug() << "null model";
+        }else {
+            qDebug() << "null model";
+        }
+
+        Singleton<FunctionsSingleton>::Instance().addFunction(mFunction);
+
+        mFunction->updateLinkedCurve();
+
+        QDialog::accept();
     }
-
-    Singleton<FunctionsSingleton>::Instance().addFunction(mFunction);
-
-    mFunction->updateLinkedCurve();
-
-    QDialog::accept();
 }
 
 void IntegralFunctionDialog::updateExpression()

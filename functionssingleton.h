@@ -20,6 +20,7 @@ public:
     bool hasFunction(int id) const {
         return mFunctions.find(id) != mFunctions.end();
     }
+    bool functionNameExists(const QString& name) const;
 
     void loadFromSettings();
     void save();

@@ -7,6 +7,7 @@
 #include "functionfactory.h"
 
 #include <QStandardItemModel>
+#include <QMessageBox>
 #include <QDebug>
 
 HierarchicalFunctionDialog::HierarchicalFunctionDialog(QWidget *parent) :
@@ -29,7 +30,6 @@ void HierarchicalFunctionDialog::init()
     connect(ui->functionAdd, SIGNAL(clicked()), this, SLOT(addFunction()));
     connect(ui->functionRemove, SIGNAL(clicked()), this, SLOT(removeFunction()));
 
-    connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
 
     connect(this, SIGNAL(expressionChanged()), this, SLOT(updateExpression()));
 }
@@ -98,10 +98,23 @@ void HierarchicalFunctionDialog::removeFunction()
 
 void HierarchicalFunctionDialog::accept()
 {
+    bool mayClose = false;
+    if(Singleton<FunctionsSingleton>::Instance().functionNameExists(ui->functionName->text())) {
+        QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Name Conflict"), tr("Another curve with the name ") + ui->functionName->text() + tr(" already exists. Do you want to modify the name?"), QMessageBox::Yes|QMessageBox::No);
+        if(reply == QMessageBox::Yes) {
+            mayClose = false;
+            return;
+        } else {
+            mayClose = true;
+        }
+    } else {
+        mayClose = true;
+    }
     mFunction->setName(ui->functionName->text());
     Singleton<FunctionsSingleton>::Instance().addFunction(mFunction);
 
-    QDialog::accept();
+    if(mayClose)
+        QDialog::accept();
 }
 
 void HierarchicalFunctionDialog::updateExpression()

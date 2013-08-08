@@ -6,8 +6,10 @@
 #include "differentialfunction.h"
 #include "integralfunction.h"
 
-
 #include "functionselectiondialog.h"
+
+#include <QMessageBox>
+#include <QDebug>
 
 DifferentialFunctionDialog::DifferentialFunctionDialog(QWidget *parent) :
     QDialog(parent),
@@ -39,7 +41,6 @@ void DifferentialFunctionDialog::init()
 {
     connect(ui->functionSelect, SIGNAL(clicked()), this, SLOT(selectFunction()));
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
 void DifferentialFunctionDialog::setFunction(DifferentialFunction* f)
@@ -80,9 +81,24 @@ void DifferentialFunctionDialog::selectFunction()
 
 void DifferentialFunctionDialog::accept()
 {
-    if(mFunction != 0) {
-        mFunction->setName(ui->differentialName->text());
-        Singleton<FunctionsSingleton>::Instance().addFunction(mFunction);
+    qDebug() << "DifferentialFunctionDialog::accept()";
+    bool mayClose = false;
+    if(Singleton<FunctionsSingleton>::Instance().functionNameExists(ui->differentialName->text())) {
+        QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Name Conflict"), tr("Another curve with the name ") + ui->differentialName->text() + tr(" already exists. Do you want to modify the name?"), QMessageBox::Yes|QMessageBox::No);
+        if(reply == QMessageBox::Yes) {
+            mayClose = false;
+            return;
+        } else {
+            mayClose = true;
+        }
+    } else {
+        mayClose = true;
     }
-    QDialog::accept();
+    if(mayClose) {
+        if(mFunction != 0) {
+            mFunction->setName(ui->differentialName->text());
+            Singleton<FunctionsSingleton>::Instance().addFunction(mFunction);
+        }
+        QDialog::accept();
+    }
 }

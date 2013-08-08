@@ -25,8 +25,9 @@ private:
 private:
     Ui::NewCurveDialog *ui;
     Curve *mCurve;
+    bool mMayClose;
 
-public slots:
+public Q_SLOTS:
     void accept();
     void loadDataFile();
     void dataFileChanged(int);

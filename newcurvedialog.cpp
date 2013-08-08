@@ -23,11 +23,11 @@ NewCurveDialog::NewCurveDialog(QWidget *parent) :
     mCurve = 0;
     init();
 
-    connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-
     // Data page
     connect(ui->dataLoadButton, SIGNAL(clicked()), this, SLOT(loadDataFile()));
     connect(ui->dataLoaded, SIGNAL(currentIndexChanged(int)), this, SLOT(dataFileChanged(int)));
+
+    mMayClose = true;
 }
 
 NewCurveDialog::~NewCurveDialog()
@@ -101,6 +101,20 @@ void NewCurveDialog::loadFromCurve(Curve *curve)
 // ========================= SLOTS ============================
 void NewCurveDialog::accept()
 {
+    qDebug() << "NewCurveDialog::accept()";
+    QString title = ui->curveName->text();
+    if(Singleton<CurveSingleton>::Instance().curveNameExists(title)) {
+        QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Name Conflict"), tr("Another curve with the name ") + title + tr(" already exists. Do you want to modify the name?"), QMessageBox::Yes|QMessageBox::No);
+        if(reply == QMessageBox::Yes) {
+            mMayClose = false;
+            return;
+        } else {
+            mMayClose = true;
+        }
+    } else {
+        mMayClose = true;
+    }
+
     mCurve->setTitle(ui->curveName->text());
     Qt::PenStyle penStyle = static_cast<Qt::PenStyle>(ui->curvePenStyle->itemData(ui->curvePenStyle->currentIndex()).toInt());
     QPen pen(ui->curveColor->currentColor());
@@ -125,7 +139,8 @@ void NewCurveDialog::accept()
         Singleton<CurveSingleton>::Instance().addCurve(mCurve);
     }
 
-    QDialog::accept();
+    if(mMayClose)
+        QDialog::accept();
 }
 
 void NewCurveDialog::loadDataFile()

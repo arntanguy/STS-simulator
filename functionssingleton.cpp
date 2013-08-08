@@ -68,6 +68,17 @@ QList<int> FunctionsSingleton::getFunctionIds() const
     return mFunctions.keys();
 }
 
+bool FunctionsSingleton::functionNameExists(const QString& name) const
+{
+    foreach(AbstractFunction *f, mFunctions) {
+        if(f != 0) {
+            if(f->getName() == name) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 void FunctionsSingleton::loadFromSettings()
 {

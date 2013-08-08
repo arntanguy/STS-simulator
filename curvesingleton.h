@@ -18,6 +18,7 @@ public:
     void removeCurve(Curve *curve);
     QMap<int, Curve *> getCurves() const;
     Curve* getCurve(int id) const;
+    bool curveNameExists(const QString& name) const;
 
     void save();
     void loadFromSettings();

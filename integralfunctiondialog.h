@@ -40,7 +40,6 @@ public Q_SLOTS:
     void removeFunction();
     void accept();
     void updateExpression();
-//    void functionSelected(const QModelIndex &index);
     void functionSelectionChanged( const QModelIndex & , const QModelIndex & );
     void parametersEdited();
     void integrationVariableEdited();

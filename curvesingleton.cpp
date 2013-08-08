@@ -53,6 +53,18 @@ Curve* CurveSingleton::getCurve(int id) const
     return mCurves[id];
 }
 
+bool CurveSingleton::curveNameExists(const QString& name) const
+{
+    foreach(Curve *curve, mCurves) {
+        if(curve != 0) {
+            if(curve->title().text() == name) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 void CurveSingleton::loadFromSettings()
 {
     qDebug()<< "CurveSingleton::loadFromSettings()";

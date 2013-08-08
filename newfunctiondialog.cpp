@@ -97,12 +97,22 @@ void NewFunctionDialog::setFunction(Function *f)
 // =============================== SLOTS ==================================
 void NewFunctionDialog::accept()
 {
-    if(setupFunction()) {
+    bool mMayClose = false;
+    if(Singleton<FunctionsSingleton>::Instance().functionNameExists(ui->functionName->text())) {
+        QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Name Conflict"), tr("Another curve with the name ") + ui->functionName->text() + tr(" already exists. Do you want to modify the name?"), QMessageBox::Yes|QMessageBox::No);
+        if(reply == QMessageBox::Yes) {
+            mMayClose = false;
+            return;
+        } else {
+            mMayClose = true;
+        }
+    } else {
+        mMayClose = true;
+    }
+    if(mMayClose && setupFunction()) {
         ui->variablesWidget->save();
         emit accepted();
         QDialog::accept();
-    } else {
-        QDialog::reject();
     }
 }
 
