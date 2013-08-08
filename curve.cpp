@@ -28,7 +28,7 @@ Curve::Curve(const QString &name)
 
 Curve::~Curve()
 {
-    qDebug() << "Curve::~Curve - Destroying curve: id="<<getId()<< ", name=" << title().text();
+    qDebug() << "Curve::~Curve - Destroying curve, name=" << title().text();
     detachFromAll();
 }
 
@@ -238,11 +238,28 @@ void Curve::attach(PlotWidget *plot)
 
 void Curve::detach(PlotWidget *plot)
 {
+    qDebug () << "---------------------------------";
+    qDebug () << "---------------------------------";
+    qDebug () << "---------------------------------";
+    qDebug () << "---------------------------------";
+    qDebug () << "Deleting curve";
+    qDebug () << "---------------------------------";
+    qDebug () << "---------------------------------";
+    qDebug () << "---------------------------------";
+    qDebug () << "---------------------------------";
     Curve *curve = mPlots[plot];
     if(curve != 0) {
+        qDebug () << "Deleting curve " << title().text() << " attached to " << plot->getId();
         curve->QwtPlotItem::detach();
-        delete curve;
+        qDebug() << "before: " << mPlots[plot];
         mPlots.remove(plot);
+        delete curve;
+    }
+    foreach(PlotWidget *p, mPlots.keys()) {
+        Curve *c = mPlots[p];
+        if(c != 0) {
+            qDebug() << "Still attached "<< c->title().text() << "to plot " << p;
+        }
     }
 }
 

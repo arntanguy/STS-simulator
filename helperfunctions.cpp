@@ -11,10 +11,11 @@ HelperFunctions::HelperFunctions()
 {
 }
 
-QStandardItem* HelperFunctions::createFunctionItem(AbstractFunction *f)
+QStandardItem* HelperFunctions::createFunctionItem(AbstractFunction *f, bool checkable)
 {
     QStandardItem *item= new QStandardItem();
-    item->setCheckable( true );
+    item->setCheckable( checkable );
+    item->setCheckState(Qt::Unchecked);
     item->setEditable(false);
     item->setText(f->getName());
     item->setData(QVariant::fromValue(f), Qt::UserRole);

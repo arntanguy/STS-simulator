@@ -12,7 +12,7 @@ class HelperFunctions
 {
 public:
     HelperFunctions();
-    static QStandardItem *createFunctionItem(AbstractFunction *f);
+    static QStandardItem *createFunctionItem(AbstractFunction *f, bool checkable = true);
     static void clearLayout(QLayout *layout);
 
     static mu::Parser* createParser();

@@ -248,7 +248,7 @@ FunctionCurve* PlotControlWindow::manageFunctionCurveFromItem(QStandardItem *ite
     AbstractFunction* function = static_cast<AbstractFunction *>(item->data(Qt::UserRole).value<AbstractFunction *>());
     if(function != 0) {
         FunctionCurve *c = function->getCurve();
-        if(item->checkState() == Qt::Checked) {
+        if(item->isCheckable() && item->checkState() == Qt::Checked) {
             if(c != 0) {
                 qDebug() << "PlotControlWindow::manageFunctionCurveFromItem() - Function already has a curve, use it";
                 c->attach(mPlot);
@@ -267,8 +267,10 @@ FunctionCurve* PlotControlWindow::manageFunctionCurveFromItem(QStandardItem *ite
                 return fcurve;
             }
         } else {
-            if(c != 0) {
-                c->detach(mPlot);
+            if(item->isCheckable()) {
+                if(c != 0) {
+                    c->detach(mPlot);
+                }
             }
             return 0;
         }
@@ -482,17 +484,17 @@ void PlotControlWindow::newFunctionAvailable()
             Function *ff = dynamic_cast<Function*>(f);
             if(ff != 0) {
                 qDebug() << "Add normal function to view";
-                QStandardItem *Item = HelperFunctions::createFunctionItem(f);
-                if(ff->isDisplayed(mPlotId)) Item->setCheckState(Qt::Checked);
+                QStandardItem *Item = HelperFunctions::createFunctionItem(f, false);
+                //if(ff->isDisplayed(mPlotId)) Item->setCheckState(Qt::Checked);
                 // XXX: disable display of base functions
-                Item->setCheckable(false);
+                //Item->setCheckable(false);
                 mFunctionItems.append(Item);
                 model->setItem( itemIndex++, Item );
             }
         } else if(f->getType() == AbstractFunction::Integral) {
-            HierarchicalFunction *hf = dynamic_cast<HierarchicalFunction*>(f);
+            IntegralFunction *hf = dynamic_cast<IntegralFunction*>(f);
             if(hf != 0) {
-                qDebug() << "add hierachical function to view";
+                qDebug() << "add integral function to view";
                 QStandardItem *parentItem = HelperFunctions::createFunctionItem(f);
                 model->setItem(itemIndex++, parentItem);
                 if(hf->isDisplayed(mPlotId)) parentItem->setCheckState(Qt::Checked);
@@ -500,7 +502,9 @@ void PlotControlWindow::newFunctionAvailable()
 
                 int subItemIndex = 0;
                 foreach(AbstractFunction *af, hf->getFunctions()) {
-                    QStandardItem * item = HelperFunctions::createFunctionItem(af);
+                    QStandardItem * item = HelperFunctions::createFunctionItem(af, false);
+                    item->setCheckState(Qt::Unchecked);
+                    item->setCheckable(false);
                     if(af->isDisplayed(mPlotId)) item->setCheckState(Qt::Checked);
                     parentItem->setChild(subItemIndex++,item);
                 }
