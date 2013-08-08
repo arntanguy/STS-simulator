@@ -88,7 +88,12 @@ void Curve::setExperimentalData(const QString &experimentId, const QString &absc
         }
         setSamples(xVal, yVal);
         foreach(Curve *curve, mPlots) {
-            curve->setExperimentalData(experimentId, abscissiaColumnName, ordinateColumnName);
+            if(curve != 0) {
+                curve->setExperimentalData(experimentId, abscissiaColumnName, ordinateColumnName);
+            } else {
+                qDebug() << "Curve::setExperimentalData() - NULL CURVE";
+            }
+
         }
     }
 }
@@ -105,7 +110,10 @@ void Curve::setMinMax(double min, double max)
         foreach(Curve *curve, mPlots) {
             if(curve != 0) {
                 curve->setMinMax(min, max);
+            } else {
+                qDebug() << "Curve::setMinMax() - NULL CURVE";
             }
+
         }
     }
 
@@ -115,7 +123,11 @@ void Curve::updateExperimentalData()
 {
     setExperimentalData(mExperimentalId, mExperimentalAbscissia, mExperimentalOrdinate);
     foreach(Curve *curve, mPlots) {
-        curve->setExperimentalData(mExperimentalId, mExperimentalAbscissia, mExperimentalOrdinate);
+        if(curve != 0) {
+            curve->setExperimentalData(mExperimentalId, mExperimentalAbscissia, mExperimentalOrdinate);
+        } else {
+            qDebug() << "Curve::updateExperimentalData() - NULL CURVE";
+        }
     }
 }
 
@@ -196,14 +208,17 @@ void Curve::setTitle(const QString& title)
 {
     QwtPlotItem::setTitle(title);
     foreach(Curve *curve, mPlots) {
-        curve->setTitle(title);
+        if(curve != 0)
+            curve->setTitle(title);
     }
 }
 void Curve::setPen(const QPen& pen)
 {
     QwtPlotCurve::setPen(pen);
     foreach(Curve *curve, mPlots) {
-        curve->setPen(pen);
+        if(curve != 0) {
+            curve->setPen(pen);
+        }
     }
     update();
 }
@@ -238,28 +253,12 @@ void Curve::attach(PlotWidget *plot)
 
 void Curve::detach(PlotWidget *plot)
 {
-    qDebug () << "---------------------------------";
-    qDebug () << "---------------------------------";
-    qDebug () << "---------------------------------";
-    qDebug () << "---------------------------------";
-    qDebug () << "Deleting curve";
-    qDebug () << "---------------------------------";
-    qDebug () << "---------------------------------";
-    qDebug () << "---------------------------------";
-    qDebug () << "---------------------------------";
     Curve *curve = mPlots[plot];
     if(curve != 0) {
         qDebug () << "Deleting curve " << title().text() << " attached to " << plot->getId();
         curve->QwtPlotItem::detach();
-        qDebug() << "before: " << mPlots[plot];
         mPlots.remove(plot);
         delete curve;
-    }
-    foreach(PlotWidget *p, mPlots.keys()) {
-        Curve *c = mPlots[p];
-        if(c != 0) {
-            qDebug() << "Still attached "<< c->title().text() << "to plot " << p;
-        }
     }
 }
 
@@ -272,7 +271,10 @@ void Curve::detachFromAll()
             delete c;
             mPlots.remove(p);
             p->replot();
-        }
+        } else {
+                qDebug() << "Curve::detachFromAll() - NULL CURVE";
+            }
+
     }
 }
 
