@@ -196,7 +196,7 @@ void PlotWidget::loadFromSettings()
     mSettings->endGroup();
 
     mSettings->beginGroup("Plot/"+QString::number(mId)+"/info");
-    setTitle(mSettings->value("title", QString::number(mId)).toString());
+    setTitle(mSettings->value("title", mName).toString());
     // axis legends
     setAxisTitle(QwtPlot::xBottom, mSettings->value("horizontalAxisName", "X Axis").toString());
     setAxisTitle(QwtPlot::yLeft, mSettings->value("verticalAxisName", "X Axis").toString());
