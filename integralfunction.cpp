@@ -18,6 +18,11 @@ IntegralFunction::IntegralFunction(int id) : HierarchicalFunction(id)
     init();
 }
 
+IntegralFunction::~IntegralFunction()
+{
+    qDebug() << "Delete integralfunction " << getName();
+}
+
 void IntegralFunction::init()
 {
     setType(mType = Function::Integral);

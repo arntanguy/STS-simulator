@@ -11,7 +11,7 @@ Q_OBJECT
 public:
     HierarchicalFunction();
     HierarchicalFunction(int id);
-    ~HierarchicalFunction();
+    virtual ~HierarchicalFunction();
 
     void addFunction(Function *function);
     void removeFunction(Function *f);

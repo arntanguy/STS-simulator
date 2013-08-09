@@ -17,6 +17,7 @@ public:
 public:
     IntegralFunction();
     IntegralFunction(int id);
+    virtual ~IntegralFunction();
 
 
     virtual void save(const QString &group);

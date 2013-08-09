@@ -24,7 +24,7 @@ public:
     Function(QObject *parent = 0);
     Function(int id, QObject *parent = 0);
     Function(Function const& toCopy);
-    ~Function();
+    virtual ~Function();
 
     void setExpression(const QString &exp);
     QString getExpression() const;

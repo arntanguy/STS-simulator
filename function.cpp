@@ -59,6 +59,7 @@ Function::Function(Function const& toCopy) : Function()
 
 Function::~Function()
 {
+    qDebug() << "Delete function " << getName();
     delete mImplicitVarFactory;
     delete mParser;
 }

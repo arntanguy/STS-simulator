@@ -19,7 +19,15 @@ HierarchicalFunction::HierarchicalFunction(int id) : Function(id)
 
 HierarchicalFunction::~HierarchicalFunction()
 {
-    qDeleteAll(mFunctions);
+    qDebug() << "Delete Hierarchical function " << getName();
+    foreach(AbstractFunction *f, mFunctions) {
+        if(f != 0) {
+            // XXX: MEMORY LEAK
+            //delete f;
+            f = 0;
+        }
+    }
+    //qDeleteAll(mFunctions);
 }
 
 void HierarchicalFunction::init()
