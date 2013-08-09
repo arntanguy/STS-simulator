@@ -39,6 +39,8 @@ void FunctionsSingleton::addFunction(AbstractFunction *f)
 
 void FunctionsSingleton::removeFunction(AbstractFunction *f)
 {
+    qDebug() << "FunctionsSingleton::removeFunction";
+    qDebug() << "deleting curve " << f->getName();
     if(f != 0) {
         Curve *c = f->getCurve();
         if(c != 0) {
@@ -46,9 +48,11 @@ void FunctionsSingleton::removeFunction(AbstractFunction *f)
         }
         QMap<int, AbstractFunction *>::iterator it = mFunctions.find(f->getId());
         if(it != mFunctions.end()) {
-            qDebug() << "FunctionsSingleton::removeFunction() - deleting " << it.value()->getName();
-            mFunctions.erase(it);
-            delete f;
+            if(it.value() != 0) {
+                qDebug() << "FunctionsSingleton::removeFunction() - deleting " << it.value()->getName();
+                mFunctions.erase(it);
+                delete f;
+            }
         }
     }
 }

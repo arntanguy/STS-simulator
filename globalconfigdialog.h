@@ -21,7 +21,6 @@ private:
     void init();
 
 public Q_SLOTS:
-    void autoYChecked(bool);
     void accept();
     void apply();
 

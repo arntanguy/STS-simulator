@@ -50,6 +50,7 @@ PlotControlWindow::PlotControlWindow(const int plotId, PlotArea *parent) :
     connect(this->ui->buttonBox, SIGNAL(rejected()), this, SLOT(close()));
     QPushButton* applyButton = ui->buttonBox->button(QDialogButtonBox::Apply);
     connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
+    connect(ui->autoOrdinate, SIGNAL(toggled(bool)), this, SLOT(autoOrdinateChecked(bool)));
 
     // Curve page
     connect(ui->newCurveButton, SIGNAL(clicked()), this, SLOT(newCurve()));
@@ -217,6 +218,14 @@ void PlotControlWindow::initFromConfig()
         }
     }
 
+    // ========= Plot range ===========
+    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/range");
+    autoOrdinateChecked(mSettings->value("autoOrdinate", true).toBool());
+    ui->minOrdinateRange->setValue(mSettings->value("minOrdinate", 0).toDouble());
+    ui->maxOrdinateRange->setValue(mSettings->value("maxOrdinate", 1000).toDouble());
+    mSettings->endGroup();
+
+
     // =============== Plot Grid ==================
     mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/grid");
     ui->gridEnabled->setChecked(mSettings->value("isEnabled", true).toBool());
@@ -300,6 +309,12 @@ void PlotControlWindow::apply()
     mSettings->setValue("verticalPosition", verticalPos);
     mSettings->setValue("alignment", static_cast<int>(aX|aY));
     mSettings->setValue("numCurves", 3);
+    mSettings->endGroup();
+
+    mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/range");
+    mSettings->setValue("autoOrdinate", ui->autoOrdinate->isChecked());
+    mSettings->setValue("minOrdinate", ui->minOrdinateRange->value());
+    mSettings->setValue("maxOrdinate", ui->maxOrdinateRange->value());
     mSettings->endGroup();
 
     mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/info");
@@ -618,4 +633,11 @@ void PlotControlWindow::functionDialogAccepted()
 {
     qDebug() << "accepted!";
     newFunctionAvailable();
+}
+
+void PlotControlWindow::autoOrdinateChecked(bool checked)
+{
+    ui->autoOrdinate->setChecked(checked);
+    ui->minOrdinateRange->setEnabled(!checked);
+    ui->maxOrdinateRange->setEnabled(!checked);
 }

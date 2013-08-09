@@ -53,8 +53,6 @@ public Q_SLOTS:
     void loadFromSettings();
     void configurationChanged();
 
-    void plotAutoYChanged(bool);
-
 public:
     virtual void replot();
     void setPrecision(int precision);

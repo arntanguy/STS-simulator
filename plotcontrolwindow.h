@@ -57,6 +57,8 @@ public slots:
     void accept();
 
     void functionDialogAccepted();
+
+    void autoOrdinateChecked(bool checked);
 };
 
 #endif // PLOTCONTROLDIALOG_H

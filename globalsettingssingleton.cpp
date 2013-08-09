@@ -13,8 +13,6 @@ void GlobalSettingsSingleton::init()
 {
     mUpdateCurve = false;
     mUpdateIntegral = false;
-    mAutoYRangeUpdated = false;
-    mYAuto = true;
     mMin = 0;
     mMax = 1;
     mResolution = 100;
@@ -27,9 +25,6 @@ void GlobalSettingsSingleton::loadFromSettings()
     settings->beginGroup("Plot");
     setMin(settings->value("xmin", 0).toDouble());
     setMax(settings->value("xmax", 1).toDouble());
-    setAutoY(settings->value("yauto", true).toBool());
-    setYMin(settings->value("ymin", 0).toDouble());
-    setYMax(settings->value("ymax", 1).toDouble());
     setResolution(settings->value("resolution", 1000).toInt());
     setIntegralResolution(settings->value("integralResolution", 2).toInt());
     settings->endGroup();
@@ -50,9 +45,6 @@ void GlobalSettingsSingleton::save()
     settings->beginGroup("Plot");
     settings->setValue("xmin", mMin);
     settings->setValue("xmax", mMax);
-    settings->setValue("yauto", mYAuto);
-    settings->setValue("ymin", mYMin);
-    settings->setValue("ymax", mYMax);
     settings->setValue("resolution", mResolution);
     settings->setValue("integralResolution", mIntegralResolution);
     settings->endGroup();
@@ -76,29 +68,6 @@ void GlobalSettingsSingleton::setMax(double max)
     if(mMax != max) {
         mUpdateCurve = true;
         mMax = max;
-    }
-}
-
-void GlobalSettingsSingleton::setYMin(double min)
-{
-    if(mYMin != min) {
-        mAutoYRangeUpdated = true;
-        mYMin = min;
-    }
-}
-void GlobalSettingsSingleton::setYMax(double max)
-{
-    if(mYMax != max) {
-        mAutoYRangeUpdated = true;
-        mYMax = max;
-    }
-}
-
-void GlobalSettingsSingleton::setAutoY(bool state)
-{
-    if(mYAuto != state) {
-        mAutoYRangeUpdated = true;
-        mYAuto = state;
     }
 }
 
@@ -132,12 +101,9 @@ void GlobalSettingsSingleton::update()
         emit curveSettingsUpdated();
     if(mUpdateIntegral)
         emit integralSettingsUpdated();
-    if(mAutoYRangeUpdated)
-        emit plotAutoYChanged(mYAuto);
 
     emit overlayOpacityUpdated();
 
     mUpdateCurve = false;
     mUpdateIntegral = false;
-    mAutoYRangeUpdated = false;
 }

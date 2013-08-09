@@ -17,6 +17,11 @@ HierarchicalFunction::HierarchicalFunction(int id) : Function(id)
     init();
 }
 
+HierarchicalFunction::~HierarchicalFunction()
+{
+    qDeleteAll(mFunctions);
+}
+
 void HierarchicalFunction::init()
 {
     setType(Function::HierarchicalFunction);

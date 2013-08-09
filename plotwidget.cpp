@@ -37,9 +37,6 @@ PlotWidget::PlotWidget(QWidget *parent) :
 
     mGlobalSettings = &Singleton<GlobalSettingsSingleton>::Instance();
     connect(&Singleton<ProjectSingleton>::Instance(), SIGNAL(projectChanged()), this, SLOT(configurationChanged()));
-    connect(mGlobalSettings, SIGNAL(plotAutoYChanged(bool)), this, SLOT(plotAutoYChanged(bool)));
-
-    plotAutoYChanged(mGlobalSettings->isAutoY());
 
     replot();
 }
@@ -117,12 +114,12 @@ void PlotWidget::loadFromSettings()
                 mExternalLegend->setWindowTitle("Plot Legend");
 
                 connect(
-                    this,
-                    SIGNAL( legendDataChanged( const QVariant &,
-                        const QList<QwtLegendData> & ) ),
-                    mExternalLegend,
-                    SLOT( updateLegend( const QVariant &,
-                        const QList<QwtLegendData> & ) ) );
+                        this,
+                        SIGNAL( legendDataChanged( const QVariant &,
+                                const QList<QwtLegendData> & ) ),
+                        mExternalLegend,
+                        SLOT( updateLegend( const QVariant &,
+                                const QList<QwtLegendData> & ) ) );
 
                 mExternalLegend->show();
 
@@ -136,10 +133,10 @@ void PlotWidget::loadFromSettings()
             mExternalLegend = NULL;
 
             if ( legend() == NULL ||
-                plotLayout()->legendPosition() != legendPosition)
+                    plotLayout()->legendPosition() != legendPosition)
             {
                 insertLegend( new QwtLegend(),
-                    QwtPlot::LegendPosition( legendPosition ) );
+                        QwtPlot::LegendPosition( legendPosition ) );
             }
         }
     }
@@ -166,9 +163,9 @@ void PlotWidget::loadFromSettings()
         mLegendItem->setAlignment( Qt::Alignment( mSettings->value("alignment", v ).value<int>() ) );
         QwtPlotLegendItem::BackgroundMode bgMode = static_cast<QwtPlotLegendItem::BackgroundMode>(mSettings->value("backgroundMode", 0).toInt());
         mLegendItem->setBackgroundMode(
-            QwtPlotLegendItem::BackgroundMode( bgMode ) );
+                QwtPlotLegendItem::BackgroundMode( bgMode ) );
         if ( bgMode ==
-            QwtPlotLegendItem::ItemBackground )
+                QwtPlotLegendItem::ItemBackground )
         {
             mLegendItem->setBorderRadius( 4 );
             mLegendItem->setMargin( 0 );
@@ -217,6 +214,16 @@ void PlotWidget::loadFromSettings()
     }
     mSettings->endGroup();
 
+    mSettings->beginGroup("Plot/"+QString::number(mId)+"/range");
+    if(!mSettings->value("autoOrdinate", true).toBool()) {
+        double min = mSettings->value("minOrdinate", -10.d).toDouble();
+        double max = mSettings->value("maxOrdinate", 10.d).toDouble();
+        this->setAxisScale(QwtPlot::yLeft, min, max);
+    } else {
+        this->setAxisAutoScale(QwtPlot::yLeft, true);
+    }
+    mSettings->endGroup();
+
 
     // Replot and then set zoom base to the current axis scale.
     QwtPlot::replot();
@@ -260,15 +267,3 @@ void PlotWidget::replot()
     QwtPlot::replot();
 }
 
-
-
-// =========================== PLOTS =======================================
-void PlotWidget::plotAutoYChanged(bool state)
-{
-    if(state) {
-        this->setAxisAutoScale(QwtPlot::yLeft, true);
-    } else {
-        this->setAxisScale(QwtPlot::yLeft, mGlobalSettings->getYMin(), mGlobalSettings->getYMax());
-    }
-    QwtPlot::replot();
-}
