@@ -36,6 +36,8 @@ public:
     QString getExpressionParameters() const;
     QString getIntegralExpression() const;
 
+    bool hasFunction(int id) const;
+
     virtual double compute(double);
     virtual double compute(const QString&, double);
     virtual PlotData integrate(double min, double max, double resolution, double stepNumber);

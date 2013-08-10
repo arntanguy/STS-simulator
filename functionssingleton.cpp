@@ -38,23 +38,75 @@ void FunctionsSingleton::addFunction(const AbstractFunctionPtr &f)
     }
 }
 
-void FunctionsSingleton::removeFunction(const AbstractFunctionPtr &f)
+IntegralFunctionPtr FunctionsSingleton::isSubFunctionOfIntegral(const AbstractFunctionPtr &f)
 {
-    qDebug() << "FunctionsSingleton::removeFunction";
-    qDebug() << "deleting curve " << f->getName();
-    if(f != 0) {
-        Curve *c = f->getCurve();
-        if(c != 0) {
-            c->detachFromAll();
-        }
-        QMap<int, QSharedPointer<AbstractFunction>>::iterator it = mFunctions.find(f->getId());
-        if(it != mFunctions.end()) {
-            if(it.value() != 0) {
-                qDebug() << "FunctionsSingleton::removeFunction() - deleting " << it.value()->getName();
-                mFunctions.erase(it);
+    foreach(AbstractFunctionPtr ptr, mFunctions) {
+        if(ptr->getType() == AbstractFunction::Integral) {
+            IntegralFunctionPtr intPtr = qSharedPointerDynamicCast<IntegralFunction>(ptr);
+            if(intPtr != 0 && intPtr->hasFunction(f->getId())) {
+                return intPtr;
             }
         }
     }
+    return IntegralFunctionPtr();
+}
+
+bool  FunctionsSingleton::removeFunction(const AbstractFunctionPtr &f)
+{
+    qDebug() << "FunctionsSingleton::removeFunction";
+    bool canDelete = false;
+    if(f != 0) {
+        canDelete = true;
+        QMap<int, QSharedPointer<AbstractFunction>>::iterator it = mFunctions.find(f->getId());
+        if(it != mFunctions.end()) {
+            if(f != 0) {
+                // Remove base function.
+                // Harmless since everything is a copy of that
+                if(f->getType() == AbstractFunction::Function) {
+                    qDebug() << "FunctionsSingleton::removeFunction() - deleting " << it.value()->getName();
+                    canDelete = true;
+                }
+                // Removes differential function.
+                // Can remove the integral function associated. Managed by QSharedPointers so instance won't be deleted as long as another function is using it
+                else if(f->getType() == AbstractFunction::Differential) {
+                    qDebug() << "FunctionsSingleton::removeFunction() -- DIFFERENTIAL";
+                    canDelete = true;
+                }
+
+                // Integral function can be deleted safely
+                else if(f->getType() == AbstractFunction::Integral) {
+                    qDebug() << "FunctionsSingleton::removeFunction() -- INTEGRAL";
+                    canDelete = true;
+                }
+
+                // Hierarchicalfunction is tricky: if deleted it should be deleted from the integral.
+                // If not then, save/load would fail, the integral wouldn't be controllable anymore!
+                // Delete only if not linked, else do nothing, return false
+                else if(f->getType() == AbstractFunction::HierarchicalFunction) {
+                    qDebug() << "FunctionsSingleton::removeFunction() -- HIERARCHICAL";
+                    canDelete = true;
+                    foreach(AbstractFunctionPtr af, mFunctions) {
+                        if(af->getType() == AbstractFunction::Integral) {
+                            IntegralFunctionPtr intPtr = qSharedPointerDynamicCast<IntegralFunction>(af);
+                            if(intPtr->hasFunction(f->getId())) {
+                                qDebug() << "Hierarchical Function " << f->getName() << " is referenced by integral " << intPtr->getName() << ": can't delete";
+                                canDelete = false;
+                                break;
+                            }
+                        }
+                    }
+                }             }
+        }
+        if(canDelete) {
+            qDebug() << "deleting function " << f->getName();
+            mFunctions.erase(it);
+            Curve *c = f->getCurve();
+            if(c != 0) {
+                c->detachFromAll();
+            }
+        }
+    }
+    return canDelete;
 }
 
 AbstractFunctionPtr FunctionsSingleton::getFunctionById(int id)

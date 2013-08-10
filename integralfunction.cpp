@@ -104,6 +104,16 @@ QString IntegralFunction::getIntegralExpression() const
     }
 }
 
+bool IntegralFunction::hasFunction(int id) const
+{
+    foreach(FunctionPtr f, mFunctions) {
+        if(f != 0 && f->getId() == id) {
+            return true;
+        }
+    }
+    return false;
+}
+
 FunctionCurve* IntegralFunction::createCurve()
 {
     if(mLinkedCurve == 0) {

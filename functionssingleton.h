@@ -17,7 +17,7 @@ public:
     ~FunctionsSingleton();
 
     void addFunction(const AbstractFunctionPtr &f);
-    void removeFunction(const AbstractFunctionPtr &f);
+    bool removeFunction(const AbstractFunctionPtr &f);
     AbstractFunctionPtr getFunctionById(int id);
     QList<int> getFunctionIds() const;
 
@@ -29,6 +29,8 @@ public:
     void loadFromSettings();
     void save();
     void clear();
+
+    IntegralFunctionPtr isSubFunctionOfIntegral(const AbstractFunctionPtr &f);
 
 private:
     // Function name, function

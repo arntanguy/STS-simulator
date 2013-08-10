@@ -27,6 +27,10 @@ public:
     PlotData differentiate();
 
     void setFunction(const IntegralFunctionPtr& f);
+    IntegralFunctionPtr getFunction() const
+    {
+        return mFunction;
+    }
     void setCurve(DifferentialCurve *curve);
 
 Q_SIGNALS:

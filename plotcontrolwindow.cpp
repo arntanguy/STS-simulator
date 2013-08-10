@@ -31,6 +31,7 @@
 #include <qwt_plot.h>
 #include <QStandardItem>
 #include <QStandardItemModel>
+#include <QMessageBox>
 
 PlotControlWindow::PlotControlWindow(const int plotId, PlotArea *parent) :
     QMainWindow(parent),
@@ -542,11 +543,26 @@ void PlotControlWindow::deleteFunction()
     QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
     QModelIndex index = ui->functionView->currentIndex();
     AbstractFunctionPtr f = index.data(Qt::UserRole).value<AbstractFunctionPtr>();
-    mFunctionItems.removeOne(model->itemFromIndex(index));
-    Singleton<FunctionsSingleton>::Instance().removeFunction(f);
-    model->removeRow(index.row());
-    // XXX: More appropriate call?
-    newFunctionAvailable();
+    FunctionsSingleton *s = &Singleton<FunctionsSingleton>::Instance();
+    if(s->removeFunction(f)) {
+        mFunctionItems.removeOne(model->itemFromIndex(index));
+        model->removeRow(index.row());
+        // XXX: More appropriate call?
+        newFunctionAvailable();
+    } else {
+        /**
+         * If the function is linked to another one, and deletion would cause it to break the hierarchical structure
+         * Don't delete and show the appropriate error
+         **/
+        if(f->getType() == AbstractFunction::HierarchicalFunction) {
+            IntegralFunctionPtr attachedInt = s->isSubFunctionOfIntegral(f);
+            if(attachedInt != 0) {
+                QMessageBox::critical(this, tr("Deletion error"), tr("The function ") + f->getName() + tr(" is attached to the integral ")+attachedInt->getName()+tr(". You need to detach it from the integral first"));
+            }
+        } else {
+                QMessageBox::critical(this, tr("Unknown deletion error"), tr("The function ") + f->getName() +tr(" could not be deleted."));
+        }
+    }
 }
 
 void PlotControlWindow::editFunction(const QModelIndex &index)
