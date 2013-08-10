@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "qthideandshowdialog.h"
+#include "typedefs.h"
 
 namespace Ui {
 class NewFunctionDialog;
@@ -17,13 +18,13 @@ class NewFunctionDialog : public QDialog
 
 public:
     explicit NewFunctionDialog(QWidget *parent = 0);
-    explicit NewFunctionDialog(Function *f, QWidget *parent = 0);
+    explicit NewFunctionDialog(FunctionPtr &f, QWidget *parent = 0);
     ~NewFunctionDialog();
 
-    Function *getFunction() {
+    FunctionPtr getFunction() {
         return mFunction;
     }
-    void setFunction(Function *f);
+    void setFunction(const FunctionPtr &f);
 
 private:
     void init();
@@ -40,7 +41,7 @@ public Q_SLOTS:
 
 private:
     Ui::NewFunctionDialog *ui;
-    Function *mFunction;
+    FunctionPtr mFunction;
     bool mEditFunction;
 
     GlobalSettingsSingleton *mSettings;

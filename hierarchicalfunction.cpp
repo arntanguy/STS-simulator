@@ -20,14 +20,7 @@ HierarchicalFunction::HierarchicalFunction(int id) : Function(id)
 HierarchicalFunction::~HierarchicalFunction()
 {
     qDebug() << "Delete Hierarchical function " << getName();
-    foreach(AbstractFunction *f, mFunctions) {
-        if(f != 0) {
-            // XXX: MEMORY LEAK
-            //delete f;
-            f = 0;
-        }
-    }
-    //qDeleteAll(mFunctions);
+    // Functions are stored in shared pointers. They'll be deleted when not referenced anymore
 }
 
 void HierarchicalFunction::init()
@@ -36,22 +29,22 @@ void HierarchicalFunction::init()
     mBaseGroup = "Functions/HierarchicalFunction/";
 }
 
-void HierarchicalFunction::addFunction(Function *function)
+void HierarchicalFunction::addFunction(const QSharedPointer<Function>& function)
 {
     qDebug() << "HierarchicalFunction::addFunction()";
     mFunctions.append(function);
-    connect(function, SIGNAL(functionUpdated(AbstractFunction *)), this, SLOT(update(AbstractFunction *)));
-    connect(function, SIGNAL(expressionChanged()), this, SLOT(update()));
+    connect(function.data(), SIGNAL(functionUpdated()), this, SLOT(update()));
+    connect(function.data(), SIGNAL(expressionChanged()), this, SLOT(update()));
     emit expressionChanged();
 }
 
-void HierarchicalFunction::removeFunction(Function *f)
+void HierarchicalFunction::removeFunction(const QSharedPointer<Function> &f)
 {
     mFunctions.removeAll(f);
     emit expressionChanged();
 }
 
-QList<Function *> HierarchicalFunction::getFunctions()
+QList<QSharedPointer<Function>> HierarchicalFunction::getFunctions()
 {
     return mFunctions;
 }
@@ -67,7 +60,7 @@ QList<Function *> HierarchicalFunction::getFunctions()
 double HierarchicalFunction::compute(double x)
 {
     double result = 0;
-    foreach(Function *f, mFunctions) {
+    foreach(QSharedPointer<Function> f, mFunctions) {
         result += f->compute(x);
     }
     return result;
@@ -76,7 +69,7 @@ double HierarchicalFunction::compute(double x)
 double HierarchicalFunction::compute(const QString& variable, double x)
 {
     double result = 0;
-    foreach(Function *f, mFunctions) {
+    foreach(QSharedPointer<Function> f, mFunctions) {
         result += f->compute(variable, x);
     }
     return result;
@@ -91,7 +84,7 @@ QString HierarchicalFunction::getExpression() const
 {
     QString exp;
     QString separator = " + ";
-    foreach(Function *f, mFunctions) {
+    foreach(QSharedPointer<Function> f, mFunctions) {
         exp += f->getExpression() + separator;
     }
     return exp.left(exp.length() - separator.length());
@@ -108,7 +101,7 @@ void HierarchicalFunction::loadFromConfig(const QString &group)
     settings->endGroup();
 
     foreach(QString fId, groups) {
-        Function *f = FunctionFactory::createFromConfig(group+"/Function/"+fId);
+        QSharedPointer<Function> f = FunctionFactory::createFromConfig(group+"/Function/"+fId);
         if(f != 0) {
             addFunction(f);
         } else {
@@ -124,7 +117,7 @@ void HierarchicalFunction::save(const QString &group)
     AbstractFunction::abstractsave(group+"/HierarchicalFunction/");
 
     QString groupName = group+"/HierarchicalFunction/"+QString::number(getId());
-    foreach(Function *f, mFunctions) {
+    foreach(QSharedPointer<Function> f, mFunctions) {
         if(f != 0) {
             f->save(groupName);
         } else {
@@ -135,14 +128,10 @@ void HierarchicalFunction::save(const QString &group)
 
 
 // =============================== SLOTS ========================================
-void HierarchicalFunction::update(AbstractFunction *f)
-{
-    update();
-}
 
 void HierarchicalFunction::update()
 {
     qDebug()<< "HierarchicalFunction::update()";
     updateLinkedCurve(true);
-    emit functionUpdated(this);
+    emit functionUpdated();
 }

@@ -15,11 +15,10 @@ NewFunctionDialog::NewFunctionDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    mFunction = 0;
     init();
 }
 
-NewFunctionDialog::NewFunctionDialog(Function *f, QWidget *parent) :
+NewFunctionDialog::NewFunctionDialog(FunctionPtr &f, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::NewFunctionDialog)
 {
@@ -63,7 +62,7 @@ bool NewFunctionDialog::setupFunction()
 {
     FunctionsSingleton *singleton = &Singleton<FunctionsSingleton>::Instance();
     if(mFunction == 0)
-        mFunction = new Function();
+        mFunction = FunctionPtr(new Function());
     mFunction->setName(ui->functionName->text());
     mFunction->setExpression(ui->functionExpression->toPlainText());
     if(mFunction->isValidExpression()) {
@@ -86,7 +85,7 @@ bool NewFunctionDialog::setupFunction()
 }
 
 // =============================== PUBLIC =================================
-void NewFunctionDialog::setFunction(Function *f)
+void NewFunctionDialog::setFunction(const FunctionPtr &f)
 {
     ui->functionName->setText(mFunction->getName());
     ui->functionExpression->setText(mFunction->getExpression());

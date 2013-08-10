@@ -4,14 +4,17 @@
 class Function;
 
 #include <QString>
+#include <QSharedPointer>
+
+#include "typedefs.h"
 
 class FunctionFactory
 {
 public:
     FunctionFactory();
-    static Function* createFromConfig(const QString &functionGroup);
-    static Function* createFromSingleton(int id);
-    static Function* createFromFunction(Function *f);
+    static FunctionPtr createFromConfig(const QString &functionGroup);
+    static FunctionPtr createFromSingleton(int id);
+    static FunctionPtr createFromFunction(const FunctionPtr &f);
 };
 
 #endif // FUNCTIONFACTORY_H

@@ -11,7 +11,7 @@ FunctionFactory::FunctionFactory()
 }
 
 // ============================ STATIC PUBLIC ===============================
-Function* FunctionFactory::createFromConfig(const QString &functionGroup)
+FunctionPtr FunctionFactory::createFromConfig(const QString &functionGroup)
 {
 
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
@@ -22,22 +22,22 @@ Function* FunctionFactory::createFromConfig(const QString &functionGroup)
 
     Function *function = new Function(id);
     function->loadFromConfig(functionGroup);
-    return function;
+    return FunctionPtr(function);
 }
 
-Function* FunctionFactory::createFromFunction(Function *f)
+FunctionPtr FunctionFactory::createFromFunction(const FunctionPtr &f)
 {
-    return new Function(*f);
+    return FunctionPtr(new Function(*(f.data())));
 }
 
-Function* FunctionFactory::createFromSingleton(int id)
-{
-    AbstractFunction *af = Singleton<FunctionsSingleton>::Instance().getFunctionById(id);
-    if(af != 0) {
-        Function *f = dynamic_cast<Function*>(af);
-        if(f != 0) {
-            return new Function(*f);
-        }
-    }
-    return 0;
-}
+//Function* FunctionFactory::createFromSingleton(int id)
+//{
+//    QSharedPointer<AbstractFunction> af = Singleton<FunctionsSingleton>::Instance().getFunctionById(id);
+//    if(af != 0) {
+//        Function *f = dynamic_cast<Function*>(af.data());
+//        if(f != 0) {
+//            return new Function(*f);
+//        }
+//    }
+//    return 0;
+//}

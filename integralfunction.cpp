@@ -74,7 +74,7 @@ QString IntegralFunction::getExpression() const
 {
     QString exp;
     QString separator = " * ";
-    foreach(Function *f, mFunctions) {
+    foreach(FunctionPtr f, mFunctions) {
         exp += f->getExpression() + separator;
     }
     return exp.left(exp.length() - separator.length());
@@ -84,7 +84,7 @@ QString IntegralFunction::getExpressionParameters() const
 {
     QString exp;
     QString separator = " * ";
-    foreach(Function *f, mFunctions) {
+    foreach(FunctionPtr f, mFunctions) {
         exp += f->getName() + "(" + getParameters(f) + ")" + separator;
     }
     return exp.left(exp.length() - separator.length());
@@ -95,7 +95,7 @@ QString IntegralFunction::getIntegralExpression() const
     if(mFunctions.size() > 0) {
         QString exp;
         QString separator = " * ";
-        foreach(Function *f, mFunctions) {
+        foreach(FunctionPtr f, mFunctions) {
             exp += f->getName() + "(" + getParameters(f) + ")" + separator;
         }
         return exp.left(exp.length() - separator.length()) + "\t<i>d</i>" + mIntegrationVariable;
@@ -114,15 +114,15 @@ FunctionCurve* IntegralFunction::createCurve()
     return mLinkedCurve;
 }
 
-void IntegralFunction::setParameters(Function *f, const QString &parameter)
+void IntegralFunction::setParameters(const QSharedPointer<Function> &f, const QString &parameter)
 {
-    mParameters[f] = parameter;
+    mParameters[f->getId()] = parameter;
     mNeedsUpdate = true;
     emit needsRecompute();
 }
-QString IntegralFunction::getParameters(Function *f) const
+QString IntegralFunction::getParameters(const FunctionPtr &f) const
 {
-    return mParameters[f];
+    return mParameters[f->getId()];
 }
 
 /**
@@ -166,9 +166,9 @@ PlotData IntegralFunction::integrate(double min, double max, double resolution, 
         for(; x<max; x += step) {
             double h1 = 1;
             // XXX: Allow for other operations than *
-            foreach(Function *f, mFunctions) {
+            foreach(FunctionPtr f, mFunctions) {
                 f->setVariable(f->getVariable(), x);
-                h1 *= f->computeWithParameters(mParameters[f], mIntegrationVariable, e);
+                h1 *= f->computeWithParameters(mParameters[f->getId()], mIntegrationVariable, e);
             }
             while(e < x) {
                 // Avoid recomputing h0 needlessly.
@@ -177,9 +177,9 @@ PlotData IntegralFunction::integrate(double min, double max, double resolution, 
 
                 e += deltaX;
                 h1 = 1;
-                foreach(Function *f, mFunctions) {
+                foreach(FunctionPtr f, mFunctions) {
                     f->setVariable(f->getVariable(), x);
-                    h1 *= f->computeWithParameters(mParameters[f], mIntegrationVariable, e);
+                    h1 *= f->computeWithParameters(mParameters[f->getId()], mIntegrationVariable, e);
                 }
                 r += deltaX * (h0 + h1)/2.d;
             }
@@ -197,9 +197,9 @@ PlotData IntegralFunction::integrate(double min, double max, double resolution, 
         for(; x>min; x -= step) {
             double h1 = 1;
             // XXX: Allow for other operations than *
-            foreach(Function *f, mFunctions) {
+            foreach(FunctionPtr f, mFunctions) {
                 f->setVariable(f->getVariable(), x);
-                h1 *= f->computeWithParameters(mParameters[f], mIntegrationVariable, e);
+                h1 *= f->computeWithParameters(mParameters[f->getId()], mIntegrationVariable, e);
             }
             while(e > x) {
                 // Avoid recomputing h0 needlessly.
@@ -208,9 +208,9 @@ PlotData IntegralFunction::integrate(double min, double max, double resolution, 
 
                 e -= deltaX;
                 h1 = 1;
-                foreach(Function *f, mFunctions) {
+                foreach(FunctionPtr f, mFunctions) {
                     f->setVariable(f->getVariable(), x);
-                    h1 *= f->computeWithParameters(mParameters[f], mIntegrationVariable, e);
+                    h1 *= f->computeWithParameters(mParameters[f->getId()], mIntegrationVariable, e);
                 }
                 r += deltaX * (h0 + h1)/2.d;
             }
@@ -254,7 +254,7 @@ void IntegralFunction::loadFromConfig(const QString &group)
     for(int i=0; i<functionIds.size(); i++) {
         int id = functionIds[i].toInt();
         QString parameter = parameters[i];
-        Function *f = dynamic_cast<Function *>(Singleton<FunctionsSingleton>::Instance().getFunctionById(id));
+        QSharedPointer<Function> f = qSharedPointerDynamicCast<Function>(Singleton<FunctionsSingleton>::Instance().getFunctionById(id));
         if(f != 0) {
             setParameters(f, parameter);
             addFunction(f);
@@ -275,10 +275,10 @@ void IntegralFunction::save(const QString &group)
     QString groupName = group+"/IntegralFunction/"+QString::number(getId())+"/";
     QStringList functionIds;
     QStringList parameters;
-    foreach(Function *f, mFunctions) {
+    foreach(FunctionPtr f, mFunctions) {
         if(f != 0) {
             functionIds << QString::number(f->getId()) ;
-            parameters << mParameters[f];
+            parameters << mParameters[f->getId()];
         }
     }
     settings->beginGroup(groupName);

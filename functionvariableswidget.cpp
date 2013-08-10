@@ -28,16 +28,16 @@ void FunctionVariablesWidget::init()
     ui->variablesScrollArea->setWidget(w);
 }
 
-void FunctionVariablesWidget::setFunction(Function *f)
+void FunctionVariablesWidget::setFunction(const FunctionPtr &f)
 {
     useFunction(f);
 }
 
 // =============================== PRIVATE ====================================
-void FunctionVariablesWidget::useFunction(Function *f)
+void FunctionVariablesWidget::useFunction(const FunctionPtr &f)
 {
     mFunction = f;
-    connect(f, SIGNAL(expressionChanged()), this, SLOT(updateVariables()));
+    connect(f.data(), SIGNAL(expressionChanged()), this, SLOT(updateVariables()));
     updateVariables();
 }
 

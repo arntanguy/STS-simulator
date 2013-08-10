@@ -182,10 +182,9 @@ void PlotControlWindow::initFromConfig()
             qDebug() << "null curve";
         }
     }
-    AbstractFunction *function = 0;
     foreach(QStandardItem *item, mFunctionItems) {
         // Only show selected curves
-        function = static_cast<AbstractFunction *>(item->data(Qt::UserRole).value<AbstractFunction *>());
+        AbstractFunctionPtr function = static_cast<AbstractFunctionPtr>(item->data(Qt::UserRole).value<AbstractFunctionPtr>());
         if(function != 0) {
             FunctionCurve *c = function->getCurve();
             if(c != 0) {
@@ -202,8 +201,7 @@ void PlotControlWindow::initFromConfig()
         QStandardItem *child = 0;
         int i = 0;
         while ((child = item->child(i++)) != 0) {
-            function = 0;
-            function = static_cast<AbstractFunction *>(child->data(Qt::UserRole).value<AbstractFunction *>());
+            function = child->data(Qt::UserRole).value<AbstractFunctionPtr>();
             if(function != 0) {
                 FunctionCurve *c = function->getCurve();
                 if(c != 0) {
@@ -254,7 +252,7 @@ void PlotControlWindow::initFromConfig()
  **/
 FunctionCurve* PlotControlWindow::manageFunctionCurveFromItem(QStandardItem *item)
 {
-    AbstractFunction* function = static_cast<AbstractFunction *>(item->data(Qt::UserRole).value<AbstractFunction *>());
+    AbstractFunctionPtr function = item->data(Qt::UserRole).value<AbstractFunctionPtr>();
     if(function != 0) {
         FunctionCurve *c = function->getCurve();
         if(item->isCheckable() && item->checkState() == Qt::Checked) {
@@ -478,25 +476,25 @@ void PlotControlWindow::newFunctionAvailable()
     FunctionsSingleton *fSingleton = &Singleton<FunctionsSingleton>::Instance();
     QList<int> fIds = fSingleton->getFunctionIds();
     foreach(int id, fIds) {
-        AbstractFunction *f = fSingleton->getFunctionById(id);
+        AbstractFunctionPtr f = fSingleton->getFunctionById(id);
         if(f->getType() == AbstractFunction::HierarchicalFunction) {
-            HierarchicalFunction *hf = dynamic_cast<HierarchicalFunction*>(f);
+            HierarchicalFunctionPtr hf = qSharedPointerDynamicCast<HierarchicalFunction>(f);
             if(hf != 0) {
-                qDebug() << "add hierachical function to view";
-                QStandardItem *parentItem = HelperFunctions::createFunctionItem(f);
-                model->setItem(itemIndex++, parentItem);
-                if(hf->isDisplayed(mPlotId)) parentItem->setCheckState(Qt::Checked);
-                mFunctionItems.append(parentItem);
+               qDebug() << "add hierachical function to view";
+               QStandardItem *parentItem = HelperFunctions::createFunctionItem(f);
+               model->setItem(itemIndex++, parentItem);
+               if(hf->isDisplayed(mPlotId)) parentItem->setCheckState(Qt::Checked);
+               mFunctionItems.append(parentItem);
 
-                int subItemIndex = 0;
-                foreach(AbstractFunction *af, hf->getFunctions()) {
-                    QStandardItem * item = HelperFunctions::createFunctionItem(af);
-                    if(af->isDisplayed(mPlotId)) item->setCheckState(Qt::Checked);
-                    parentItem->setChild(subItemIndex++,item);
-                }
+               int subItemIndex = 0;
+               foreach(AbstractFunctionPtr af, hf->getFunctions()) {
+                   QStandardItem * item = HelperFunctions::createFunctionItem(af);
+                   if(af->isDisplayed(mPlotId)) item->setCheckState(Qt::Checked);
+                   parentItem->setChild(subItemIndex++,item);
+               }
             }
         } else if(f->getType() == AbstractFunction::Function) {
-            Function *ff = dynamic_cast<Function*>(f);
+            FunctionPtr ff = qSharedPointerDynamicCast<Function>(f);
             if(ff != 0) {
                 qDebug() << "Add normal function to view";
                 QStandardItem *Item = HelperFunctions::createFunctionItem(f, false);
@@ -507,7 +505,7 @@ void PlotControlWindow::newFunctionAvailable()
                 model->setItem( itemIndex++, Item );
             }
         } else if(f->getType() == AbstractFunction::Integral) {
-            IntegralFunction *hf = dynamic_cast<IntegralFunction*>(f);
+            IntegralFunctionPtr hf = qSharedPointerDynamicCast<IntegralFunction>(f);
             if(hf != 0) {
                 qDebug() << "add integral function to view";
                 QStandardItem *parentItem = HelperFunctions::createFunctionItem(f);
@@ -516,7 +514,7 @@ void PlotControlWindow::newFunctionAvailable()
                 mFunctionItems.append(parentItem);
 
                 int subItemIndex = 0;
-                foreach(AbstractFunction *af, hf->getFunctions()) {
+                foreach(AbstractFunctionPtr af, hf->getFunctions()) {
                     QStandardItem * item = HelperFunctions::createFunctionItem(af, false);
                     item->setCheckState(Qt::Unchecked);
                     item->setCheckable(false);
@@ -525,7 +523,7 @@ void PlotControlWindow::newFunctionAvailable()
                 }
             }
         } else if(f->getType() == AbstractFunction::Differential) {
-            DifferentialFunction *ff = dynamic_cast<DifferentialFunction*>(f);
+            DifferentialFunctionPtr ff = qSharedPointerDynamicCast<DifferentialFunction>(f);
             if(ff != 0) {
                 qDebug() << "Add normal function to view";
                 QStandardItem *Item = HelperFunctions::createFunctionItem(f);
@@ -543,7 +541,7 @@ void PlotControlWindow::deleteFunction()
     qDebug() << "PlotControlWindow::deleteFunction()";
     QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
     QModelIndex index = ui->functionView->currentIndex();
-    AbstractFunction *f = index.data(Qt::UserRole).value<AbstractFunction *>();
+    AbstractFunctionPtr f = index.data(Qt::UserRole).value<AbstractFunctionPtr>();
     mFunctionItems.removeOne(model->itemFromIndex(index));
     Singleton<FunctionsSingleton>::Instance().removeFunction(f);
     model->removeRow(index.row());
@@ -558,16 +556,16 @@ void PlotControlWindow::editFunction(const QModelIndex &index)
         QVariant item = model->data(index, Qt::UserRole);
         if(item.isValid()) {
             qDebug() << item;
-            AbstractFunction *f = item.value<AbstractFunction*>();
+            AbstractFunctionPtr f = item.value<AbstractFunctionPtr>();
             if(f->getType() == AbstractFunction::Function) {
-                Function *func = dynamic_cast<Function *>(f);
+                FunctionPtr func = qSharedPointerDynamicCast<Function>(f);
                 if(func != 0) {
                     NewFunctionDialog* dialog = new NewFunctionDialog(func);
                     connect(dialog, SIGNAL(accepted()), this, SLOT(functionDialogAccepted()));
                     dialog->show();
                 }
             } else if(f->getType() == AbstractFunction::HierarchicalFunction) {
-                HierarchicalFunction *function = dynamic_cast<HierarchicalFunction *>(f);
+                HierarchicalFunctionPtr function = qSharedPointerDynamicCast<HierarchicalFunction>(f);
                 if(function != 0) {
                     HierarchicalFunctionDialog dialog(this);
                     dialog.setFunction(function);
@@ -576,7 +574,7 @@ void PlotControlWindow::editFunction(const QModelIndex &index)
                     }
                 }
             } else if(f->getType() == AbstractFunction::Integral) {
-                IntegralFunction *function = dynamic_cast<IntegralFunction *>(f);
+                IntegralFunctionPtr function = qSharedPointerDynamicCast<IntegralFunction>(f);
                 if(function != 0) {
                     IntegralFunctionDialog dialog(this);
                     dialog.setFunction(function);
@@ -585,7 +583,7 @@ void PlotControlWindow::editFunction(const QModelIndex &index)
                     }
                 }
             } else if(f->getType() == AbstractFunction::Differential) {
-                DifferentialFunction *function = dynamic_cast<DifferentialFunction *>(f);
+                DifferentialFunctionPtr function = qSharedPointerDynamicCast<DifferentialFunction>(f);
                 if(function != 0) {
                     DifferentialFunctionDialog dialog(function, this);
                     if(dialog.exec() == QDialog::Accepted) {
@@ -600,7 +598,7 @@ void PlotControlWindow::editFunction(const QModelIndex &index)
 void PlotControlWindow::editFunctionCurve()
 {
     QModelIndex index = ui->functionView->currentIndex();
-    AbstractFunction *f = index.data(Qt::UserRole).value<AbstractFunction *>();
+    AbstractFunctionPtr f = index.data(Qt::UserRole).value<AbstractFunctionPtr>();
     FunctionCurve *curve = f->getCurve();
     if(curve == 0) {
         curve = f->createCurve();

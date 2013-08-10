@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "abstractfunction.h"
+#include "typedefs.h"
 
 class QModelIndex;
 class Function;
@@ -21,16 +22,16 @@ public:
     explicit FunctionSelectionDialog(QWidget *parent = 0, AbstractFunction::FunctionType flags = AbstractFunction::All);
     ~FunctionSelectionDialog();
 
-    Function* getSelectedFunction();
+    FunctionPtr getSelectedFunction();
 
 private:
     void init();
-    void useFunction(Function *);
-    QStandardItem* createItem(Function *);
+    void useFunction(const FunctionPtr &);
+    QStandardItem* createItem(const FunctionPtr &);
 
 private:
     Ui::FunctionSelectionDialog *ui;
-    Function *mCurrentFunction;
+    FunctionPtr mCurrentFunction;
     AbstractFunction::FunctionType mFlags;
 
 public Q_SLOTS:

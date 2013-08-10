@@ -19,7 +19,6 @@ void DifferentialFunction::init()
 {
     qDebug() << "Init new DifferentialFunction";
     setType(AbstractFunction::Differential);
-    mFunction = 0;
 }
 
 
@@ -75,7 +74,7 @@ void DifferentialFunction::loadFromConfig(const QString &group)
     settings->beginGroup(group);
     int id = settings->value("integralFunctionId", -1).toInt();
     qDebug() << "id: "<<id;
-    IntegralFunction* f = dynamic_cast<IntegralFunction *>(Singleton<FunctionsSingleton>::Instance().getFunctionById(id));
+    IntegralFunctionPtr f = qSharedPointerDynamicCast<IntegralFunction>(Singleton<FunctionsSingleton>::Instance().getFunctionById(id));
     if(f != 0) {
         qDebug() << "f isn't null";
         DifferentialFunction::setFunction(f);
@@ -84,12 +83,12 @@ void DifferentialFunction::loadFromConfig(const QString &group)
     if(mLinkedCurve != 0) mLinkedCurve->update(true);
 }
 
-void DifferentialFunction::setFunction(IntegralFunction *f)
+void DifferentialFunction::setFunction(const IntegralFunctionPtr &f)
 {
     if(f != 0) {
         qDebug() << "DifferentialFunction::setFunction ";
         mFunction = f;
-        connect(mFunction, SIGNAL(integralDataComputed()), this, SIGNAL(integralDataComputed()));
+        connect(mFunction.data(), SIGNAL(integralDataComputed()), this, SIGNAL(integralDataComputed()));
         if(mLinkedCurve != 0) {
             DifferentialCurve *c = dynamic_cast<DifferentialCurve*>(mLinkedCurve);
             if(c!=0) {

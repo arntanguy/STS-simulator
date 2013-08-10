@@ -2,6 +2,7 @@
 #define HIERARCHICALFUNCTION_H
 
 #include <QList>
+#include <QSharedPointer>
 
 #include "function.h"
 
@@ -13,9 +14,9 @@ public:
     HierarchicalFunction(int id);
     virtual ~HierarchicalFunction();
 
-    void addFunction(Function *function);
-    void removeFunction(Function *f);
-    QList<Function *> getFunctions();
+    void addFunction(const QSharedPointer<Function>& function);
+    void removeFunction(const QSharedPointer<Function> &f);
+    QList<QSharedPointer<Function>> getFunctions();
 
     /**
      * Pure virtual functions
@@ -32,14 +33,15 @@ public:
     virtual void save(const QString &group);
 
 public Q_SLOTS:
-    void update(AbstractFunction *);
     void update();
 
 private:
     void init();
 
 protected:
-    QList<Function *> mFunctions;
+    QList<QSharedPointer<Function>> mFunctions;
 };
+
+Q_DECLARE_METATYPE(HierarchicalFunctionPtr);
 
 #endif // HIERARCHICALFUNCTION_H

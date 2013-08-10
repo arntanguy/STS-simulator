@@ -8,7 +8,7 @@
 #include <QDebug>
 #include <QSettings>
 
-ValueSelector::ValueSelector(const QString &name, Function *f, QWidget *parent) :
+ValueSelector::ValueSelector(const QString &name, const FunctionPtr &f, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ValueSelector)
 {
@@ -25,6 +25,7 @@ ValueSelector::ValueSelector(const QString &name, Function *f, QWidget *parent) 
 
     ui->variableName->setText(name + " = ");
 
+    // XXX: use global settings
     //double minSliderValue = Singleton<GlobalSettingsSingleton>::Instance().getSliderMin();
     //double maxSliderValue = Singleton<GlobalSettingsSingleton>::Instance().getSliderMax();
     double minSliderValue = 0;

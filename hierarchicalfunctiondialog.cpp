@@ -15,7 +15,7 @@ HierarchicalFunctionDialog::HierarchicalFunctionDialog(QWidget *parent) :
     ui(new Ui::HierarchicalFunctionDialog)
 {
     ui->setupUi(this);
-    mFunction =  new HierarchicalFunction();
+    mFunction =  HierarchicalFunctionPtr(new HierarchicalFunction());
     init();
 }
 
@@ -36,7 +36,7 @@ void HierarchicalFunctionDialog::init()
     connect(this, SIGNAL(expressionChanged()), this, SLOT(updateExpression()));
 }
 
-void HierarchicalFunctionDialog::setFunction(HierarchicalFunction *f)
+void HierarchicalFunctionDialog::setFunction(const HierarchicalFunctionPtr& f)
 {
     qDebug() << "HierarchicalFunctionDialog::setFunction("<<f->getName()<<")";
     mEdit = true;
@@ -46,14 +46,14 @@ void HierarchicalFunctionDialog::setFunction(HierarchicalFunction *f)
     if(f != 0) {
         QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
         model->clear();
-        foreach(Function* af, mFunction->getFunctions()) {
+        foreach(QSharedPointer<Function> af, mFunction->getFunctions()) {
             addFunctionItem(af);
         }
     }
 }
 
 // ============================= PRIVATE =======================
-void HierarchicalFunctionDialog::addFunction(Function *f)
+void HierarchicalFunctionDialog::addFunction(const FunctionPtr& f)
 {
     if(f != 0) {
         addFunctionItem(f);
@@ -63,7 +63,7 @@ void HierarchicalFunctionDialog::addFunction(Function *f)
     }
 }
 
-void HierarchicalFunctionDialog::addFunctionItem(Function *f)
+void HierarchicalFunctionDialog::addFunctionItem(const FunctionPtr& f)
 {
     if(f != 0) {
         QStandardItem *item = new QStandardItem();
@@ -91,10 +91,9 @@ void HierarchicalFunctionDialog::removeFunction()
 {
     QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
     QModelIndex index = ui->functionView->currentIndex();
-    Function *f = index.data(Qt::UserRole).value<Function *>();
+    FunctionPtr f = index.data(Qt::UserRole).value<FunctionPtr>();
     mFunction->removeFunction(f);
     model->removeRow(index.row());
-    delete f;
     emit expressionChanged();
 }
 

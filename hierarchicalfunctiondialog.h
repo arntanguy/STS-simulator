@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "qthideandshowdialog.h"
+#include "typedefs.h"
 
 namespace Ui {
 class HierarchicalFunctionDialog;
@@ -19,16 +20,16 @@ public:
     explicit HierarchicalFunctionDialog(QWidget *parent = 0);
     ~HierarchicalFunctionDialog();
 
-    HierarchicalFunction* getFunction() {
+    HierarchicalFunctionPtr getFunction() {
         return mFunction;
     }
-    void setFunction(HierarchicalFunction *f);
+    void setFunction(const HierarchicalFunctionPtr& f);
 
 private:
     void init();
     void initFromFunction();
-    void addFunction(Function *f);
-    void addFunctionItem(Function *f);
+    void addFunction(const FunctionPtr& f);
+    void addFunctionItem(const FunctionPtr& f);
 
 public Q_SLOTS:
     void addFunction();
@@ -43,7 +44,7 @@ Q_SIGNALS:
 private:
     Ui::HierarchicalFunctionDialog *ui;
 
-    HierarchicalFunction *mFunction;
+    HierarchicalFunctionPtr mFunction;
 
     bool mEdit;
 };

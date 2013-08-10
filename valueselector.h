@@ -2,6 +2,7 @@
 #define VALUESELECTOR_H
 
 #include <QWidget>
+#include "typedefs.h"
 
 namespace Ui {
 class ValueSelector;
@@ -14,7 +15,7 @@ class ValueSelector : public QWidget
     Q_OBJECT
 
 public:
-    explicit ValueSelector(const QString &name, Function *f, QWidget *parent = 0);
+    explicit ValueSelector(const QString &name, const FunctionPtr &f, QWidget *parent = 0);
     ~ValueSelector();
 
     void save();
@@ -34,7 +35,7 @@ private:
     /**
      * Any change made to this variable will be repercuted when computing the function
      **/
-    Function *mFunction;
+    FunctionPtr mFunction;
     double *mVariable;
     QString mName;
 };

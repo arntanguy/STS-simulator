@@ -38,7 +38,7 @@ void FunctionSelectionDialog::init()
     if(model != 0) {
         int row = 0;
         foreach(int id, fIds) {
-            Function *f = dynamic_cast<Function*>(singleton->getFunctionById(id));
+            FunctionPtr f = qSharedPointerDynamicCast<Function>(singleton->getFunctionById(id));
             if(f != 0) {
                 if(f->getType() & mFlags) {
                     model->setItem(row++, createItem(f));
@@ -50,14 +50,14 @@ void FunctionSelectionDialog::init()
     }
 }
 
-Function* FunctionSelectionDialog::getSelectedFunction()
+FunctionPtr FunctionSelectionDialog::getSelectedFunction()
 {
     return mCurrentFunction;
 }
 
 
 // ======================= PRIVATE ========================================
-void FunctionSelectionDialog::useFunction(Function *f)
+void FunctionSelectionDialog::useFunction(const FunctionPtr& f)
 {
     mCurrentFunction = f;
     qDebug() << "Selected function " << f->getName();
@@ -73,11 +73,11 @@ void FunctionSelectionDialog::useFunction(Function *f)
     }
 }
 
-QStandardItem* FunctionSelectionDialog::createItem(Function *f)
+QStandardItem* FunctionSelectionDialog::createItem(const FunctionPtr &f)
 {
     QStandardItem *item = new QStandardItem();
     item->setText(f->getName());
-    item->setData(QVariant::fromValue<Function *>(f), Qt::UserRole);
+    item->setData(QVariant::fromValue<FunctionPtr>(f), Qt::UserRole);
     return item;
 }
 
@@ -89,7 +89,7 @@ void FunctionSelectionDialog::functionSelected(const QModelIndex &index)
         QVariant item = model->data(index, Qt::UserRole);
         if(item.isValid()) {
             qDebug() << item;
-            Function *f = dynamic_cast<Function *>(item.value<Function *>());
+            FunctionPtr f = FunctionPtr(item.value<FunctionPtr>());
             if(f != 0) {
                 useFunction(f);
             } else {
@@ -113,7 +113,7 @@ void FunctionSelectionDialog::newFunction()
     if(dialog.exec() == QDialog::Accepted) {
         QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionList->model());
         if(model != 0) {
-            Function *f=dialog.getFunction();
+            FunctionPtr f=dialog.getFunction();
             if(f != 0) {
                 model->setItem(model->rowCount(), createItem(f));
             }

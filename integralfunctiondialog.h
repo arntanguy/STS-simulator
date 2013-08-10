@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QModelIndex>
+#include "typedefs.h"
 
 namespace Ui {
 class IntegralFunctionDialog;
@@ -19,18 +20,18 @@ public:
     explicit IntegralFunctionDialog(QWidget *parent = 0);
     ~IntegralFunctionDialog();
 
-    IntegralFunction* getFunction() {
+    IntegralFunctionPtr getFunction() {
         return mFunction;
     }
-    void setFunction(IntegralFunction *f);
+    void setFunction(const IntegralFunctionPtr &f);
 
 private:
     void init();
     void initFromFunction();
-    void addFunction(Function *function);
-    void addFunctionItem(Function *);
-    void useFunction(Function *);
-    void setFunctionConfiguration(Function *f);
+    void addFunction(const FunctionPtr &function);
+    void addFunctionItem(const FunctionPtr &);
+    void useFunction(const FunctionPtr &);
+    void setFunctionConfiguration(const FunctionPtr &f);
 
 Q_SIGNALS:
     void expressionChanged();
@@ -47,8 +48,8 @@ public Q_SLOTS:
 private:
     Ui::IntegralFunctionDialog *ui;
 
-    IntegralFunction *mFunction;
-    Function *mFunctionInUse;
+    IntegralFunctionPtr mFunction;
+    FunctionPtr mFunctionInUse;
 
     bool mEdit;
 };

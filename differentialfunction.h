@@ -26,7 +26,7 @@ public:
 
     PlotData differentiate();
 
-    void setFunction(IntegralFunction *f);
+    void setFunction(const IntegralFunctionPtr& f);
     void setCurve(DifferentialCurve *curve);
 
 Q_SIGNALS:
@@ -36,7 +36,7 @@ private:
     void init();
 
 private:
-    IntegralFunction *mFunction;
+    IntegralFunctionPtr mFunction;
 };
 
 #endif // DIFFERENTIALFUNCTION_H

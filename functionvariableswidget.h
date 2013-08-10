@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QHBoxLayout>
 
+#include "typedefs.h"
 
 namespace Ui {
 class FunctionVariablesWidget;
@@ -18,7 +19,7 @@ class FunctionVariablesWidget : public QWidget
 public:
     explicit FunctionVariablesWidget(QWidget *parent = 0);
 
-    void setFunction(Function *f);
+    void setFunction(const FunctionPtr& f);
     void save();
 
 signals:
@@ -30,10 +31,10 @@ public slots:
 
 private:
     void init();
-    void useFunction(Function *f);
+    void useFunction(const FunctionPtr& f);
 
 private:
-    Function *mFunction;
+    FunctionPtr mFunction;
     Ui::FunctionVariablesWidget *ui;
 
     QHBoxLayout *mVariabesLayout;

@@ -41,8 +41,8 @@ public:
     virtual PlotData integrate(double min, double max, double resolution, double stepNumber);
     virtual FunctionCurve* createCurve();
 
-    void setParameters(Function *f, const QString &parameter);
-    QString getParameters(Function *f) const;
+    void setParameters(const QSharedPointer<Function> &f, const QString &parameter);
+    QString getParameters(const FunctionPtr &f) const;
 
     PlotData getData() {
         return mData;
@@ -61,7 +61,8 @@ private:
 
     QString mIntegrationVariable;
 
-    QMap<Function*, QString> mParameters;
+    //FunctionId, Parameter
+    QMap<int, QString> mParameters;
 
     PlotData mData;
 

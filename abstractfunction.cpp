@@ -169,7 +169,7 @@ void AbstractFunction::updateLinkedCurve(QString var, double val, bool forceUpda
 {
     emit needsRecompute();
     updateLinkedCurve(forceUpdate);
-    emit functionUpdated(this);
+    emit functionUpdated();
 }
 
 

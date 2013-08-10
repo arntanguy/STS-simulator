@@ -1,6 +1,8 @@
 #ifndef HELPERFUNCTIONS_H
 #define HELPERFUNCTIONS_H
 
+#include "typedefs.h"
+
 class QStandardItem;
 class AbstractFunction;
 class QLayout;
@@ -12,7 +14,7 @@ class HelperFunctions
 {
 public:
     HelperFunctions();
-    static QStandardItem *createFunctionItem(AbstractFunction *f, bool checkable = true);
+    static QStandardItem *createFunctionItem(AbstractFunctionPtr f, bool checkable = true);
     static void clearLayout(QLayout *layout);
 
     static mu::Parser* createParser();

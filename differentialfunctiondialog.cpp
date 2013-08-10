@@ -17,12 +17,12 @@ DifferentialFunctionDialog::DifferentialFunctionDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    mFunction = new DifferentialFunction();
+    mFunction = DifferentialFunctionPtr(new DifferentialFunction());
 
     init();
 
 }
-DifferentialFunctionDialog::DifferentialFunctionDialog(DifferentialFunction *f, QWidget *parent) :
+DifferentialFunctionDialog::DifferentialFunctionDialog(const DifferentialFunctionPtr &f, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DifferentialFunctionDialog)
 {
@@ -32,7 +32,7 @@ DifferentialFunctionDialog::DifferentialFunctionDialog(DifferentialFunction *f, 
     if(f != 0) {
         setFunction(f);
     } else {
-        mFunction = new DifferentialFunction();
+        mFunction = DifferentialFunctionPtr(new DifferentialFunction());
     }
 
 }
@@ -44,7 +44,7 @@ void DifferentialFunctionDialog::init()
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
 }
 
-void DifferentialFunctionDialog::setFunction(DifferentialFunction* f)
+void DifferentialFunctionDialog::setFunction(const DifferentialFunctionPtr& f)
 {
     mEdit = true;
     mFunction = f;
@@ -66,15 +66,15 @@ void DifferentialFunctionDialog::functionSelected()
 void DifferentialFunctionDialog::selectFunction()
 {
     if(mFunction == 0) {
-        mFunction = new DifferentialFunction();
+        mFunction = DifferentialFunctionPtr(new DifferentialFunction());
     }
     FunctionSelectionDialog dialog(this, AbstractFunction::Integral);
-    Function *f = 0;
+    FunctionPtr f;
     if(dialog.exec() == QDialog::Accepted) {
         // Do not copy as we're linking the real funciton to the derivate
         f = dialog.getSelectedFunction();
     }
-    IntegralFunction *intF = dynamic_cast<IntegralFunction *>(f);
+    IntegralFunctionPtr intF = qSharedPointerDynamicCast<IntegralFunction>(f);
     if(intF != 0) {
         mFunction->setFunction(intF);
         functionSelected();

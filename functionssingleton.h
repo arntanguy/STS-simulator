@@ -4,6 +4,10 @@
 #include <QMap>
 #include "singleton.h"
 
+#include "typedefs.h"
+
+#include <QSharedPointer>
+
 class AbstractFunction;
 
 class FunctionsSingleton
@@ -12,9 +16,9 @@ public:
     FunctionsSingleton();
     ~FunctionsSingleton();
 
-    void addFunction(AbstractFunction *f);
-    void removeFunction(AbstractFunction *f);
-    AbstractFunction* getFunctionById(int id);
+    void addFunction(const AbstractFunctionPtr &f);
+    void removeFunction(const AbstractFunctionPtr &f);
+    AbstractFunctionPtr getFunctionById(int id);
     QList<int> getFunctionIds() const;
 
     bool hasFunction(int id) const {
@@ -28,7 +32,7 @@ public:
 
 private:
     // Function name, function
-    QMap<int , AbstractFunction *> mFunctions;
+    QMap<int , AbstractFunctionPtr> mFunctions;
 };
 
 #endif // FUNCTIONSSINGLETON_H

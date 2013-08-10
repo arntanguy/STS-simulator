@@ -11,7 +11,7 @@ HelperFunctions::HelperFunctions()
 {
 }
 
-QStandardItem* HelperFunctions::createFunctionItem(AbstractFunction *f, bool checkable)
+QStandardItem* HelperFunctions::createFunctionItem(AbstractFunctionPtr f, bool checkable)
 {
     QStandardItem *item= new QStandardItem();
     item->setCheckable( checkable );

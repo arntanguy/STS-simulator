@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+#include "typedefs.h"
+
 namespace Ui {
 class DifferentialFunctionDialog;
 }
@@ -15,10 +17,10 @@ class DifferentialFunctionDialog : public QDialog
 
 public:
     explicit DifferentialFunctionDialog(QWidget *parent = 0);
-    explicit DifferentialFunctionDialog(DifferentialFunction *f, QWidget *parent = 0);
+    explicit DifferentialFunctionDialog(const DifferentialFunctionPtr& f, QWidget *parent = 0);
     ~DifferentialFunctionDialog();
 
-    void setFunction(DifferentialFunction* f);
+    void setFunction(const DifferentialFunctionPtr& f);
 
 public Q_SLOTS:
     void accept();
@@ -32,7 +34,7 @@ private:
     Ui::DifferentialFunctionDialog *ui;
 
 
-    DifferentialFunction *mFunction;
+    DifferentialFunctionPtr mFunction;
 
     bool mEdit;
 };

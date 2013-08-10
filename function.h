@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QString>
 #include <QMetaType>
+#include "typedefs.h"
 
 
 class VariableFactory;
@@ -76,6 +77,6 @@ protected:
     VariableFactory *mImplicitVarFactory;
 };
 
-Q_DECLARE_METATYPE(Function*);
+Q_DECLARE_METATYPE(FunctionPtr);
 
 #endif // FUNCTION_H

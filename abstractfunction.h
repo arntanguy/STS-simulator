@@ -6,6 +6,8 @@
 #include <QObject>
 #include <QMap>
 
+#include "typedefs.h"
+
 class PlotWidget;
 class FunctionCurve;
 
@@ -68,7 +70,7 @@ class AbstractFunction : public QObject
 Q_SIGNALS:
         void nameUpdated(const QString &);
         virtual void curveUpdated(AbstractFunction *);
-        virtual void functionUpdated(AbstractFunction *);
+        virtual void functionUpdated();
         void needsRecompute();
 
         public Q_SLOTS:
@@ -92,6 +94,7 @@ Q_SIGNALS:
         FunctionCurve *mLinkedCurve;
 };
 
-Q_DECLARE_METATYPE(AbstractFunction*);
+//Q_DECLARE_METATYPE(AbstractFunction*);
+Q_DECLARE_METATYPE(AbstractFunctionPtr);
 
 #endif // ABSTRACTFUNCTION_H
