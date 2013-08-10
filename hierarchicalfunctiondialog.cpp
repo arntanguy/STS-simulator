@@ -80,7 +80,7 @@ void HierarchicalFunctionDialog::addFunctionItem(const FunctionPtr& f)
 
 void HierarchicalFunctionDialog::addFunction()
 {
-    FunctionSelectionDialog dialog(this, AbstractFunction::Function | AbstractFunction::HierarchicalFunction);
+    FunctionSelectionDialog dialog(this, AbstractFunction::Function);
     if(dialog.exec() == QDialog::Accepted) {
         // Add a copy the function
         addFunction(FunctionFactory::createFromFunction(dialog.getSelectedFunction()));
