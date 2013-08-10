@@ -7,6 +7,7 @@
 #include "differentialfunction.h"
 #include "curve.h"
 #include "functioncurve.h"
+#include "curvesingleton.h"
 
 #include <QStringList>
 #include <QDebug>
@@ -100,10 +101,7 @@ bool  FunctionsSingleton::removeFunction(const AbstractFunctionPtr &f)
         if(canDelete) {
             qDebug() << "deleting function " << f->getName();
             mFunctions.erase(it);
-            Curve *c = f->getCurve();
-            if(c != 0) {
-                c->detachFromAll();
-            }
+            Singleton<CurveSingleton>::Instance().removeCurve(f->getCurve());
         }
     }
     return canDelete;
