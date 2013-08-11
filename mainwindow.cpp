@@ -10,6 +10,7 @@
 #include "projectsingleton.h"
 #include "plotsingleton.h"
 #include "globalconstants.h"
+#include "functionssingleton.h"
 
 
 #include <QCloseEvent>
@@ -64,6 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionLoad_Project, SIGNAL(triggered(bool)), this, SLOT(actionLoadProject(bool)));
     connect(ui->actionNew_Base_Function, SIGNAL(triggered(bool)), this, SLOT(newBaseFunction(bool)));
     connect(ui->actionEdit_Default_Project_Template, SIGNAL(triggered(bool)), this, SLOT(actionEditDefaultProjectTemplate(bool)));
+    connect(ui->actionExport_Variables, SIGNAL(triggered(bool)), this, SLOT(actionExportVariables(bool)));
 
     connect(ui->actionGlobal_Settings, SIGNAL(triggered(bool)), this, SLOT(actionGlobalSettings(bool)));
 }
@@ -200,4 +202,19 @@ void MainWindow::newBaseFunction(bool)
 {
     NewFunctionDialog dialog(this);
     dialog.exec();
+}
+
+void MainWindow::actionExportVariables(bool)
+{
+    QString startDir = mSettings.value("Save/variablesExport", "").toString();
+
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Export variables"),
+                                                    startDir,
+                                                    tr("All Files (*.*)"));
+
+    if(!fileName.isEmpty()) {
+        mSettings.setValue("Save/projectDirectory", QFileInfo(fileName).absoluteDir().absolutePath());
+
+        Singleton<FunctionsSingleton>::Instance().exportVariables(fileName);
+    }
 }

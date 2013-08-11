@@ -105,6 +105,7 @@ void FunctionCurve::update(bool forceUpdate)
     if(needsUpdate() || forceUpdate) {
         qDebug() << "FunctionCurve::update()";
         updateData();
+        emit rangeUpdated();
     }
     foreach(PlotWidget *plot, mPlots.keys()) {
         qDebug() << "Updating on plot " << plot->getName();
@@ -116,6 +117,7 @@ void FunctionCurve::update(bool forceUpdate)
             qDebug() << "NULL CURVE!!!!!!!!!!!!!" << curve;
         }
         plot->replot();
+        plot->updateRange();
     }
 }
 

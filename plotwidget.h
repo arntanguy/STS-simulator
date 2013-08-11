@@ -52,6 +52,8 @@ private:
 public Q_SLOTS:
     void loadFromSettings();
     void configurationChanged();
+    void updateRange();
+    virtual void plotZoomed();
 
 public:
     virtual void replot();

@@ -44,6 +44,7 @@ public Q_SLOTS:
     void slotDeferedUpdate();
 
 Q_SIGNALS:
+    virtual void rangeUpdated();
     void functionUpdated(AbstractFunction *);
     void functionDataUpdated(AbstractFunction *);
 

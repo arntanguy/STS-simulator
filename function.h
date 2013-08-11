@@ -43,6 +43,7 @@ public:
     void setVariable(const QString &name, double value);
     double* getVariable(const QString &name);
     QStringList getVariableList() const;
+    QStringList getVariablesValueList() const;
 
     double compute(double x);
     double compute(const QString &variable, double x);

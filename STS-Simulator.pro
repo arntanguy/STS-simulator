@@ -74,7 +74,8 @@ SOURCES += main.cpp\
     differentialfunction.cpp \
     differentialfunctiondialog.cpp \
     functionhelpdialog.cpp \
-    qsciencespinbox.cpp
+    qsciencespinbox.cpp \
+    csvfilewriter.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -121,7 +122,8 @@ HEADERS  += mainwindow.h \
     differentialfunction.h \
     differentialfunctiondialog.h \
     functionhelpdialog.h \
-    qsciencespinbox.h
+    qsciencespinbox.h \
+    csvfilewriter.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \

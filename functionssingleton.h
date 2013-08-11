@@ -25,6 +25,7 @@ public:
         return mFunctions.find(id) != mFunctions.end();
     }
     bool functionNameExists(const QString& name) const;
+    bool exportVariables(const QString& path);
 
     void loadFromSettings();
     void save();

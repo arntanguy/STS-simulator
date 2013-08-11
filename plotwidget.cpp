@@ -61,6 +61,8 @@ void PlotWidget::initZoom()
     const QColor c(Qt::darkBlue);
     mPlotZoomer->setRubberBandPen(c);
     mPlotZoomer->setTrackerPen(c);
+
+    //connect(mPlotZoomer, SIGNAL(zoomed(const QRectF &)), this, SLOT(plotZoomed()));
 }
 
 void PlotWidget::setupPlot()
@@ -120,7 +122,6 @@ void PlotWidget::loadFromSettings()
                         mExternalLegend,
                         SLOT( updateLegend( const QVariant &,
                                 const QList<QwtLegendData> & ) ) );
-
                 mExternalLegend->show();
 
                 // populate the new legend
@@ -267,3 +268,15 @@ void PlotWidget::replot()
     QwtPlot::replot();
 }
 
+/**
+ * Only effective if a replot has been done before
+ **/
+void PlotWidget::updateRange()
+{
+    qDebug () << "UPDATE RANGE";
+    mPlotZoomer->setZoomBase();
+}
+
+void PlotWidget::plotZoomed()
+{
+}

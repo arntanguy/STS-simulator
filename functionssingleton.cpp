@@ -8,6 +8,7 @@
 #include "curve.h"
 #include "functioncurve.h"
 #include "curvesingleton.h"
+#include "csvfilewriter.h"
 
 #include <QStringList>
 #include <QDebug>
@@ -198,5 +199,33 @@ void FunctionsSingleton::save()
     foreach(int fId, mFunctions.keys()) {
         qDebug() << "Function " << fId;
         mFunctions[fId]->save("Functions");
+    }
+}
+
+bool FunctionsSingleton::exportVariables(const QString& path)
+{
+    CSVFileWriter w("\t");
+    if(w.openFile(path)) {
+        QString fName, name, type;
+
+        foreach(AbstractFunctionPtr af, mFunctions) {
+            int fNumber = 0;
+            if(af->getType() == AbstractFunction::HierarchicalFunction) {
+                HierarchicalFunctionPtr hf = qSharedPointerDynamicCast<HierarchicalFunction>(af);
+                if(hf != 0) {
+                    fName = af->getName();
+                    foreach(FunctionPtr f, hf->getFunctions()) {
+                        name = fName+"_"+QString::number(fNumber++);
+                        type = f->getName();
+                        QStringList line;
+                        line << name << type << f->getVariableList();
+                        w.writeLine(line);
+                        line.clear();
+                        line << name << type << f->getVariablesValueList();
+                        w.writeLine(line);
+                    }
+                }
+            }
+        }
     }
 }

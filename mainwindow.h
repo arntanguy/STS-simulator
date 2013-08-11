@@ -32,6 +32,7 @@ public slots:
     void actionSaveAs(bool);
     void actionSave(bool);
     void actionGlobalSettings(bool);
+    void actionExportVariables(bool);
     void slotNewProject();
     void slotOpenProject(QString &fileName);
     void newBaseFunction(bool);

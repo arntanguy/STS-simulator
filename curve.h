@@ -82,6 +82,8 @@ private:
 protected:
     void abstractCopyFromCurve(Curve *curve);
 
+Q_SIGNALS:
+    virtual void rangeUpdated();
 
 private:
     QSharedPointer<Data> mData;

@@ -310,12 +310,20 @@ double* Function::getVariable(const QString &name)
 
 QStringList Function::getVariableList() const
 {
-    varmap_type variables = mParser->GetVar();
-    varmap_type::iterator it = variables.begin();
     QStringList list;
-    while(it++ != variables.end()) {
-        QString val = it->first.c_str();
-        list << val;
+    foreach(QString name, mImplicitVarFactory->getVariableNames()) {
+        if(name != getVariable())
+            list << name;
+    }
+    return list;
+}
+
+QStringList Function::getVariablesValueList() const
+{
+    QStringList list;
+    foreach(QString name, mImplicitVarFactory->getVariableNames()) {
+        if(name != getVariable())
+            list << QString::number(*mImplicitVarFactory->getVariableAddress(name));
     }
     return list;
 }

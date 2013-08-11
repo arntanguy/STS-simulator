@@ -249,6 +249,7 @@ void Curve::attach(PlotWidget *plot)
             curve->setExperimentalData(mExperimentalId, mExperimentalAbscissia, mExperimentalOrdinate);
     }
     mPlots[plot] = curve;
+    connect(this, SIGNAL(rangeUpdated()), plot, SLOT(updateRange()));
 }
 
 void Curve::detach(PlotWidget *plot)

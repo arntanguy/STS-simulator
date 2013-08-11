@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QSharedPointer>
+#include "typedefs.h"
 
 #include "function.h"
 
@@ -16,7 +17,7 @@ public:
 
     void addFunction(const QSharedPointer<Function>& function);
     void removeFunction(const QSharedPointer<Function> &f);
-    QList<QSharedPointer<Function>> getFunctions();
+    QList<FunctionPtr> getFunctions();
 
     /**
      * Pure virtual functions
@@ -39,7 +40,7 @@ private:
     void init();
 
 protected:
-    QList<QSharedPointer<Function>> mFunctions;
+    QList<FunctionPtr> mFunctions;
 };
 
 Q_DECLARE_METATYPE(HierarchicalFunctionPtr);
