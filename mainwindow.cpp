@@ -5,6 +5,7 @@
 #include "plotarea.h"
 #include "globalconfigdialog.h"
 #include "newfunctiondialog.h"
+#include "plotexportdialog.h"
 
 #include "globalsettingssingleton.h"
 #include "projectsingleton.h"
@@ -58,7 +59,6 @@ MainWindow::MainWindow(QWidget *parent) :
     showMaximized();
 
     // Connect Menu Events
-    connect(ui->actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout(bool)));
     connect(ui->actionSave_As, SIGNAL(triggered(bool)), this, SLOT(actionSaveAs(bool)));
     connect(ui->actionSave, SIGNAL(triggered(bool)), this, SLOT(actionSave(bool)));
     connect(ui->actionNew_Project, SIGNAL(triggered(bool)), this, SLOT(actionNewProject(bool)));
@@ -66,8 +66,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionNew_Base_Function, SIGNAL(triggered(bool)), this, SLOT(newBaseFunction(bool)));
     connect(ui->actionEdit_Default_Project_Template, SIGNAL(triggered(bool)), this, SLOT(actionEditDefaultProjectTemplate(bool)));
     connect(ui->actionExport_Variables, SIGNAL(triggered(bool)), this, SLOT(actionExportVariables(bool)));
+    connect(ui->actionExport_Plots, SIGNAL(triggered(bool)), this, SLOT(actionExportPlots(bool)));
 
     connect(ui->actionGlobal_Settings, SIGNAL(triggered(bool)), this, SLOT(actionGlobalSettings(bool)));
+    connect(ui->actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout(bool)));
 }
 
 MainWindow::~MainWindow()
@@ -217,4 +219,14 @@ void MainWindow::actionExportVariables(bool)
 
         Singleton<FunctionsSingleton>::Instance().exportVariables(fileName);
     }
+}
+
+void MainWindow::actionExportPlots(bool)
+{
+    PlotExportDialog dialog(this);
+    dialog.addPlot(mPlotArea1->getPlotWidget());
+    dialog.addPlot(mPlotArea2->getPlotWidget());
+    dialog.addPlot(mPlotArea3->getPlotWidget());
+    dialog.addPlot(mPlotArea4->getPlotWidget());
+    dialog.exec();
 }

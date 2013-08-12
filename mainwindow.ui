@@ -129,6 +129,7 @@
     <addaction name="actionEdit_Default_Project_Template"/>
     <addaction name="separator"/>
     <addaction name="actionExport_Variables"/>
+    <addaction name="actionExport_Plots"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -217,6 +218,11 @@
   <action name="actionExport_Variables">
    <property name="text">
     <string>Export Variables</string>
+   </property>
+  </action>
+  <action name="actionExport_Plots">
+   <property name="text">
+    <string>Export Plots</string>
    </property>
   </action>
  </widget>

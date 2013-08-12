@@ -9,6 +9,7 @@
 #include <qwt_legend.h>
 #include <QSettings>
 #include <QList>
+#include <QPixmap>
 
 class LegendItem;
 class QwtPlotGrid;
@@ -38,6 +39,7 @@ public:
     void setId(unsigned int id);
     unsigned int getId() const;
 
+    QPixmap print();
 private:
     void initZoom();
     void initGrid();

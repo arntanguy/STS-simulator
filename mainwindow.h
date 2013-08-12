@@ -29,6 +29,7 @@ public slots:
     void actionNewProject(bool);
     void actionLoadProject(bool);
     void actionEditDefaultProjectTemplate(bool);
+    void actionExportPlots(bool);
     void actionSaveAs(bool);
     void actionSave(bool);
     void actionGlobalSettings(bool);

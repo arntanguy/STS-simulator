@@ -13,9 +13,11 @@
 #include "globalsettingssingleton.h"
 
 #include <QPushButton>
+#include <QLabel>
 #include <qwt_widget_overlay.h>
 #include <qwt_date_scale_engine.h>
 #include <qwt_plot_grid.h>
+#include <qwt_plot_renderer.h>
 
 /*!
  * \brief PlotWidget::PlotWidget

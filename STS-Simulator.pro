@@ -75,7 +75,8 @@ SOURCES += main.cpp\
     differentialfunctiondialog.cpp \
     functionhelpdialog.cpp \
     qsciencespinbox.cpp \
-    csvfilewriter.cpp
+    csvfilewriter.cpp \
+    plotexportdialog.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -123,7 +124,8 @@ HEADERS  += mainwindow.h \
     differentialfunctiondialog.h \
     functionhelpdialog.h \
     qsciencespinbox.h \
-    csvfilewriter.h
+    csvfilewriter.h \
+    plotexportdialog.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
@@ -139,7 +141,8 @@ FORMS    += mainwindow.ui \
     globalconfigdialog.ui \
     plotcontrolwindow.ui \
     differentialfunctiondialog.ui \
-    functionhelpdialog.ui
+    functionhelpdialog.ui \
+    plotexportdialog.ui
 
 QMAKE_CXXFLAGS += -std=c++0x
 
