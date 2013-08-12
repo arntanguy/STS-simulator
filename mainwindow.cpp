@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    removeToolBar(ui->mainToolBar);
 
     // Creates the first instance of the singleton
     ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();

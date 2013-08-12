@@ -148,5 +148,8 @@ FORMS    += mainwindow.ui \
     functionhelpdialog.ui \
     plotexportdialog.ui
 
-QMAKE_CXXFLAGS += -std=c++0x
+#unix {
+#QMAKE_CXXFLAGS += -std=c++0x
+#}
+
 
