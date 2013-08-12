@@ -45,7 +45,7 @@ Function::Function(int id, QObject *parent) : AbstractFunction(id, parent)
     init();
 }
 
-Function::Function(Function const& toCopy) : Function()
+Function::Function(Function const& toCopy) : AbstractFunction(toCopy)
 {
     // Creates a new variable factory and set default parameters
     init();

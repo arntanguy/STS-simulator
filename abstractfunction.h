@@ -34,6 +34,7 @@ class AbstractFunction : public QObject
     public:
         AbstractFunction(QObject *parent=0);
         AbstractFunction(int id, QObject *parent=0);
+        AbstractFunction(const AbstractFunction&);
 
         void setName(const QString &name);
         QString getName() const;
@@ -86,7 +87,6 @@ Q_SIGNALS:
     protected:
         QString mName;
         QString mVariable;
-        QString mBaseGroup;
         FunctionType mType;
 
         bool mNeedsUpdate;

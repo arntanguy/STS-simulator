@@ -48,7 +48,7 @@ signals:
 public slots:
 
 private:
-    QMap<QString, QSharedPointer<Data>>	mData;
+    QMap< QString, QSharedPointer<Data> >	mData;
 };
 
 #endif // DATASINGLETON_H

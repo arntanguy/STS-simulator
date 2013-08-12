@@ -1,4 +1,4 @@
-#include <math.h>
+#include <cmath>
 
 #include <QDebug>
 #include <QSettings>
@@ -191,7 +191,7 @@ PlotData IntegralFunction::integrate(double min, double max, double resolution, 
                     f->setVariable(f->getVariable(), x);
                     h1 *= f->computeWithParameters(mParameters[f->getId()], mIntegrationVariable, e);
                 }
-                r += deltaX * (h0 + h1)/2.d;
+                r += deltaX * (h0 + h1)/(double)2;
             }
             mData.x.append(x);
             mData.y.append(r);
@@ -222,7 +222,7 @@ PlotData IntegralFunction::integrate(double min, double max, double resolution, 
                     f->setVariable(f->getVariable(), x);
                     h1 *= f->computeWithParameters(mParameters[f->getId()], mIntegrationVariable, e);
                 }
-                r += deltaX * (h0 + h1)/2.d;
+                r += deltaX * (h0 + h1)/(double)2;
             }
             mData.x.append(x);
             mData.y.append(r);

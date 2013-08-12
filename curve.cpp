@@ -159,7 +159,7 @@ void Curve::loadFromSettings()
     // Load pen
     QPen pen;
     pen.setColor(settings->value("color", Qt::black).value<QColor>());
-    pen.setWidth(settings->value("thickness", 0.0d).toDouble());
+    pen.setWidth(settings->value("thickness", 0).toDouble());
     pen.setStyle(static_cast<Qt::PenStyle>(settings->value("style", Qt::SolidLine).toInt()));
     // Apply pen
     setPen(pen);

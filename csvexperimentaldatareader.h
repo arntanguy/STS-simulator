@@ -12,7 +12,7 @@ public:
     virtual ~CSVExperimentalDataReader();
 
     DataColumn<double> getColumn(const QString &column);
-    QMap<QString, DataColumn<double>> getData() const {
+    QMap< QString, DataColumn<double> > getData() const {
                                  return mData;
 };
 
@@ -24,7 +24,7 @@ protected:
     virtual void processLine(const QString &line);
 
 private:
-    QMap<QString, DataColumn<double>> mData;
+    QMap< QString, DataColumn<double> > mData;
 };
 
 #endif // CSVEXPERIMENTALDATAREADER_H

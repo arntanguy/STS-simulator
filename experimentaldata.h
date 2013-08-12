@@ -25,7 +25,7 @@ public:
         return mId;
     }
 private:
-    QMap<QString, DataColumn<double>> mData;
+    QMap< QString, DataColumn<double> > mData;
     QString mId;
 };
 

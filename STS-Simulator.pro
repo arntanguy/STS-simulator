@@ -18,6 +18,10 @@ unix {
     INCLUDEPATH += /usr/local/qwt-6.1.0-rc3/include
     LIBS +=  -L/usr/local/qwt-6.1.0-rc3/lib -lqwt
 }
+win32 {
+    include(C:/Qwt-6.1.0/qwt.prf)
+    CONFIG += console
+}
 
 
 ## To build muparser from included sources

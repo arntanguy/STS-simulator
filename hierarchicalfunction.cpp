@@ -44,7 +44,7 @@ void HierarchicalFunction::removeFunction(const QSharedPointer<Function> &f)
     emit expressionChanged();
 }
 
-QList<QSharedPointer<Function>> HierarchicalFunction::getFunctions()
+QList< QSharedPointer<Function> > HierarchicalFunction::getFunctions()
 {
     return mFunctions;
 }

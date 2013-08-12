@@ -219,8 +219,8 @@ void PlotWidget::loadFromSettings()
 
     mSettings->beginGroup("Plot/"+QString::number(mId)+"/range");
     if(!mSettings->value("autoOrdinate", true).toBool()) {
-        double min = mSettings->value("minOrdinate", -10.d).toDouble();
-        double max = mSettings->value("maxOrdinate", 10.d).toDouble();
+        double min = mSettings->value("minOrdinate", -10).toDouble();
+        double max = mSettings->value("maxOrdinate", 10).toDouble();
         this->setAxisScale(QwtPlot::yLeft, min, max);
     } else {
         this->setAxisAutoScale(QwtPlot::yLeft, true);
@@ -280,8 +280,8 @@ void PlotWidget::updateRange()
     QSettings *mSettings = Singleton<ProjectSingleton>::Instance().getSettings();
     mSettings->beginGroup("Plot/"+QString::number(mId)+"/range");
     if(!mSettings->value("autoOrdinate", true).toBool()) {
-        double min = mSettings->value("minOrdinate", -10.d).toDouble();
-        double max = mSettings->value("maxOrdinate", 10.d).toDouble();
+        double min = mSettings->value("minOrdinate", -10).toDouble();
+        double max = mSettings->value("maxOrdinate", 10).toDouble();
         this->setAxisScale(QwtPlot::yLeft, min, max);
     } else {
         this->setAxisAutoScale(QwtPlot::yLeft, true);

@@ -16,16 +16,20 @@ AbstractFunction::FunctionType operator|(AbstractFunction::FunctionType a, Abstr
 
 AbstractFunction::AbstractFunction(QObject *parent) : QObject(parent)
 {
-    mBaseGroup = "Functions/AbstractFunction/";
     mLinkedCurve = 0;
     setId(mFunctionStaticId);
 }
 
 AbstractFunction::AbstractFunction(int id, QObject *parent) : QObject(parent)
 {
-    mBaseGroup = "Functions/AbstractFunction/";
     mLinkedCurve = 0;
     setId(id);
+}
+
+AbstractFunction(const AbstractFunction&)
+{
+    mLinkedCurve = 0;
+    setId(mFunctionStaticId);
 }
 
 void AbstractFunction::setId(int id)

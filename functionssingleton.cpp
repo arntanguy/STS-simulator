@@ -59,7 +59,7 @@ bool  FunctionsSingleton::removeFunction(const AbstractFunctionPtr &f)
     bool canDelete = false;
     if(f != 0) {
         canDelete = true;
-        QMap<int, QSharedPointer<AbstractFunction>>::iterator it = mFunctions.find(f->getId());
+        QMap< int, QSharedPointer<AbstractFunction> >::iterator it = mFunctions.find(f->getId());
         if(it != mFunctions.end()) {
             if(f != 0) {
                 // Remove base function.
