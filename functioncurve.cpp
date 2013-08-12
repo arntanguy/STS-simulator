@@ -142,7 +142,7 @@ void FunctionCurve::updateData()
         for(int i=0; i<resolution; i++) {
             double yval = 0;
             try {
-                yval = mFunction->compute(xval);
+                yval = mFunction->compute(mFunction->getVariable(), xval);
             } catch(mu::Parser::exception_type &e) {
                 qDebug() << "FunctionCurve::updateData() - ERROR computing function " << mFunction->getName();
                 qDebug() << "Message:  " << e.GetMsg().c_str() << "\n";
