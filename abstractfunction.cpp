@@ -26,7 +26,7 @@ AbstractFunction::AbstractFunction(int id, QObject *parent) : QObject(parent)
     setId(id);
 }
 
-AbstractFunction(const AbstractFunction&)
+AbstractFunction::AbstractFunction(const AbstractFunction&)
 {
     mLinkedCurve = 0;
     setId(mFunctionStaticId);

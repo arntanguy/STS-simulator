@@ -26,7 +26,6 @@ IntegralFunction::~IntegralFunction()
 void IntegralFunction::init()
 {
     setType(mType = Function::Integral);
-    mBaseGroup = "Functions/IntegralFunction/";
     setStepNumber(100);
     setRange(ZeroToV);
     mIntegrationVariable = "e";

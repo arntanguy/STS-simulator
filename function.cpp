@@ -54,7 +54,6 @@ Function::Function(Function const& toCopy) : AbstractFunction(toCopy)
     setExpression(toCopy.getExpression());
     mVariable = toCopy.mVariable;
     mType = toCopy.mType;
-    mBaseGroup = "Functions/Function/";
 }
 
 Function::~Function()
@@ -76,7 +75,6 @@ void Function::init()
     // Defines the variable factory used for implicit variable declaration.
     mParser->SetVarFactory(addVariable, mImplicitVarFactory);
 
-    mBaseGroup = "Functions/Function/";
 }
 
 /**

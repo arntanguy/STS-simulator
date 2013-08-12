@@ -26,7 +26,6 @@ HierarchicalFunction::~HierarchicalFunction()
 void HierarchicalFunction::init()
 {
     setType(Function::HierarchicalFunction);
-    mBaseGroup = "Functions/HierarchicalFunction/";
 }
 
 void HierarchicalFunction::addFunction(const QSharedPointer<Function>& function)

@@ -154,7 +154,7 @@ void PlotControlWindow::initFromConfig()
     mSettings->endGroup();
 
     mSettings->beginGroup("Plot/"+QString::number(mPlotId)+"/info");
-    ui->titleLineEdit->setText(mSettings->value("title", QString::number(mPlotId)).toString());
+    ui->titleLineEdit->setText(mSettings->value("title", mPlot->title().text()).toString());
     ui->horizontalAxisLineEdit->setText(mSettings->value("horizontalAxisName", "X Axis").toString());
     ui->verticalAxisLineEdit->setText(mSettings->value("verticalAxisName", "X Axis").toString());
     mSettings->endGroup();
