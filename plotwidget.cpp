@@ -273,8 +273,24 @@ void PlotWidget::replot()
  **/
 void PlotWidget::updateRange()
 {
-    qDebug () << "UPDATE RANGE";
-    mPlotZoomer->setZoomBase();
+    mPlotZoomer->zoom(0);
+    QwtPlot::update();
+    QSettings *mSettings = Singleton<ProjectSingleton>::Instance().getSettings();
+    mSettings->beginGroup("Plot/"+QString::number(mId)+"/range");
+    if(!mSettings->value("autoOrdinate", true).toBool()) {
+        double min = mSettings->value("minOrdinate", -10.d).toDouble();
+        double max = mSettings->value("maxOrdinate", 10.d).toDouble();
+        this->setAxisScale(QwtPlot::yLeft, min, max);
+    } else {
+        this->setAxisAutoScale(QwtPlot::yLeft, true);
+    }
+    mSettings->endGroup();
+
+    this->setAxisAutoScale(QwtPlot::xBottom, true);
+    if(mPlotZoomer->zoomRectIndex() == 0) {
+        qDebug () << "UPDATE RANGE";
+        mPlotZoomer->setZoomBase();
+    }
 }
 
 void PlotWidget::plotZoomed()

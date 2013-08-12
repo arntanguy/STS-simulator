@@ -79,7 +79,8 @@ void GlobalSettingsSingleton::setResolution(double resolution)
     }
 }
 
-void GlobalSettingsSingleton::setIntegralResolution(double resolution) {
+void GlobalSettingsSingleton::setIntegralResolution(double resolution)
+{
     if(mIntegralResolution != resolution) {
         mIntegralResolution = resolution;
         mUpdateIntegral = true;
