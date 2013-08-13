@@ -66,18 +66,25 @@ void ValueSelector::loadFromConfig()
     setRange(settings->value("min", 0).toDouble(), settings->value("max", 100).toDouble(), settings->value("step", 0).toDouble());
     ui->variableValue->setValue(settings->value("value", 0).toDouble());
     ui->variableSlider->setValue(ui->variableValue->value());
+    //XXX: hack
+    //variableValueChanged(ui->variableValue->value());
     settings->endGroup();
 }
 
-// ===================== SLOTS ===========================
+void ValueSelector::updateVar()
+{
+    *mVariable = ui->variableValue->value();
+}
+
 void ValueSelector::variableValueChanged(double val)
 {
     qDebug() << "value changed";
     *mVariable = val;
 
-    emit valueChanged(val);
+    //emit valueChanged(val);
     emit valueChanged(mName, val);
 }
+// ===================== SLOTS ===========================
 
 void ValueSelector::sliderReleased()
 {

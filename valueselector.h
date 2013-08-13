@@ -24,8 +24,9 @@ public:
 
     void setRange(double, double, double);
 
-public Q_SLOTS:
     void variableValueChanged(double);
+    void updateVar();
+public Q_SLOTS:
     void sliderValueChanged(double);
     void configureSlider(const Slider *);
     void sliderReleased();

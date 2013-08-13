@@ -22,6 +22,11 @@ public:
     void setFunction(const FunctionPtr& f);
     void save();
 
+    void saveIfNeeded() {
+        if(mNeedsSaving)
+            save();
+        mNeedsSaving = false;
+    }
 signals:
     void valueChanged(QString var, double val);
 
@@ -37,6 +42,8 @@ private:
 private:
     FunctionPtr mFunction;
     Ui::FunctionVariablesWidget *ui;
+
+    bool mNeedsSaving;
 
     QHBoxLayout *mVariabesLayout;
     QList<ValueSelector *> mValueSelectors;

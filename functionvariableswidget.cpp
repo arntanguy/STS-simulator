@@ -22,6 +22,7 @@ FunctionVariablesWidget::FunctionVariablesWidget(QWidget *parent) :
 
 void FunctionVariablesWidget::init()
 {
+    mNeedsSaving = false;
     mVariabesLayout = new QHBoxLayout();
     QWidget *w = new QWidget(this);
     w->setLayout(mVariabesLayout);
@@ -44,6 +45,7 @@ void FunctionVariablesWidget::useFunction(const FunctionPtr &f)
 
 
 // =============================== SLOTS ==================================
+//XXX: function values are restored using this instead of Function::setExpression!!!
 void FunctionVariablesWidget::updateVariables()
 {
     HelperFunctions::clearLayout(mVariabesLayout);
@@ -59,12 +61,17 @@ void FunctionVariablesWidget::updateVariables()
                 connect(valueSelector, SIGNAL(valueChanged(QString,double)), this, SLOT(variableValueChanged(QString, double)));
                 connect(valueSelector, SIGNAL(configureAllSliders(double, double, double)), this, SLOT(configureAllSliders(double, double, double)));
                 valueSelector->loadFromConfig();
+                // XXX: hack to restore values to function
+                valueSelector->updateVar();
                 // Creates a widget to control it
                 mVariabesLayout->addWidget(valueSelector);
                 mValueSelectors.append(valueSelector);
             }
         }
     }
+    // XXX: call a more apropriate signal
+    variableValueChanged("", 0);
+    mNeedsSaving = true;
 }
 
 void FunctionVariablesWidget::variableValueChanged(QString var, double val)
@@ -72,7 +79,7 @@ void FunctionVariablesWidget::variableValueChanged(QString var, double val)
     qDebug() << "Variable value changed: " << var << ": " << val;
     if(mFunction != 0) {
         mFunction->updateLinkedCurve(var, val, true);
-        emit valueChanged(var, val);
+        //emit valueChanged(var, val);
     }
 }
 

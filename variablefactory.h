@@ -31,6 +31,10 @@ public:
 
     void deleteOthers(const QStringList& varsInUse);
 
+    QMap<QString, double> saveValues() const {
+        return mVariables;
+    }
+
 private:
     /**
      * Careful, encapsulation will be broken by myParser: the values will be directly manipulated.

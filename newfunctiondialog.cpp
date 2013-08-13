@@ -75,6 +75,7 @@ bool NewFunctionDialog::setupFunction()
             //}
             singleton->addFunction(mFunction);
             setFunction(mFunction);
+            ui->variablesWidget->save();
         }
         return true;
     } else {
@@ -119,6 +120,8 @@ void NewFunctionDialog::pageChanged(int index)
 {
     if(index == 1) {
         setupFunction();
+    } else {
+        ui->variablesWidget->saveIfNeeded();
     }
 }
 
