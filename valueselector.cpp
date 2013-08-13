@@ -56,6 +56,7 @@ void ValueSelector::save()
     settings->setValue("max", ui->variableSlider->upperBound());
     settings->setValue("step", ui->variableSlider->scaleStepSize());
     settings->endGroup();
+    settings->sync();
 }
 
 void ValueSelector::loadFromConfig()

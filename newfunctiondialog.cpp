@@ -109,7 +109,8 @@ void NewFunctionDialog::accept()
     } else {
         mMayClose = true;
     }
-    if(mMayClose && setupFunction()) {
+    if(mMayClose && mFunction != 0) {
+        qDebug() << "SAVE";
         ui->variablesWidget->save();
         emit accepted();
         QDialog::accept();
