@@ -42,6 +42,7 @@ void DifferentialFunctionDialog::init()
     mEdit = false;
     connect(ui->functionSelect, SIGNAL(clicked()), this, SLOT(selectFunction()));
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
 void DifferentialFunctionDialog::setFunction(const DifferentialFunctionPtr& f)
