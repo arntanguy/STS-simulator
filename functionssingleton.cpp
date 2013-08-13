@@ -101,8 +101,8 @@ bool  FunctionsSingleton::removeFunction(const AbstractFunctionPtr &f)
         }
         if(canDelete) {
             qDebug() << "deleting function " << f->getName();
-            mFunctions.erase(it);
             Singleton<CurveSingleton>::Instance().removeCurve(f->getCurve());
+            mFunctions.erase(it);
         }
     }
     return canDelete;
