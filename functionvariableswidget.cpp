@@ -57,6 +57,7 @@ void FunctionVariablesWidget::updateVariables()
                 qDebug() << "FunctionVariablesWidget::useFunction() - variable " << var << " detected";
                 ValueSelector *valueSelector = new ValueSelector(var, mFunction, this);
                 connect(valueSelector, SIGNAL(valueChanged(QString,double)), this, SLOT(variableValueChanged(QString, double)));
+                connect(valueSelector, SIGNAL(configureAllSliders(double, double, double)), this, SLOT(configureAllSliders(double, double, double)));
                 valueSelector->loadFromConfig();
                 // Creates a widget to control it
                 mVariabesLayout->addWidget(valueSelector);
@@ -88,4 +89,11 @@ void FunctionVariablesWidget::save()
 
     settings->endGroup();
     settings->sync();
+}
+
+void FunctionVariablesWidget::configureAllSliders(double min, double max, double step)
+{
+    foreach(ValueSelector *s, mValueSelectors) {
+        s->setRange(min, max, step);
+    }
 }

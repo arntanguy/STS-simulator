@@ -28,6 +28,7 @@ signals:
 public slots:
     void variableValueChanged(QString var, double val);
     void updateVariables();
+    void configureAllSliders(double, double, double);
 
 private:
     void init();

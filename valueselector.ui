@@ -53,7 +53,7 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QwtSlider" name="variableSlider" native="true"/>
+    <widget class="Slider" name="variableSlider" native="true"/>
    </item>
   </layout>
  </widget>
@@ -64,9 +64,10 @@
    <header location="global">qsciencespinbox.h</header>
   </customwidget>
   <customwidget>
-   <class>QwtSlider</class>
+   <class>Slider</class>
    <extends>QWidget</extends>
-   <header>qwt_slider.h</header>
+   <header location="global">slider.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

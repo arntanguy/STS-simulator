@@ -13,8 +13,8 @@
 
 FunctionSelectionDialog::FunctionSelectionDialog(QWidget *parent, AbstractFunction::FunctionType flags) :
     QDialog(parent),
-    mFlags(flags),
-    ui(new Ui::FunctionSelectionDialog)
+    ui(new Ui::FunctionSelectionDialog),
+    mFlags(flags)
 {
     ui->setupUi(this);
     init();

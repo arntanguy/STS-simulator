@@ -9,6 +9,7 @@ class ValueSelector;
 }
 class QSettings;
 class Function;
+class Slider;
 
 class ValueSelector : public QWidget
 {
@@ -21,14 +22,19 @@ public:
     void save();
     void loadFromConfig();
 
+    void setRange(double, double, double);
+
 public Q_SLOTS:
-    void sliderRangeChanged(double, double);
     void variableValueChanged(double);
     void sliderValueChanged(double);
+    void configureSlider(const Slider *);
+    void sliderReleased();
+    void valueEntered();
 
 Q_SIGNALS:
     void valueChanged(double);
     void valueChanged(const QString &, double);
+    void configureAllSliders(double, double, double);
 
 private:
     Ui::ValueSelector *ui;
