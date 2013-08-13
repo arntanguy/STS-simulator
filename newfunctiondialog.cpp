@@ -6,6 +6,7 @@
 #include "globalsettingssingleton.h"
 #include "functionhelpdialog.h"
 
+#include <QKeyEvent>
 #include <QMessageBox>
 #include <QDebug>
 
@@ -92,6 +93,15 @@ void NewFunctionDialog::setFunction(const FunctionPtr &f)
     ui->functionExpression->setText(mFunction->getExpression());
     ui->variablesWidget->setFunction(mFunction);
     mEditFunction = true;
+}
+
+
+/// =================== VIRTUAL REIMPLEMENTED ===========================
+void NewFunctionDialog::keyPressEvent(QKeyEvent *evt)
+{
+    if(evt->key() == Qt::Key_Enter || evt->key() == Qt::Key_Return)
+        return;
+    QDialog::keyPressEvent(evt);
 }
 
 // =============================== SLOTS ==================================

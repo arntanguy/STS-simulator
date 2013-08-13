@@ -9,6 +9,7 @@ namespace Ui {
 class NewFunctionDialog;
 }
 
+class QKeyEvent;
 class Function;
 class GlobalSettingsSingleton;
 
@@ -29,6 +30,9 @@ public:
 private:
     void init();
     bool setupFunction();
+
+protected:
+    virtual void keyPressEvent(QKeyEvent *evt);
 
 Q_SIGNALS:
     void accepted();
