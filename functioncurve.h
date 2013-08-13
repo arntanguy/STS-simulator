@@ -29,6 +29,13 @@ public:
 
     virtual void copyFromCurve(Curve *curve);
 
+    QVector<double> getXData() {
+        return mXData;
+    }
+    QVector<double> getYData() {
+        return mYData;
+    }
+
 public Q_SLOTS:
     void initGlobalSettings();
 

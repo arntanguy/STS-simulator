@@ -82,7 +82,8 @@ SOURCES += main.cpp\
     csvfilewriter.cpp \
     plotexportdialog.cpp \
     sliderconfigdialog.cpp \
-    slider.cpp
+    slider.cpp \
+    exportcurvesdialog.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -133,7 +134,8 @@ HEADERS  += mainwindow.h \
     csvfilewriter.h \
     plotexportdialog.h \
     sliderconfigdialog.h \
-    slider.h
+    slider.h \
+    exportcurvesdialog.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
@@ -151,7 +153,8 @@ FORMS    += mainwindow.ui \
     differentialfunctiondialog.ui \
     functionhelpdialog.ui \
     plotexportdialog.ui \
-    sliderconfigdialog.ui
+    sliderconfigdialog.ui \
+    exportcurvesdialog.ui
 
 #unix {
 #QMAKE_CXXFLAGS += -std=c++0x
