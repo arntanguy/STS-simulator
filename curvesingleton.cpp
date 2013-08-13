@@ -28,9 +28,11 @@ void CurveSingleton::removeCurveFromId(int id)
 }
 void CurveSingleton::removeCurve(Curve *curve)
 {
-    curve->detachFromAll();
-    mCurves.remove(curve->getId());
-    delete curve;
+    if(curve != 0) {
+        curve->detachFromAll();
+        mCurves.remove(curve->getId());
+        delete curve;
+    }
 }
 
 void CurveSingleton::clear()
