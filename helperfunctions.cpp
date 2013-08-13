@@ -15,7 +15,7 @@ QStandardItem* HelperFunctions::createFunctionItem(AbstractFunctionPtr f, bool c
 {
     QStandardItem *item= new QStandardItem();
     item->setCheckable( checkable );
-    item->setCheckState(Qt::Unchecked);
+    //item->setCheckState(Qt::Unchecked);
     item->setEditable(false);
     item->setText(f->getName());
     item->setData(QVariant::fromValue(f), Qt::UserRole);

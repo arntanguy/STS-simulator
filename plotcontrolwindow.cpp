@@ -517,9 +517,9 @@ void PlotControlWindow::newFunctionAvailable()
                 int subItemIndex = 0;
                 foreach(AbstractFunctionPtr af, hf->getFunctions()) {
                     QStandardItem * item = HelperFunctions::createFunctionItem(af, false);
-                    item->setCheckState(Qt::Unchecked);
+                    //item->setCheckState(Qt::Unchecked);
                     item->setCheckable(false);
-                    if(af->isDisplayed(mPlotId)) item->setCheckState(Qt::Checked);
+                    //if(af->isDisplayed(mPlotId)) item->setCheckState(Qt::Checked);
                     parentItem->setChild(subItemIndex++,item);
                 }
             }
