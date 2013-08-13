@@ -26,6 +26,7 @@ private:
     Ui::NewCurveDialog *ui;
     Curve *mCurve;
     bool mMayClose;
+    bool mEdit;
 
 public Q_SLOTS:
     void accept();

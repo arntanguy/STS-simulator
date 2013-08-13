@@ -62,6 +62,7 @@ void NewCurveDialog::init()
 
 void NewCurveDialog::loadFromCurve(Curve *curve)
 {
+    mEdit = true;
     mCurve = curve;
     if(mCurve != 0) {
         ui->curveName->setText(mCurve->title().text());
@@ -103,7 +104,7 @@ void NewCurveDialog::accept()
 {
     qDebug() << "NewCurveDialog::accept()";
     QString title = ui->curveName->text();
-    if(Singleton<CurveSingleton>::Instance().curveNameExists(title)) {
+    if(!mEdit && Singleton<CurveSingleton>::Instance().curveNameExists(title)) {
         QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Name Conflict"), tr("Another curve with the name ") + title + tr(" already exists. Do you want to modify the name?"), QMessageBox::Yes|QMessageBox::No);
         if(reply == QMessageBox::Yes) {
             mMayClose = false;

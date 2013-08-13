@@ -543,24 +543,26 @@ void PlotControlWindow::deleteFunction()
     QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->functionView->model());
     QModelIndex index = ui->functionView->currentIndex();
     AbstractFunctionPtr f = index.data(Qt::UserRole).value<AbstractFunctionPtr>();
-    FunctionsSingleton *s = &Singleton<FunctionsSingleton>::Instance();
-    if(s->removeFunction(f)) {
-        mFunctionItems.removeOne(model->itemFromIndex(index));
-        model->removeRow(index.row());
-        // XXX: More appropriate call?
-        newFunctionAvailable();
-    } else {
-        /**
-         * If the function is linked to another one, and deletion would cause it to break the hierarchical structure
-         * Don't delete and show the appropriate error
-         **/
-        if(f->getType() == AbstractFunction::HierarchicalFunction) {
-            IntegralFunctionPtr attachedInt = s->isSubFunctionOfIntegral(f);
-            if(attachedInt != 0) {
-                QMessageBox::critical(this, tr("Deletion error"), tr("The function ") + f->getName() + tr(" is attached to the integral ")+attachedInt->getName()+tr(". You need to detach it from the integral first"));
-            }
+    if( f != 0) {
+        FunctionsSingleton *s = &Singleton<FunctionsSingleton>::Instance();
+        if(s->removeFunction(f)) {
+            mFunctionItems.removeOne(model->itemFromIndex(index));
+            model->removeRow(index.row());
+            // XXX: More appropriate call?
+            newFunctionAvailable();
         } else {
+            /**
+             * If the function is linked to another one, and deletion would cause it to break the hierarchical structure
+             * Don't delete and show the appropriate error
+             **/
+            if(f->getType() == AbstractFunction::HierarchicalFunction) {
+                IntegralFunctionPtr attachedInt = s->isSubFunctionOfIntegral(f);
+                if(attachedInt != 0) {
+                    QMessageBox::critical(this, tr("Deletion error"), tr("The function ") + f->getName() + tr(" is attached to the integral ")+attachedInt->getName()+tr(". You need to detach it from the integral first"));
+                }
+            } else {
                 QMessageBox::critical(this, tr("Unknown deletion error"), tr("The function ") + f->getName() +tr(" could not be deleted."));
+            }
         }
     }
 }
@@ -615,14 +617,16 @@ void PlotControlWindow::editFunctionCurve()
 {
     QModelIndex index = ui->functionView->currentIndex();
     AbstractFunctionPtr f = index.data(Qt::UserRole).value<AbstractFunctionPtr>();
-    FunctionCurve *curve = f->getCurve();
-    if(curve == 0) {
-        curve = f->createCurve();
-    }
-    NewCurveDialog dialog;
-    dialog.loadFromCurve(curve);
-    if(dialog.exec() == QDialog::Accepted) {
-        f->setCurve(curve);
+    if(f != 0) {
+        FunctionCurve *curve = f->getCurve();
+        if(curve == 0) {
+            curve = f->createCurve();
+        }
+        NewCurveDialog dialog;
+        dialog.loadFromCurve(curve);
+        if(dialog.exec() == QDialog::Accepted) {
+            f->setCurve(curve);
+        }
     }
 }
 
@@ -630,8 +634,6 @@ void PlotControlWindow::deleteSelectedCurve()
 {
     qDebug() << "PlotControlWindow::deleteCurve()";
 
-    // XXX: More appropriate call?
-    newFunctionAvailable();
     QStandardItemModel *model = dynamic_cast<QStandardItemModel*>(ui->curveSelection->model());
     QModelIndex index = ui->curveSelection->currentIndex();
     Curve *c = index.data(Qt::UserRole).value<Curve *>();
@@ -640,6 +642,9 @@ void PlotControlWindow::deleteSelectedCurve()
         Singleton<CurveSingleton>::Instance().removeCurve(c);
         model->removeRow(index.row());
     }
+
+    // XXX: More appropriate call?
+    newFunctionAvailable();
 }
 
 
