@@ -63,4 +63,6 @@ private:
     int mResolution;
 };
 
+Q_DECLARE_METATYPE(FunctionCurve*)
+
 #endif // FUNCTIONCURVE_H

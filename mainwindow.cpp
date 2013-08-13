@@ -12,6 +12,7 @@
 #include "plotsingleton.h"
 #include "globalconstants.h"
 #include "functionssingleton.h"
+#include "exportcurvesdialog.h"
 
 
 #include <QCloseEvent>
@@ -68,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionEdit_Default_Project_Template, SIGNAL(triggered(bool)), this, SLOT(actionEditDefaultProjectTemplate(bool)));
     connect(ui->actionExport_Variables, SIGNAL(triggered(bool)), this, SLOT(actionExportVariables(bool)));
     connect(ui->actionExport_Plots, SIGNAL(triggered(bool)), this, SLOT(actionExportPlots(bool)));
+    connect(ui->actionExport_Function_Data, SIGNAL(triggered(bool)), this, SLOT(actionExportFunctionData(bool)));
 
     connect(ui->actionGlobal_Settings, SIGNAL(triggered(bool)), this, SLOT(actionGlobalSettings(bool)));
     connect(ui->actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout(bool)));
@@ -229,5 +231,11 @@ void MainWindow::actionExportPlots(bool)
     dialog.addPlot(mPlotArea2->getPlotWidget());
     dialog.addPlot(mPlotArea3->getPlotWidget());
     dialog.addPlot(mPlotArea4->getPlotWidget());
+    dialog.exec();
+}
+
+void MainWindow::actionExportFunctionData(bool)
+{
+    ExportCurvesDialog dialog(this);
     dialog.exec();
 }

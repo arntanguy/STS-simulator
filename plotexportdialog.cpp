@@ -22,6 +22,7 @@ PlotExportDialog::PlotExportDialog(QWidget *parent) :
 
     connect(ui->browseButton, SIGNAL(clicked()), this, SLOT(chooseFile()));
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(rejected()));
 }
 
 void PlotExportDialog::addPlot(QwtPlot *p)

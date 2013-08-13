@@ -18,6 +18,11 @@ public:
 private:
     void init();
     void initCurves();
+
+public Q_SLOTS:
+    void chooseFile();
+    void accept();
+
 private:
     Ui::ExportCurvesDialog *ui;
 };
