@@ -76,6 +76,13 @@ public:
 
     // XXX: should be hidden (friend?)
     static void resetStaticId();
+
+    QString getExperimentalAbscissia() const {
+        return mExperimentalAbscissia;
+    }
+    QString getExperimentalOrdinate() const {
+        return mExperimentalOrdinate;
+    }
 private:
     void init();
     void setId(int id);

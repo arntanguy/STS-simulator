@@ -82,8 +82,10 @@ void NewCurveDialog::loadFromCurve(Curve *curve)
                 ui->dataLoaded->setCurrentIndex(index);
             }
 
-            QString abscissia = settings->value("abscissia", "").toString();
-            QString ordinate = settings->value("ordinate", "").toString();
+            //QString abscissia = settings->value("abscissia", "").toString();
+            //QString ordinate = settings->value("ordinate", "").toString();
+            QString abscissia = mCurve->getExperimentalAbscissia();
+            QString ordinate = mCurve->getExperimentalOrdinate();
             index = ui->dataAbscissia->findData(abscissia, Qt::UserRole);
             qDebug() << "abscissia: "<< abscissia << " at index " << index;
             if(index != -1) {
