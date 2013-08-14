@@ -56,6 +56,7 @@ void Curve::init()
     mType = Unknown;
     setRenderHint( QwtPlotItem::RenderAntialiased );
     setMinMax(0, 1);
+    initGlobalSettings();
     GlobalSettingsSingleton *singleton = &Singleton<GlobalSettingsSingleton>::Instance();
     connect(singleton, SIGNAL(curveSettingsUpdated()), this, SLOT(initGlobalSettings()));
 }
@@ -141,6 +142,7 @@ void Curve::updateExperimentalData()
             p->replot();
             qDebug() << "update range";
             p->updateRange();
+            p->replot();
         } else {
             qDebug() << "Curve::updateExperimentalData() - NULL CURVE";
         }

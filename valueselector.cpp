@@ -115,6 +115,7 @@ void ValueSelector::setRange(double min, double max, double step)
     ui->variableSlider->setScaleStepSize(step);
     ui->variableSlider->setLowerBound(min, value);
     ui->variableSlider->setUpperBound(max, value);
+    ui->variableSlider->setValue(ui->variableValue->value());
 }
 
 void ValueSelector::configureSlider(const Slider *s)

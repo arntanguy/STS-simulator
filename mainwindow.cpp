@@ -150,10 +150,9 @@ void MainWindow::actionSaveAs(bool)
     // Save currently used directory for later use
     if(!fileName.isNull()) {
         mSettings.setValue("Save/projectDirectory", QFileInfo(fileName).absoluteDir().absolutePath());
+        ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
+        singleton->saveAs(fileName);
     }
-
-    ProjectSingleton *singleton = &Singleton<ProjectSingleton>::Instance();
-    singleton->saveAs(fileName);
 }
 
 void MainWindow::actionEditDefaultProjectTemplate(bool)
