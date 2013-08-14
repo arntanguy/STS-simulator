@@ -7,6 +7,8 @@ namespace Ui {
 class ExportCurvesDialog;
 }
 
+class QStandardItem;
+
 class ExportCurvesDialog : public QDialog
 {
     Q_OBJECT
@@ -18,6 +20,7 @@ public:
 private:
     void init();
     void initCurves();
+    bool exportData(const QString&);
 
 public Q_SLOTS:
     void chooseFile();
@@ -25,6 +28,8 @@ public Q_SLOTS:
 
 private:
     Ui::ExportCurvesDialog *ui;
+
+    QList<QStandardItem *> mItems;
 };
 
 #endif // EXPORTCURVESDIALOG_H

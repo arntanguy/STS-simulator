@@ -28,3 +28,7 @@ void PlotSingleton::save()
 {
     qDebug() << "Saving all plots (do nothing)...";
 }
+
+QList<unsigned int> PlotSingleton::getPlotIds() const {
+    return mPlots.keys();
+}

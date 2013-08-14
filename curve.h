@@ -72,6 +72,7 @@ public:
     void detachFromAll();
     bool isAttached(PlotWidget *plot) const;
     bool isAttached(unsigned int plotId) const;
+    bool isAttached() const;
 
     // XXX: should be hidden (friend?)
     static void resetStaticId();

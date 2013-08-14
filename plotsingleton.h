@@ -2,6 +2,7 @@
 #define PLOTSINGLETON_H
 
 #include <QMap>
+#include <QList>
 #include "singleton.h"
 
 class PlotWidget;
@@ -16,6 +17,8 @@ public:
 
     void loadFromSettings();
     void save();
+
+    QList<unsigned int> getPlotIds() const;
 
 private:
     QMap<unsigned int, PlotWidget *> mPlots;

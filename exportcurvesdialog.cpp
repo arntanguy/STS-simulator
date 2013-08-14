@@ -5,6 +5,7 @@
 #include "abstractfunction.h"
 #include "functioncurve.h"
 #include "typedefs.h"
+#include "csvfilewriter.h"
 
 #include <QStandardItemModel>
 #include <QSettings>
@@ -30,7 +31,7 @@ void ExportCurvesDialog::init()
 
     connect(ui->browseButton, SIGNAL(clicked()), this, SLOT(chooseFile()));
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(rejected()));
+    connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
 void ExportCurvesDialog::initCurves()
@@ -41,6 +42,7 @@ void ExportCurvesDialog::initCurves()
     model->clear();
     //mCurveItems.clear();
 
+    mItems.clear();
     FunctionsSingleton *s = &Singleton<FunctionsSingleton>::Instance();
     QList<int> ids = s->getFunctionIds();
     int j=0;
@@ -48,7 +50,7 @@ void ExportCurvesDialog::initCurves()
         AbstractFunctionPtr f = s->getFunctionById(id);
         if(f != 0 && (f->getType() == AbstractFunction::HierarchicalFunction || f->getType() == AbstractFunction::Differential || f->getType() == AbstractFunction::Integral)) {
             FunctionCurve *c=f->getCurve();
-            if(c != 0) {
+            if(c != 0 && c->isAttached()) {
                 QStandardItem *Item = new QStandardItem();
                 Item->setCheckable( true );
                 Item->setEditable(false);
@@ -56,6 +58,7 @@ void ExportCurvesDialog::initCurves()
                 Item->setData(QVariant::fromValue(c), Qt::UserRole);
      //           mCurveItems.append(Item);
                 model->setItem( j++, Item );
+                mItems.append(Item);
             }
         }
     }
@@ -79,7 +82,67 @@ void ExportCurvesDialog::chooseFile()
     }
 }
 
+bool ExportCurvesDialog::exportData(const QString &file)
+{
+    QStringList name;
+    name << "V";
+    QVector< QVector<double> > xData;
+    QVector< QVector<double> > yData;
+
+    foreach(QStandardItem *item, mItems) {
+        //manageFunctionCurveFromItem(item);
+        FunctionCurve *c =  item->data(Qt::UserRole).value<FunctionCurve *>();
+        if(c != 0) {
+            if(item->isCheckable() && item->checkState() == Qt::Checked) {
+                xData.append(c->getXData());
+                yData.append(c->getYData());
+                name.append(c->title().text());
+            }
+        }
+    }
+
+    int size = xData.size();
+    if(size > 0) {
+        int nPoints = xData[0].size();
+        qDebug() << "size >0";
+        // Check if correct number of points
+        for(int i=0; i<xData.size(); i++) {
+            if(xData[i].size() != nPoints && yData[i].size() != nPoints) {
+                return false;
+            }
+        }
+        qDebug() << "correct number";
+        // Check if x points are the same
+        for(int i=0; i<xData.size(); i++) {
+                for(int j=0; j<xData[i].size(); j++) {
+                    if(xData[i][j] != xData[0][j]) {
+                        return false;
+                    }
+                }
+        }
+        qDebug() << "same x";
+        QVector<double> xx = xData[0];
+        QVector<QStringList> exportD(nPoints);
+        // Create export lines
+        for(int i=0; i<xx.size(); i++) {
+            exportD[i] << QString::number(xx[i]);
+            for(int j=0; j<yData.size(); j++) {
+                exportD[i] << QString::number(yData[j][i]);
+            }
+        }
+
+        CSVFileWriter w("\t");
+        if(w.openFile(file)) {
+            w.writeLine(name);
+            foreach(QStringList l, exportD) {
+                w.writeLine(l);
+            }
+        }
+    }
+}
+
 void ExportCurvesDialog::accept()
 {
+    exportData(ui->filePath->text());
     QDialog::accept();
 }

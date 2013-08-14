@@ -114,18 +114,23 @@ PlotData DifferentialFunction::differentiate()
         PlotData data = mFunction->getData();
         if(data.size() >2) {
             derivate.reserve(data.size());
+            double h = 0;
             for(int i=0; i<data.size()-1; i++) {
                 double x0 = data.x[i];
                 double x1 = data.x[i+1];
                 double y0 = data.y[i];
                 double y1 = data.y[i+1];
-                double h = x1-x0;
+                h = x1-x0;
                 if(h != 0) {
                     double d = (y1-y0)/h;
                     derivate.x.append(x0);
                     derivate.y.append(d);
                 }
             }
+            // Use previous value as last value
+            double lastValue = derivate.y[derivate.size() - 1];
+            derivate.x.append(data.x[data.size() -1]);
+            derivate.y.append(lastValue);
         } else {
             qDebug() << "DifferentialCurve::updateData() -- ERROR: invalid data set: size < 2";
         }

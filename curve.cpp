@@ -289,6 +289,13 @@ bool Curve::isAttached(unsigned int plotId) const
     return isAttached(Singleton<PlotSingleton>::Instance().getPlot(plotId));
 }
 
+bool Curve::isAttached() const
+{
+    foreach(unsigned int id, Singleton<PlotSingleton>::Instance().getPlotIds()) {
+        if(isAttached(id)) return true;
+    }
+    return false;
+}
 
 
 
