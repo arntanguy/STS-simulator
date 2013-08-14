@@ -25,7 +25,7 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QDoubleSpinBox" name="max">
+    <widget class="QScienceSpinBox" name="max">
      <property name="minimum">
       <double>-1000000000.000000000000000</double>
      </property>
@@ -42,7 +42,7 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QDoubleSpinBox" name="step">
+    <widget class="QScienceSpinBox" name="step">
      <property name="maximum">
       <double>1000000000.000000000000000</double>
      </property>
@@ -63,7 +63,7 @@
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QDoubleSpinBox" name="min"/>
+    <widget class="QScienceSpinBox" name="min"/>
    </item>
    <item row="3" column="0">
     <widget class="QCheckBox" name="applyToAll">
@@ -74,6 +74,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QScienceSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header location="global">qsciencespinbox.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
