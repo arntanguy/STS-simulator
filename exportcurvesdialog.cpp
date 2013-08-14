@@ -11,6 +11,7 @@
 #include <QSettings>
 #include <QFileInfo>
 #include <QFileDialog>
+#include <QMessageBox>
 
 ExportCurvesDialog::ExportCurvesDialog(QWidget *parent) :
     QDialog(parent),
@@ -108,6 +109,7 @@ bool ExportCurvesDialog::exportData(const QString &file)
         // Check if correct number of points
         for(int i=0; i<xData.size(); i++) {
             if(xData[i].size() != nPoints && yData[i].size() != nPoints) {
+                qDebug() << "SIZE MISMATCH! " << xData[i].size() << " != " << nPoints;
                 return false;
             }
         }
@@ -116,6 +118,7 @@ bool ExportCurvesDialog::exportData(const QString &file)
         for(int i=0; i<xData.size(); i++) {
                 for(int j=0; j<xData[i].size(); j++) {
                     if(xData[i][j] != xData[0][j]) {
+                        qDebug() << "X Mismatch: " << xData[i][j] << " != "<< xData[0][j];
                         return false;
                     }
                 }
@@ -143,6 +146,8 @@ bool ExportCurvesDialog::exportData(const QString &file)
 
 void ExportCurvesDialog::accept()
 {
-    exportData(ui->filePath->text());
+    if(!exportData(ui->filePath->text())) {
+        QMessageBox::critical(this, tr("Export Function Data"), tr("Function data could not be exported!"));
+    }
     QDialog::accept();
 }
