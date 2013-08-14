@@ -4,6 +4,7 @@
 #include "datasingleton.h"
 #include "plotsingleton.h"
 #include "plotwidget.h"
+#include "globalsettingssingleton.h"
 
 int Curve::mCurveStaticId = 0;
 
@@ -55,6 +56,17 @@ void Curve::init()
     mType = Unknown;
     setRenderHint( QwtPlotItem::RenderAntialiased );
     setMinMax(0, 1);
+    GlobalSettingsSingleton *singleton = &Singleton<GlobalSettingsSingleton>::Instance();
+    connect(singleton, SIGNAL(curveSettingsUpdated()), this, SLOT(initGlobalSettings()));
+}
+
+void Curve::initGlobalSettings()
+{
+    qDebug() << "=========== Curve::INIT GLOBAL SETTINGS ==============";
+    GlobalSettingsSingleton *singleton = &Singleton<GlobalSettingsSingleton>::Instance();
+    setMinMax(singleton->getMin(), singleton->getMax());
+    updateExperimentalData();
+    //setResolution(singleton->getResolution());
 }
 
 void Curve::setId(int id)
@@ -86,14 +98,15 @@ void Curve::setExperimentalData(const QString &experimentId, const QString &absc
                 yVal.append(fullY[i]);
             }
         }
+        //qDebug() << "data: "<<xVal;
         setSamples(xVal, yVal);
-        foreach(Curve *curve, mPlots) {
-            if(curve != 0) {
-                curve->setExperimentalData(experimentId, abscissiaColumnName, ordinateColumnName);
+        foreach(PlotWidget *p, mPlots.keys()) {
+            Curve *c=mPlots[p];
+            if(c != 0) {
+                c->setExperimentalData(experimentId, abscissiaColumnName, ordinateColumnName);
             } else {
                 qDebug() << "Curve::setExperimentalData() - NULL CURVE";
             }
-
         }
     }
 }
@@ -113,7 +126,6 @@ void Curve::setMinMax(double min, double max)
             } else {
                 qDebug() << "Curve::setMinMax() - NULL CURVE";
             }
-
         }
     }
 
@@ -122,9 +134,13 @@ void Curve::setMinMax(double min, double max)
 void Curve::updateExperimentalData()
 {
     setExperimentalData(mExperimentalId, mExperimentalAbscissia, mExperimentalOrdinate);
-    foreach(Curve *curve, mPlots) {
+    foreach(PlotWidget *p, mPlots.keys()) {
+        Curve *curve = mPlots[p];
         if(curve != 0) {
             curve->setExperimentalData(mExperimentalId, mExperimentalAbscissia, mExperimentalOrdinate);
+            p->replot();
+            qDebug() << "update range";
+            p->updateRange();
         } else {
             qDebug() << "Curve::updateExperimentalData() - NULL CURVE";
         }

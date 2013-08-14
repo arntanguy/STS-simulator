@@ -86,6 +86,9 @@ protected:
 Q_SIGNALS:
     virtual void rangeUpdated();
 
+public Q_SLOTS:
+    void initGlobalSettings();
+
 private:
     QSharedPointer<Data> mData;
     QString mExperimentalAbscissia, mExperimentalOrdinate;
