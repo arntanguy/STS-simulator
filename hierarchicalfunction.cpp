@@ -39,6 +39,11 @@ void HierarchicalFunction::addFunction(const QSharedPointer<Function>& function)
 
 void HierarchicalFunction::removeFunction(const QSharedPointer<Function> &f)
 {
+    Singleton<FunctionsSingleton>::Instance().removeFunction(f);
+        //Singleton<CurveSingleton>::Instance().removeCurveFromId(c->getId());
+        //// XXX: should it be removed? yeah
+        //c->detach();
+    //}
     mFunctions.removeAll(f);
     emit expressionChanged();
 }
