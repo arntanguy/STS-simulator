@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="functionsPage">
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -192,10 +192,10 @@
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QDoubleSpinBox" name="maxOrdinateRange"/>
+            <widget class="QScienceSpinBox" name="maxOrdinateRange"/>
            </item>
            <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="minOrdinateRange"/>
+            <widget class="QScienceSpinBox" name="minOrdinateRange"/>
            </item>
           </layout>
          </widget>
@@ -457,6 +457,13 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QScienceSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header location="global">qsciencespinbox.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -2,6 +2,8 @@
 
 #include <limits>
 
+#define DEFAULT_DECIMALS 4
+
 //#define QSPINBOX_QSBDEBUG
 #ifdef QSPINBOX_QSBDEBUG
 #  define QSBDEBUG qDebug
@@ -25,6 +27,7 @@ QScienceSpinBox::QScienceSpinBox(QWidget * parent)
     v->setDecimals(1000); // (standard anyway)
     v->setNotation(QDoubleValidator::ScientificNotation);
     this->lineEdit()->setValidator(v);
+    setDecimals(DEFAULT_DECIMALS);
 }
 
 void QScienceSpinBox::initLocalValues(QWidget *parent)
