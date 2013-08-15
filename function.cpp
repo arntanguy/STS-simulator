@@ -198,7 +198,8 @@ double Function::computeWithParameters(const QString &parameters, const QString 
     }
 
     // Define x value in function parser
-    mParser->DefineVar(variable.toStdString(), &x);
+    setVariable(variable, x);
+    //mParser->DefineVar(variable.toStdString(), &x);
 
     /**
      * Create a parser for the parameters
@@ -291,19 +292,25 @@ void Function::setVariable(const QString &name, double value)
         *var = value;
     } else {
         // XXX: handle error
-        //qDebug() << "Function::setVariable() - var " << name << " doesn't exist, creating it";
+        qDebug() << "Function::setVariable() - var " << name << " doesn't exist, evaluating to find missing variables";
+        mParser->Eval();
+        //double *val = new double;
+        //*val = value;
+
+        //mParser->DefineVar(name.toStdString(), val);
     }
 }
 
 double* Function::getVariable(const QString &name)
 {
-    varmap_type variables = mParser->GetVar();
-    varmap_type::iterator it = variables.find(name.toStdString());
-    if(it != variables.end()) {
-        return it->second;
-    } else {
-        return 0;
-    }
+    //varmap_type variables = mParser->GetVar();
+    //varmap_type::iterator it = variables.find(name.toStdString());
+    //if(it != variables.end()) {
+    //    return it->second;
+    //} else {
+    //    return 0;
+    //}
+    return mImplicitVarFactory->getVariableAddress(name);
 }
 
 QStringList Function::getVariableList() const

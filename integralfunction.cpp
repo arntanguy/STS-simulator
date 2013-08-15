@@ -138,46 +138,59 @@ QString IntegralFunction::getParameters(const FunctionPtr &f) const
 // From 0 to V
 // h: stepsize
 // V: max value
-double IntegralFunction::integrateZeroToV(double h, double V)
-{
-    // Integration variable
-    double e = 0;
-
-    double result = 0;
-    while(e <= V) {
-        double area=1;
-        foreach(FunctionPtr f, mFunctions) {
-            area *= h*f->compute(e);
-        }
-        result += area;
-        e += h;
-    }
-    return result;
-}
-
-// XXX: StepNumber is ignored for now
-PlotData IntegralFunction::integrate(double min, double max, double resolution, double stepNumber)
-{
-    qDebug() << "IntegralFunction::integrate(min: "<<min<<", max: "<<max<<", resolution: "<<resolution;
-    mData.clear();
-    mData.reserve(resolution);
-
-    // Integration step
-    double h = std::abs(max-min)/resolution;
-    /**
-     * Compute integral from 0 to max (V)
-     * it will compute I(0.00), I(0.001), I(0.O02)....,I(100),...I(max)
-     **/
-    int i = 0;
-    double V = 0;
-    while(V <= max) {
-        mData.x.append(V);
-        mData.y.append(integrateZeroToV(h, V));
-        V += h;
-        i++;
-    }
-    return mData;
-}
+//double IntegralFunction::integrateZeroToV(double h, double V)
+//{
+//    // Integration variable
+//    double e = 0;
+//
+//    double result = 0;
+//    while(e <= V) {
+//        double area=1;
+//        foreach(FunctionPtr f, mFunctions) {
+//            //area *= h*f->compute(e);
+//            area *= h*f->computeWithParameters(mParameters[f->getId()], "e", e);
+//        }
+//        result += area;
+//        e += h;
+//    }
+//    return result;
+//}
+//
+//// XXX: StepNumber is ignored for now
+//PlotData IntegralFunction::integrate(double min, double max, double resolution, double stepNumber)
+//{
+//    qDebug() << "IntegralFunction::integrate(min: "<<min<<", max: "<<max<<", resolution: "<<resolution;
+//    foreach(FunctionPtr f, mFunctions) {
+//        qDebug() << "Function parameter for "<<f->getName() << ": " <<mParameters[f->getId()];
+//    }
+//
+//    mData.clear();
+//    mData.reserve(resolution);
+//
+//    // Integration step
+//    double h = std::abs(max-min)/resolution;
+//    /**
+//     * Compute integral from 0 to max (V)
+//     * it will compute I(0.00), I(0.001), I(0.O02)....,I(100),...I(max)
+//     **/
+//    int i = 0;
+//    double V = 0;
+//    while(V <= max) {
+//        static int i = 0;
+//        if(i>=2) {
+//        mData.x.append(V);
+//        mData.y.append(integrateZeroToV(h, V));
+//        }
+//        i++;
+//        //if(mFunctions.size()>0) {
+//        //    qDebug() << mFunctions[0]->computeWithParameters("e-V", "e", V);
+//        //    mData.y.append(mFunctions[0]->computeWithParameters("e-V", "e", V));
+//        //}
+//        V += h;
+//        i++;
+//    }
+//    return mData;
+//}
 
 /**
  * Integrate by using optimized midpoint method
@@ -192,93 +205,75 @@ PlotData IntegralFunction::integrate(double min, double max, double resolution, 
  *  Number of step for each integral computation (i.e, there will be stepNumber steps
  *  between min, and min + (max-min)/resolution
  **/
-//PlotData IntegralFunction::integrate(double min, double max, double resolution, double stepNumber)
-//{
-//    qDebug() << "IntegralFunction::integrate(min: "<<min<<", max: "<<max<<", resolution: "<<resolution<<", stepNumber: "<<stepNumber<<")";
-//    qDebug() << "Expression : " << getExpression();
-//
-//    if(resolution == 0 || stepNumber == 0) {
-//        qDebug() << "FATAL ERROR: NULL STEP NUMBER";
-//        exit(1);
-//    }
-//
-//    double step = std::abs(max-min)/resolution;
-//    double deltaX = (double)(std::abs(max-min)/resolution)/(double)stepNumber;
-//    qDebug() << "IntegralFunction::integrate() -- step size deltaX="<<deltaX;
-//
-//    mData.clear();
-//    mData.reserve(resolution);
-//
-//    if(mRange == ZeroToV) {
-//        qDebug() << "IntegralFunction::integrate() -- 0 to V";
-//        double r = 0;
-//        min = 0;
-//        double x = min;
-//        double e = min;
-//
-//        // Set upper limit (V)
-//        for(; x<max; x += step) {
-//            double h1 = 1;
-//            // XXX: Allow for other operations than *
-//            foreach(FunctionPtr f, mFunctions) {
-//                f->setVariable(f->getVariable(), x);
-//                h1 *= f->computeWithParameters(mParameters[f->getId()], mIntegrationVariable, e);
-//            }
-//            while(e < x) {
-//                // Avoid recomputing h0 needlessly.
-//                // See midpoint graph for explanation
-//                double h0 = h1;
-//
-//                e += deltaX;
-//                h1 = 1;
-//                foreach(FunctionPtr f, mFunctions) {
-//                    f->setVariable(f->getVariable(), x);
-//                    h1 *= f->computeWithParameters(mParameters[f->getId()], mIntegrationVariable, e);
-//                }
-//                r += deltaX * (h0 + h1)/(double)2;
-//            }
-//            mData.x.append(x);
-//            mData.y.append(r);
-//        }
-//    } else if(mRange == MinusVToZero) {
-//        qDebug() << "IntegralFunction::integrate() -- 0 to -V";
-//        double r = 0;
-//        max = 0;
-//        double x = max;
-//        double e = max;
-//
-//        // Set upper limit (V)
-//        for(; x>min; x -= step) {
-//            double h1 = 1;
-//            // XXX: Allow for other operations than *
-//            foreach(FunctionPtr f, mFunctions) {
-//                f->setVariable(f->getVariable(), x);
-//                h1 *= f->computeWithParameters(mParameters[f->getId()], mIntegrationVariable, e);
-//            }
-//            while(e > x) {
-//                // Avoid recomputing h0 needlessly.
-//                // See midpoint graph for explanation
-//                double h0 = h1;
-//
-//                e -= deltaX;
-//                h1 = 1;
-//                foreach(FunctionPtr f, mFunctions) {
-//                    f->setVariable(f->getVariable(), x);
-//                    h1 *= f->computeWithParameters(mParameters[f->getId()], mIntegrationVariable, e);
-//                }
-//                r += deltaX * (h0 + h1)/(double)2;
-//            }
-//            mData.x.append(x);
-//            mData.y.append(r);
-//        }
-//    } else {
-//        // XXX:
-//        qDebug() << "IntegralFunction::integrate() - INVALID RANGE: supported range are 0 to V and 0 to -V";
-//    }
-//    qDebug() << "IntegralFunction::integrate() - emitting finish signal integralDataComputed()";
-//    emit integralDataComputed();
-//    return mData;
-//}
+PlotData IntegralFunction::integrate(double min, double max, double resolution, double stepNumber)
+{
+    qDebug() << "IntegralFunction::integrate(min: "<<min<<", max: "<<max<<", resolution: "<<resolution<<", stepNumber: "<<stepNumber<<")";
+    qDebug() << "Expression : " << getExpression();
+
+    if(resolution == 0 || stepNumber == 0) {
+        qDebug() << "FATAL ERROR: NULL STEP NUMBER";
+        exit(1);
+    }
+
+    double step = std::abs(max-min)/resolution;
+    double deltaX = (double)(std::abs(max-min)/resolution)/(double)stepNumber;
+    qDebug() << "IntegralFunction::integrate() -- step size deltaX="<<deltaX;
+
+    mData.clear();
+    mData.reserve(resolution);
+
+    if(mRange == ZeroToV) {
+        qDebug() << "IntegralFunction::integrate() -- 0 to V";
+        double r = 0;
+        min = 0;
+        double V = min;
+        double e = min;
+
+        // Set upper limit (V)
+        for(; V<max; V += step) {
+            while(e <= V) {
+                double area = 1;
+                e += deltaX;
+                area = 1;
+                foreach(FunctionPtr f, mFunctions) {
+                    f->setVariable(f->getVariable(), V);
+                    area *= f->computeWithParameters(mParameters[f->getId()], mIntegrationVariable, e);
+                }
+                r += deltaX * area;
+            }
+            mData.x.append(V);
+            mData.y.append(r);
+        }
+    } else if(mRange == MinusVToZero) {
+        qDebug() << "IntegralFunction::integrate() -- 0 to -V";
+        double r = 0;
+        max = 0;
+        double V = max;
+        double e = max;
+
+        // Set upper limit (V)
+        for(; V>min; V -= step) {
+            while(e >= V) {
+                double area = 1;
+
+                e -= deltaX;
+                foreach(FunctionPtr f, mFunctions) {
+                    f->setVariable(f->getVariable(), V);
+                    area *= f->computeWithParameters(mParameters[f->getId()], mIntegrationVariable, e);
+                }
+                r += deltaX * area;
+            }
+            mData.x.append(V);
+            mData.y.append(r);
+        }
+    } else {
+        // XXX:
+        qDebug() << "IntegralFunction::integrate() - INVALID RANGE: supported range are 0 to V and 0 to -V";
+    }
+    qDebug() << "IntegralFunction::integrate() - emitting finish signal integralDataComputed()";
+    emit integralDataComputed();
+    return mData;
+}
 
 double IntegralFunction::compute(double x)
 {
