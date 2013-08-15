@@ -7,6 +7,7 @@
 
 #include <QMap>
 #include "plotdata.h"
+#include "experimentalfunction.h"
 
 namespace mu
 {
@@ -14,16 +15,6 @@ namespace mu
 }
 
 template<int I> double dz(double x);
-
-typedef double (*FuncPtr)(double);
-
-struct ExperimentalFunction
-{
-    QString name;
-    // Address of function
-    FuncPtr function;
-    PlotData data;
-};
 
 /***
  * WARNING: read this carefully
@@ -44,16 +35,18 @@ class ExperimentalFunctionSingleton
 public:
     ExperimentalFunctionSingleton();
 
-    bool linkData(int dzIndex, PlotData data);
+    bool linkData(int dzIndex, const QString &experimentId, const QString &abscissiaColumnName, const QString &ordinateColumnName);
     bool hasLinkedData(int dzIndex);
 
     double interpolate(int dzIndex, double x);
 
     void defineParserFunctions(mu::Parser *parser);
 
+    QMap<int, ExperimentalFunction *> getAllFunctions() {
+        return mFunctions;
+    }
+
 private:
-    typedef double (*FuncPtr)(double);
-    //double (*mPtrArray[NUMBER_OF_DZ])(double);
     QMap<int, ExperimentalFunction *> mFunctions;
 };
 

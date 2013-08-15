@@ -9,6 +9,8 @@
 #include <QStandardItem>
 #include <QDebug>
 #include <QSettings>
+#include "experimentalfunctionsingleton.h"
+#include "experimentalfunction.h"
 #include "experimentaldata.h"
 #include "typedefs.h"
 
@@ -20,6 +22,7 @@ ExperimentalFunctionDialog::ExperimentalFunctionDialog(QWidget *parent) :
     init();
 
     connect(ui->dataLoadButton, SIGNAL(clicked()), this, SLOT(loadDataFile()));
+    connect(ui->functionSelection, SIGNAL(currentIndexChanged(int)), this, SLOT(functionChanged(int)));
     connect(ui->dataLoaded, SIGNAL(currentIndexChanged(int)), this, SLOT(dataFileChanged(int)));
 }
 
@@ -30,7 +33,15 @@ ExperimentalFunctionDialog::~ExperimentalFunctionDialog()
 
 void ExperimentalFunctionDialog::init()
 {
+    mSelectedFunction = 0;
+
     ui->dataTable->setEditTriggers(QTableView::NoEditTriggers);
+
+    // Load the available DZ function slots (defined at compile time)
+    QMap<int, ExperimentalFunction *> functions = Singleton<ExperimentalFunctionSingleton>::Instance().getAllFunctions();
+    foreach(int id, functions.keys()) {
+        ui->functionSelection->addItem(functions[id]->getName(), QVariant::fromValue(functions[id]));
+    }
 
     //Loads the data first
     QStringList dataPaths = Singleton<DataSingleton>::Instance().getExperimentalDataPaths();
@@ -41,6 +52,12 @@ void ExperimentalFunctionDialog::init()
         }
         dataFileChanged(ui->dataLoaded->currentIndex());
     }
+}
+
+void ExperimentalFunctionDialog::functionChanged(int index)
+{
+    ExperimentalFunction *f = ui->functionSelection->itemData(index, Qt::UserRole).value<ExperimentalFunction *>();
+    mSelectedFunction = f;
 }
 
 void ExperimentalFunctionDialog::dataFileChanged(int index)
@@ -54,12 +71,17 @@ void ExperimentalFunctionDialog::dataFileChanged(int index)
     if(data != 0) {
         QStringList columns = data->getAvailableColumns();
         foreach(QString column, columns) {
-            ui->data->addItem(column, column);
+            ui->dataAbscissia->addItem(column, column);
+            ui->dataOrdinate->addItem(column, column);
+        }
+        int ind = ui->dataAbscissia->findData("V");
+        if(ind != -1) {
+            ui->dataAbscissia->setCurrentIndex(ind);
         }
         // Autoset abscissia to DZ1 column
-        int ind = ui->data->findData("DZ1");
+        ind = ui->dataOrdinate->findData("DZ1");
         if(ind != -1) {
-            ui->data->setCurrentIndex(ind);
+            ui->dataOrdinate->setCurrentIndex(ind);
         }
 
         // ========= Fill in the values in the tablewidget
@@ -82,32 +104,24 @@ void ExperimentalFunctionDialog::dataFileChanged(int index)
 void ExperimentalFunctionDialog::accept()
 {
     qDebug() << "NewCurveDialog::accept()";
-    bool mayClose = false;
-    QString title = ui->name->text();
-    if(!mEdit /*&& Singleton<FunctionsSingleton>::Instance().functionNameExists(title)*/) {
-        QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Name Conflict"), tr("Another curve with the name ") + title + tr(" already exists. Do you want to modify the name?"), QMessageBox::Yes|QMessageBox::No);
-        if(reply == QMessageBox::Yes) {
-            mayClose = false;
-            return;
-        } else {
-            mayClose = true;
-        }
+    if(mSelectedFunction == 0) {
+        QMessageBox::information(this, tr("No Function selected"), tr("You need to select a function first."));
     } else {
-        mayClose = true;
-    }
+        // Set function data
+        QString fileName = ui->dataLoaded->itemData(ui->dataLoaded->currentIndex()).toString();
+        if(!fileName.isEmpty()) {
+                QString abscissia = ui->dataAbscissia->itemData(ui->dataAbscissia->currentIndex()).toString();
+                QString ordinate = ui->dataOrdinate->itemData(ui->dataOrdinate->currentIndex()).toString();
+                if(!abscissia.isEmpty() && !ordinate.isEmpty()) {
+                    qDebug() << "NewCurveDialog::accept(): setting experimental curve data ("<<abscissia<<", "<<ordinate<<")" << endl;
+                    if(mSelectedFunction->setData(fileName, abscissia, ordinate)) {
 
-    // Set function data
-    QString fileName = ui->dataLoaded->itemData(ui->dataLoaded->currentIndex()).toString();
-    if(!fileName.isEmpty()) {
-            QString data = ui->data->itemData(ui->data->currentIndex()).toString();
-            if(!data.isEmpty()) {
-                // Set function data
-            }
-    }
+                    }
+                }
+        }
 
-
-    if(mayClose)
-        QDialog::accept();
+            QDialog::accept();
+        }
 }
 
 void ExperimentalFunctionDialog::loadDataFile()

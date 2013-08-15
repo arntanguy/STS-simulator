@@ -9,9 +9,13 @@
 template<int I> double dz(double x) {
     ExperimentalFunctionSingleton *s = &Singleton<ExperimentalFunctionSingleton>::Instance();
     if(s->hasLinkedData(I)) {
-        qDebug() << "dz:: Function "<<I<<" has linked data";
+        //qDebug() << "dz:: Function "<<I<<" has linked data";
+        return s->interpolate(I, x);
+    } else {
+        qDebug() << "DZ - id "<<I<<" has NO DATA!";
+        return 0;
     }
-    return s->interpolate(I, x);
+
 }
 
 ExperimentalFunctionSingleton::ExperimentalFunctionSingleton()
@@ -19,45 +23,45 @@ ExperimentalFunctionSingleton::ExperimentalFunctionSingleton()
     for(int i=0; i<NUMBER_OF_DZ; i++) {
         mFunctions[i] = new ExperimentalFunction();
     }
-    mFunctions[0]->name = "DZ0";
-    mFunctions[0]->function = dz<0>;
+    mFunctions[0]->setName("DZ0");
+    mFunctions[0]->setFunction(dz<0>);
 
-    mFunctions[1]->name = "DZ1";
-    mFunctions[1]->function = dz<1>;
+    mFunctions[1]->setName("DZ1");
+    mFunctions[1]->setFunction(dz<1>);
 
-    mFunctions[2]->name = "DZ2";
-    mFunctions[2]->function = dz<2>;
+    mFunctions[2]->setName("DZ2");
+    mFunctions[2]->setFunction(dz<2>);
 
-    mFunctions[3]->name = "DZ3";
-    mFunctions[3]->function = dz<3>;
+    mFunctions[3]->setName("DZ3");
+    mFunctions[3]->setFunction(dz<3>);
 
-    mFunctions[4]->name = "DZ4";
-    mFunctions[4]->function = dz<4>;
+    mFunctions[4]->setName("DZ4");
+    mFunctions[4]->setFunction(dz<4>);
 
-    mFunctions[5]->name = "DZ5";
-    mFunctions[5]->function = dz<5>;
+    mFunctions[5]->setName("DZ5");
+    mFunctions[5]->setFunction(dz<5>);
 
-    mFunctions[6]->name = "DZ6";
-    mFunctions[6]->function = dz<6>;
+    mFunctions[6]->setName("DZ6");
+    mFunctions[6]->setFunction(dz<6>);
 
-    mFunctions[7]->name = "DZ7";
-    mFunctions[7]->function = dz<7>;
+    mFunctions[7]->setName("DZ7");
+    mFunctions[7]->setFunction(dz<7>);
 
-    mFunctions[8]->name = "DZ8";
-    mFunctions[8]->function = dz<8>;
+    mFunctions[8]->setName("DZ8");
+    mFunctions[8]->setFunction(dz<8>);
 
-    mFunctions[9]->name = "DZ9";
-    mFunctions[9]->function = dz<9>;
+    mFunctions[9]->setName("DZ9");
+    mFunctions[9]->setFunction(dz<9>);
 }
 
 
-bool ExperimentalFunctionSingleton::linkData(int dzIndex, PlotData data)
+bool ExperimentalFunctionSingleton::linkData(int dzIndex, const QString &experimentId, const QString &abscissiaColumnName, const QString &ordinateColumnName)
 {
     if(dzIndex >= NUMBER_OF_DZ) {
         qDebug() << "ExperimentalFunctionSingleton::linkData -- function doesn't exist for index " << dzIndex;
         return false;
     }
-    mFunctions[dzIndex]->data = data;
+    mFunctions[dzIndex]->setData(experimentId, abscissiaColumnName, ordinateColumnName);
     return true;
 }
 
@@ -67,14 +71,14 @@ bool ExperimentalFunctionSingleton::hasLinkedData(int dzIndex)
         qDebug() << "ExperimentalFunctionSingleton::hasLinkedData -- function doesn't exist for index " << dzIndex;
         return false;
     }
-    return (mFunctions[dzIndex]->data.size() == 0);
+    return (mFunctions[dzIndex]->hasData());
 }
 
 void ExperimentalFunctionSingleton::defineParserFunctions(mu::Parser *parser)
 {
     for(int i=0; i<NUMBER_OF_DZ; i++) {
-        FuncPtr fun = mFunctions[i]->function;
-        parser->DefineFun(mFunctions[i]->name.toStdString(), fun);
+        FuncPtr fun = mFunctions[i]->getFunction();
+        parser->DefineFun(mFunctions[i]->getName().toStdString(), fun);
     }
 }
 
@@ -83,5 +87,12 @@ void ExperimentalFunctionSingleton::defineParserFunctions(mu::Parser *parser)
 // XXX: not done!
 double ExperimentalFunctionSingleton::interpolate(int dzIndex, double x)
 {
-    return x;
+    if(dzIndex >= NUMBER_OF_DZ) {
+        qDebug() << "ExperimentalFunctionSingleton::interpolate -- function doesn't exist for index " << dzIndex;
+        return false;
+    }
+    ExperimentalFunction *f = mFunctions[dzIndex];
+    if(f->hasData()) {
+        return f->interpolate(x);
+    }
 }

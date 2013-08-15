@@ -7,6 +7,8 @@ namespace Ui {
 class ExperimentalFunctionDialog;
 }
 
+class ExperimentalFunction;
+
 class ExperimentalFunctionDialog : public QDialog
 {
     Q_OBJECT
@@ -22,11 +24,12 @@ public Q_SLOTS:
     void accept();
     void loadDataFile();
     void dataFileChanged(int);
+    void functionChanged(int);
 
 private:
     Ui::ExperimentalFunctionDialog *ui;
 
-    bool mEdit;
+    ExperimentalFunction *mSelectedFunction;
 };
 
 #endif // EXPERIMENTALFUNCTIONDIALOG_H

@@ -23,8 +23,8 @@ int main(int argc, char *argv[])
     p->SetExpr("DZ1(10)");
     qDebug() << p->Eval();
 
-    //MainWindow w;
-    //w.show();
+    MainWindow w;
+    w.show();
 //    UnitTest test;
 //    test.testAll();
 
