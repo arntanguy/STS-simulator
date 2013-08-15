@@ -52,12 +52,36 @@ void ExperimentalFunctionDialog::init()
         }
         dataFileChanged(ui->dataLoaded->currentIndex());
     }
+    functionChanged(0);
+}
+
+void ExperimentalFunctionDialog::loadFromFunction(ExperimentalFunction *f)
+{
+    if(f->hasData()) {
+        int ind = ui->dataLoaded->findData(f->getExperimentalFiles());
+        if(ind != -1) {
+            ui->dataAbscissia->setCurrentIndex(ind);
+        }
+
+        QString abs = f->getExperimentalAbscissia();
+        ind = ui->dataAbscissia->findData(abs);
+        if(ind != -1) {
+            ui->dataAbscissia->setCurrentIndex(ind);
+        }
+        // Autoset abscissia to DZ1 column
+        QString ord =  f->getExperimentalOrdinate();
+        ind = ui->dataOrdinate->findData(ord);
+        if(ind != -1) {
+            ui->dataOrdinate->setCurrentIndex(ind);
+        }
+    }
 }
 
 void ExperimentalFunctionDialog::functionChanged(int index)
 {
     ExperimentalFunction *f = ui->functionSelection->itemData(index, Qt::UserRole).value<ExperimentalFunction *>();
     mSelectedFunction = f;
+    loadFromFunction(f);
 }
 
 void ExperimentalFunctionDialog::dataFileChanged(int index)

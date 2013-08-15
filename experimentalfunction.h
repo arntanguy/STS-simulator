@@ -39,17 +39,25 @@ class ExperimentalFunction : public QObject
         void loadFromSettings(QSettings *settings);
         void save(QSettings *settings);
 
+        QString getExperimentalFiles() const {
+            return mExperimentalFiles;
+        }
+        QString getExperimentalOrdinate() const {
+            return mExperimentalOrdinate;
+        }
+        QString getExperimentalAbscissia() const {
+            return mExperimentalAbscissia;
+        }
     private:
         QString mName;
         // Address of function
         FuncPtr mFunction;
 
-    public:
         bool mDataAvailable;
         PlotData mData;
 
-    QString mExperimentalAbscissia, mExperimentalOrdinate;
-    QString mExperimentalFiles;
+        QString mExperimentalAbscissia, mExperimentalOrdinate;
+        QString mExperimentalFiles;
 };
 
 Q_DECLARE_METATYPE(ExperimentalFunction *);

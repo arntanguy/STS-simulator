@@ -17,6 +17,8 @@ public:
     explicit ExperimentalFunctionDialog(QWidget *parent = 0);
     ~ExperimentalFunctionDialog();
 
+    void loadFromFunction(ExperimentalFunction *f);
+
 private:
     void init();
 
