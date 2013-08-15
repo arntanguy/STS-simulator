@@ -56,6 +56,7 @@ Q_SIGNALS:
 private:
     void init();
     void setFunctionsIntegrationVariable();
+    double integrateZeroToV(double h, double V);
 
 private:
     double mStepNumber;
