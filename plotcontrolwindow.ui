@@ -391,7 +391,7 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="0">
+           <item row="4" column="0">
             <widget class="QPushButton" name="functionEditCurve">
              <property name="text">
               <string>Edit Curve</string>
@@ -412,20 +412,13 @@
              </property>
             </widget>
            </item>
-           <item row="6" column="0">
+           <item row="5" column="0">
             <widget class="QPushButton" name="functionDelete">
              <property name="enabled">
               <bool>true</bool>
              </property>
              <property name="text">
               <string>Delete</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QPushButton" name="functionExperimentalNew">
-             <property name="text">
-              <string>New Experimental Function</string>
              </property>
             </widget>
            </item>

@@ -151,6 +151,7 @@
      <string>Function</string>
     </property>
     <addaction name="actionNew_Base_Function"/>
+    <addaction name="actionDZ_Functions"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuFunction"/>
@@ -229,6 +230,11 @@
   <action name="actionExport_Function_Data">
    <property name="text">
     <string>Export Function Data</string>
+   </property>
+  </action>
+  <action name="actionDZ_Functions">
+   <property name="text">
+    <string>DZ Functions</string>
    </property>
   </action>
  </widget>

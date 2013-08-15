@@ -31,6 +31,7 @@ public slots:
     void actionEditDefaultProjectTemplate(bool);
     void actionExportPlots(bool);
     void actionExportFunctionData(bool);
+    void actionDZFunctions(bool);
     void actionSaveAs(bool);
     void actionSave(bool);
     void actionGlobalSettings(bool);

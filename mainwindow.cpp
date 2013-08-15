@@ -6,6 +6,7 @@
 #include "globalconfigdialog.h"
 #include "newfunctiondialog.h"
 #include "plotexportdialog.h"
+#include "experimentalfunctiondialog.h"
 
 #include "globalsettingssingleton.h"
 #include "projectsingleton.h"
@@ -70,6 +71,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionExport_Variables, SIGNAL(triggered(bool)), this, SLOT(actionExportVariables(bool)));
     connect(ui->actionExport_Plots, SIGNAL(triggered(bool)), this, SLOT(actionExportPlots(bool)));
     connect(ui->actionExport_Function_Data, SIGNAL(triggered(bool)), this, SLOT(actionExportFunctionData(bool)));
+    connect(ui->actionDZ_Functions, SIGNAL(triggered(bool)), this, SLOT(actionDZFunctions(bool)));
 
     connect(ui->actionGlobal_Settings, SIGNAL(triggered(bool)), this, SLOT(actionGlobalSettings(bool)));
     connect(ui->actionAbout, SIGNAL(triggered(bool)), this, SLOT(actionAbout(bool)));
@@ -237,4 +239,12 @@ void MainWindow::actionExportFunctionData(bool)
 {
     ExportCurvesDialog dialog(this);
     dialog.exec();
+}
+
+void MainWindow::actionDZFunctions(bool)
+{
+    ExperimentalFunctionDialog dialog(this);
+    if(dialog.exec() == QDialog::Accepted) {
+        //XXX: update functions?
+    }
 }

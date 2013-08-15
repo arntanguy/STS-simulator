@@ -48,7 +48,6 @@ public slots:
     void newIntegralFunction();
     void newDifferentialFunction();
     void newFunctionAvailable();
-    void newExperimentalFunction();
     void editFunction(const QModelIndex &);
     void editFunctionCurve();
     void deleteFunction();

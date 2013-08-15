@@ -23,7 +23,6 @@
 
 #include "newcurvedialog.h"
 #include "newfunctiondialog.h"
-#include "experimentalfunctiondialog.h"
 #include "plotarea.h"
 #include "plotwidget.h"
 
@@ -64,7 +63,6 @@ PlotControlWindow::PlotControlWindow(const int plotId, PlotArea *parent) :
     connect(ui->functionHierarchicalNew, SIGNAL(clicked()), this, SLOT(newHierarachicalFunction()));
     connect(ui->functionIntegralNew, SIGNAL(clicked()), this, SLOT(newIntegralFunction()));
     connect(ui->functionDifferentialNew, SIGNAL(clicked()), this, SLOT(newDifferentialFunction()));
-    connect(ui->functionExperimentalNew, SIGNAL(clicked()), this, SLOT(newExperimentalFunction()));
     connect(ui->functionView, SIGNAL(doubleClicked ( const QModelIndex &)), this, SLOT(editFunction(const QModelIndex &)));
     connect(ui->functionDelete, SIGNAL(clicked()), this, SLOT(deleteFunction()));
     connect(ui->functionEditCurve, SIGNAL(clicked()), this, SLOT(editFunctionCurve()));
@@ -465,14 +463,6 @@ void PlotControlWindow::newDifferentialFunction()
 {
     DifferentialFunctionDialog dialog(this);
     if(dialog.exec() == QDialog::Accepted)	{
-        newFunctionAvailable();
-    }
-}
-
-void PlotControlWindow::newExperimentalFunction()
-{
-    ExperimentalFunctionDialog dialog(this);
-    if(dialog.exec() == QDialog::Accepted) {
         newFunctionAvailable();
     }
 }
