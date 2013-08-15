@@ -1,6 +1,8 @@
 #include "helperfunctions.h"
 #include "abstractfunction.h"
 #include "muParser.h"
+#include "experimentalfunctionsingleton.h"
+#include "singleton.h"
 
 #include <QStandardItem>
 #include <QLayout>
@@ -44,5 +46,6 @@ mu::Parser* HelperFunctions::createParser()
 {
     mu::Parser* parser = new mu::Parser();
     parser->DefineConst("_pi", (double)3.14159);
+    Singleton<ExperimentalFunctionSingleton>::Instance().defineParserFunctions(parser);
     return parser;
 }

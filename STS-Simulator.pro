@@ -84,7 +84,8 @@ SOURCES += main.cpp\
     sliderconfigdialog.cpp \
     slider.cpp \
     exportcurvesdialog.cpp \
-    experimentalfunctiondialog.cpp
+    experimentalfunctiondialog.cpp \
+    experimentalfunctionsingleton.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -137,7 +138,8 @@ HEADERS  += mainwindow.h \
     sliderconfigdialog.h \
     slider.h \
     exportcurvesdialog.h \
-    experimentalfunctiondialog.h
+    experimentalfunctiondialog.h \
+    experimentalfunctionsingleton.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \

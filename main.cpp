@@ -8,6 +8,7 @@
 #include "function.h"
 #include "hierarchicalfunction.h"
 #include "unittest.h"
+#include  "helperfunctions.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,9 +19,12 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("crann.tcd.ie");
     QCoreApplication::setApplicationName("STS-Simulator");
 
-    MainWindow w;
-    w.show();
+    mu::Parser *p = HelperFunctions::createParser();
+    p->SetExpr("DZ1(10)");
+    qDebug() << p->Eval();
 
+    //MainWindow w;
+    //w.show();
 //    UnitTest test;
 //    test.testAll();
 
