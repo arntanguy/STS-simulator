@@ -163,7 +163,11 @@ void NewCurveDialog::loadDataFile()
                                    "Do you want to load ")+fileName+tr(" again?"),
                                 QMessageBox::Yes | QMessageBox::No);
         if(ret == QMessageBox::Yes) {
-            qDebug() << "XXX: load file again";
+            DataPtr data = Singleton<DataSingleton>::Instance().getData(fileName);
+            QSharedPointer<ExperimentalData> d = qSharedPointerDynamicCast<ExperimentalData>(data);
+            if(d != 0) {
+                d->loadFromFile(fileName);
+            }
         }
     }
     else {

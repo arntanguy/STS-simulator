@@ -4,8 +4,8 @@
 #include "functionssingleton.h"
 #include "abstractfunction.h"
 #include "functioncurve.h"
-#include "typedefs.h"
 #include "csvfilewriter.h"
+#include "typedefs.h"
 
 #include <QStandardItemModel>
 #include <QSettings>
