@@ -1,8 +1,10 @@
 #include "singleton.h"
 #include "experimentalfunctionsingleton.h"
+#include "projectsingleton.h"
 
 #include "muParser.h"
 
+#include <QSettings>
 #include <QDebug>
 
 // I represents the function index
@@ -95,4 +97,29 @@ double ExperimentalFunctionSingleton::interpolate(int dzIndex, double x)
     if(f->hasData()) {
         return f->interpolate(x);
     }
+}
+
+void ExperimentalFunctionSingleton::loadFromSettings()
+{
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup("DZ");
+    for(int i=0; i<NUMBER_OF_DZ; i++) {
+        settings->beginGroup(QString::number(i));
+        mFunctions[i]->loadFromSettings(settings);
+        settings->endGroup();
+    }
+    settings->endGroup();
+}
+
+void ExperimentalFunctionSingleton::save()
+{
+    QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+    settings->beginGroup("DZ");
+    settings->remove("");
+    for(int i=0; i<NUMBER_OF_DZ; i++) {
+        settings->beginGroup(QString::number(i));
+        mFunctions[i]->save(settings);
+        settings->endGroup();
+    }
+    settings->endGroup();
 }

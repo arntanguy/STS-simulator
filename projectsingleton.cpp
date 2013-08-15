@@ -2,6 +2,7 @@
 #include "curvesingleton.h"
 #include "datasingleton.h"
 #include "functionssingleton.h"
+#include "experimentalfunctionsingleton.h"
 #include "plotsingleton.h"
 #include "globalsettingssingleton.h"
 #include "globalconstants.h"
@@ -83,6 +84,8 @@ void ProjectSingleton::openProjectFromSettings()
     qDebug() << "\n\n";
     Singleton<DataSingleton>::Instance().loadFromSettings();
     qDebug() << "\n\n";
+    Singleton<ExperimentalFunctionSingleton>::Instance().loadFromSettings();
+    qDebug() << "\n\n";
     Singleton<CurveSingleton>::Instance().loadFromSettings();
     qDebug() << "\n\n";
     Singleton<FunctionsSingleton>::Instance().loadFromSettings();
@@ -116,6 +119,7 @@ void ProjectSingleton::save()
     if(!mFileName.isEmpty())
     {
         Singleton<GlobalSettingsSingleton>::Instance().save();
+        Singleton<ExperimentalFunctionSingleton>::Instance().save();
         // Save all curves
         Singleton<CurveSingleton>::Instance().save();
         mSettings->sync();

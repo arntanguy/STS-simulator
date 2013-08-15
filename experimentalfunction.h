@@ -5,6 +5,8 @@
 #include <QString>
 #include <QMetaType>
 
+class QSettings;
+
 typedef double (*FuncPtr)(double);
 
 class ExperimentalFunction : public QObject
@@ -33,6 +35,10 @@ class ExperimentalFunction : public QObject
         bool setData(const QString &experimentId, const QString &abscissiaColumnName, const QString &ordinateColumnName);
 
         double interpolate(double x);
+
+        void loadFromSettings(QSettings *settings);
+        void save(QSettings *settings);
+
     private:
         QString mName;
         // Address of function

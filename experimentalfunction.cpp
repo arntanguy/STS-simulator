@@ -3,6 +3,7 @@
 #include "data.h"
 #include "typedefs.h"
 
+#include <QSettings>
 #include <cmath>
 #include <QDebug>
 
@@ -58,4 +59,24 @@ double ExperimentalFunction::interpolate(double x)
         }
     }
     return 0;
+}
+
+void ExperimentalFunction::loadFromSettings(QSettings *settings)
+{
+    if(settings->value("hasData", false).toBool()) {
+        QString expFile = settings->value("experimentalFile", "").toString();
+        QString expX = settings->value("experimentalAbscissia", "").toString();
+        QString expY = settings->value("experimentalOrdinate", "").toString();
+        setData(expFile, expX, expY);
+    }
+}
+
+void ExperimentalFunction::save(QSettings *settings)
+{
+    if(mDataAvailable) {
+        settings->setValue("hasData", mDataAvailable);
+        settings->setValue("experimentalFile", mExperimentalFiles);
+        settings->setValue("experimentalAbscissia", mExperimentalAbscissia);
+        settings->setValue("experimentalOrdinate", mExperimentalOrdinate);
+    }
 }

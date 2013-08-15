@@ -46,6 +46,8 @@ public:
         return mFunctions;
     }
 
+    void loadFromSettings();
+    void save();
 private:
     QMap<int, ExperimentalFunction *> mFunctions;
 };
