@@ -47,7 +47,7 @@ public:
 
     double compute(double x);
     double compute(const QString &variable, double x);
-    double computeWithParameters(const QString &parameters, const QString& variable, double x);
+    double computeParameters(const QString& parameters, double max, double integrationValue);
 
     double operator() (double x) {
         return compute(x);

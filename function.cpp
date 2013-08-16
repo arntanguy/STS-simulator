@@ -176,31 +176,10 @@ double Function::compute(const QString &variable, double x)
 }
 
 
-/**
- * @brief Function::compute
- *  Computes the value with parameters f(parameters)
- * @param parameters
- *  Any valid expression composed of constants and variables from the function expression
- *  Ex:
- *  compute("V+2*e", 1) => f(V+2*e) => f(21) = 31
- *
- *  If left empty, compute(x) will be called instead
- * @param x
- *  Value for which to compute
- * @return
- *  Computed value f(parameters)
- */
-double Function::computeWithParameters(const QString &parameters, const QString &variable, double x)
+
+double Function::computeParameters(const QString& parameters, double max, double integrationValue)
 {
-    //qDebug() << "Function::compute(parameters: " << parameters <<", x="<<x<<")";
-    if(parameters.isEmpty()) {
-        qDebug() << "Function::computeWithParameters -- WARNING: empty parameters";
-    }
-
-    // Define x value in function parser
-    setVariable(variable, x);
-    //mParser->DefineVar(variable.toStdString(), &x);
-
+    // Hierarchichal function!!! Can't have access to the variables, but we don't need them!
     /**
      * Create a parser for the parameters
      **/
@@ -210,35 +189,12 @@ double Function::computeWithParameters(const QString &parameters, const QString 
     pParser->SetVarFactory(addVariable, &pVarFact);
     pParser->Eval();
 
+    pVarFact.setValue("e", integrationValue);
+    pVarFact.setValue("V", max);
 
-    /**
-     * This loop check if parameters variables are in the function expression
-     * If they are, the parameter variable is set to the function value
-     * Otherwise an exception is (XXX) thrown
-     **/
-    // Get the map with the variables
-    varmap_type variables = pParser->GetVar();
-    varmap_type::const_iterator item = variables.begin();
-    // Query the variables
-    for (; item!=variables.end(); ++item)
-    {
-        double* pVal = 0;
-        pVal = getVariable(item->first.c_str());
-        if(pVal != 0) {
-            pParser->DefineVar(item->first, pVal);
-        } else {
-            std::cout << "ERROR: " << item->first << std::endl;
-            // XXX: throw error!
-            return -1;
-        }
-        //std::cout << "Variable " << item->first << ", value: " << pParser.GetVar()[item->first] << std::endl;
-    }
-
-    double parameterValue = pParser->Eval();
+    double parameter = pParser->Eval();
     delete pParser;
-    //qDebug() << "parameter value for x="<<x<< ": " << parameterValue;
-    return compute(mVariable, parameterValue);
-
+    return parameter;
 }
 
 /**
