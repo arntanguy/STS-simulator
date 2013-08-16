@@ -45,6 +45,7 @@ public Q_SLOTS:
     void functionSelectionChanged( const QModelIndex & , const QModelIndex & );
     void parametersEdited();
     void integrationVariableEdited();
+    void configureTransmission();
 
 private:
     Ui::IntegralFunctionDialog *ui;

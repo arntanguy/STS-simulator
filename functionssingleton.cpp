@@ -16,7 +16,7 @@
 
 FunctionsSingleton::FunctionsSingleton()
 {
-    mTransmissionFunction = new TransmissionFunction();
+    //mTransmissionFunction = new TransmissionFunction();
 }
 FunctionsSingleton::~FunctionsSingleton()
 {
@@ -139,6 +139,7 @@ bool FunctionsSingleton::functionNameExists(const QString& name) const
 
 void FunctionsSingleton::loadFromSettings()
 {
+    mTransmissionFunction = new TransmissionFunction();
     qDebug() << "FunctionsSingleton::loadFromSettings()";
 	QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
 
@@ -235,3 +236,8 @@ bool FunctionsSingleton::exportVariables(const QString& path)
         }
     }
 }
+
+TransmissionFunction* FunctionsSingleton::getTransmissionFunction()
+{
+        return mTransmissionFunction;
+    }

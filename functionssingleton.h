@@ -34,9 +34,7 @@ public:
 
     IntegralFunctionPtr isSubFunctionOfIntegral(const AbstractFunctionPtr &f);
 
-    TransmissionFunction* getTransmissionFunction() {
-        return mTransmissionFunction;
-    }
+    TransmissionFunction* getTransmissionFunction();
 
 private:
     // Function name, function

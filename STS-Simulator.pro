@@ -87,7 +87,8 @@ SOURCES += main.cpp\
     experimentalfunctiondialog.cpp \
     experimentalfunctionsingleton.cpp \
     experimentalfunction.cpp \
-    transmissionfunction.cpp
+    transmissionfunction.cpp \
+    transmissiondialog.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -143,7 +144,8 @@ HEADERS  += mainwindow.h \
     experimentalfunctiondialog.h \
     experimentalfunctionsingleton.h \
     experimentalfunction.h \
-    transmissionfunction.h
+    transmissionfunction.h \
+    transmissiondialog.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
@@ -163,7 +165,8 @@ FORMS    += mainwindow.ui \
     plotexportdialog.ui \
     sliderconfigdialog.ui \
     exportcurvesdialog.ui \
-    experimentalfunctiondialog.ui
+    experimentalfunctiondialog.ui \
+    transmissiondialog.ui
 
 #unix {
 #QMAKE_CXXFLAGS += -std=c++0x

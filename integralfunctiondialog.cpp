@@ -5,6 +5,7 @@
 #include "functionselectiondialog.h"
 #include "functionssingleton.h"
 #include "experimentalfunctionsingleton.h"
+#include "transmissiondialog.h"
 
 #include <QStandardItemModel>
 #include <QMessageBox>
@@ -45,6 +46,7 @@ void IntegralFunctionDialog::init()
     connect(ui->integralView->selectionModel(), SIGNAL(currentChanged (const QModelIndex & , const QModelIndex & )), this, SLOT(functionSelectionChanged(const QModelIndex& , const QModelIndex& )));
     connect(ui->functionParameters, SIGNAL(editingFinished()), this, SLOT(parametersEdited()));
     connect(ui->integralIntegrationVariable, SIGNAL(editingFinished()), this, SLOT(integrationVariableEdited()));
+    connect(ui->transmissionParameters, SIGNAL(clicked()), this, SLOT(configureTransmission()));
 
     connect(this, SIGNAL(expressionChanged()), this, SLOT(updateExpression()));
 }
@@ -265,4 +267,11 @@ void IntegralFunctionDialog::integrationVariableEdited()
 {
     mFunction->setIntegrationVariable(ui->integralIntegrationVariable->text());
     updateExpression();
+}
+
+void IntegralFunctionDialog::configureTransmission()
+{
+    qDebug() << "IntegralFunctionDialog::configureTransmission()";
+    TransmissionDialog dialog(this);
+    dialog.exec();
 }

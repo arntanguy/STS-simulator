@@ -186,11 +186,8 @@ PlotData IntegralFunction::integrate(double min, double max, double resolution, 
     int i = 0;
     double V = 0;
     while(V <= max) {
-        static int i = 0;
-        if(i>=2) {
-            mData.x.append(V);
-            mData.y.append(integrateZeroToV(h, V));
-        }
+        mData.x.append(V);
+        mData.y.append(integrateZeroToV(h, V));
         i++;
         V += h;
         i++;

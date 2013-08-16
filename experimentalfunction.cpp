@@ -37,7 +37,7 @@ double ExperimentalFunction::interpolate(double x)
         while(x-mData.x[i] >= 0 && i<mData.size()) {
             i++;
         }
-        qDebug() << "Match  i="<<i<<", xdata="<<mData.x[i] << " for real x="<<x;
+        //qDebug() << "Match  i="<<i<<", xdata="<<mData.x[i] << " for real x="<<x;
         return mData.y[i];
 
         // It's an exact match
