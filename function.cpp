@@ -102,7 +102,7 @@ void Function::cleanupVariables()
     {
         used << QString(item->first.c_str());
     }
-    qDebug() << "Function::cleanupVariables() - keeping " << used;
+    //qDebug() << "Function::cleanupVariables() - keeping " << used;
     // Remove all unused variables from the factory
     mImplicitVarFactory->deleteOthers(used);
 }
@@ -250,6 +250,7 @@ void Function::setVariable(const QString &name, double value)
         // XXX: handle error
         qDebug() << "Function::setVariable() - var " << name << " doesn't exist, evaluating to find missing variables";
         mParser->Eval();
+        setVariable(name, value);
         //double *val = new double;
         //*val = value;
 

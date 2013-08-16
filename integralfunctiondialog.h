@@ -27,6 +27,7 @@ public:
 
 private:
     void init();
+    void initTransmission();
     void initFromFunction();
     void addFunction(const FunctionPtr &function);
     void addFunctionItem(const FunctionPtr &);

@@ -7,6 +7,7 @@
 #include "function.h"
 #include "integralfunction.h"
 #include "integralcurve.h"
+#include "transmissionfunction.h"
 
 IntegralFunction::IntegralFunction() : HierarchicalFunction()
 {
@@ -29,6 +30,7 @@ void IntegralFunction::init()
     setStepNumber(100);
     setRange(ZeroToV);
     mIntegrationVariable = "e";
+    mTransmissionDZ = "DZ0";
 }
 
 void IntegralFunction::setIntegrationVariable(const QString &variable)
@@ -143,6 +145,8 @@ double IntegralFunction::integrateZeroToV(double h, double V)
     // Integration variable
     double e = 0;
 
+    TransmissionFunction *transmissionF = Singleton<FunctionsSingleton>::Instance().getTransmissionFunction();
+
     double result = 0;
     while(e <= V) {
         double area=1;
@@ -153,6 +157,7 @@ double IntegralFunction::integrateZeroToV(double h, double V)
             //qDebug() << "param: " << param<< "\t" << e-V;
             area *= f->compute("V", param);
         }
+        area *= transmissionF->compute(mTransmissionDZ, V, e);
         result += h* area;
         e += h;
     }
@@ -295,7 +300,7 @@ void IntegralFunction::loadFromConfig(const QString &group)
 
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
     settings->beginGroup(group);
-
+    setTransmissionDZ(settings->value("TransmissionDZ", "DZ0").toString());
     setName(settings->value("name", "Unknown").toString());
     setRange(static_cast<Range>(settings->value("range", ZeroToV).toUInt()));
     QStringList functionIds = settings->value("ids", QStringList()).toStringList();
@@ -332,8 +337,15 @@ void IntegralFunction::save(const QString &group)
     }
     settings->beginGroup(groupName);
     qDebug() << "IntegralFunction::save - group name: " << groupName;
+    settings->setValue("TransmissionDZ", mTransmissionDZ);
     settings->setValue("ids", functionIds);
     settings->setValue("parameters", parameters);
     settings->setValue("range", mRange);
     settings->endGroup();
+}
+
+void IntegralFunction::setTransmissionDZ(const QString &dzName)
+{
+    //if(dzName != mTransmissionDZ)
+    mTransmissionDZ = dzName;
 }

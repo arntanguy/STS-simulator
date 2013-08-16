@@ -3,6 +3,7 @@
 #include "function.h"
 #include "hierarchicalfunction.h"
 #include "integralfunction.h"
+#include "transmissionfunction.h"
 #include "abstractfunction.h"
 #include "differentialfunction.h"
 #include "curve.h"
@@ -15,6 +16,7 @@
 
 FunctionsSingleton::FunctionsSingleton()
 {
+    mTransmissionFunction = new TransmissionFunction();
 }
 FunctionsSingleton::~FunctionsSingleton()
 {
@@ -140,6 +142,8 @@ void FunctionsSingleton::loadFromSettings()
     qDebug() << "FunctionsSingleton::loadFromSettings()";
 	QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
 
+    mTransmissionFunction->loadFromSettings();
+
     settings->beginGroup("Functions/Function/");
     QStringList groups = settings->childGroups();
     settings->endGroup();
@@ -188,6 +192,8 @@ void FunctionsSingleton::save()
 {
     qDebug() << "FunctionsSingleton::save() : Saving all functions...";
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
+
+    mTransmissionFunction->save();
 
     // First cleanup the curves
     settings->beginGroup("Functions");

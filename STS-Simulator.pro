@@ -86,7 +86,8 @@ SOURCES += main.cpp\
     exportcurvesdialog.cpp \
     experimentalfunctiondialog.cpp \
     experimentalfunctionsingleton.cpp \
-    experimentalfunction.cpp
+    experimentalfunction.cpp \
+    transmissionfunction.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
@@ -141,7 +142,8 @@ HEADERS  += mainwindow.h \
     exportcurvesdialog.h \
     experimentalfunctiondialog.h \
     experimentalfunctionsingleton.h \
-    experimentalfunction.h
+    experimentalfunction.h \
+    transmissionfunction.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \

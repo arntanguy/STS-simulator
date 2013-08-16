@@ -14,7 +14,7 @@ template<int I> double dz(double x) {
         //qDebug() << "dz:: Function "<<I<<" has linked data";
         return s->interpolate(I, x);
     } else {
-        qDebug() << "DZ - id "<<I<<" has NO DATA!";
+        //qDebug() << "DZ - id "<<I<<" has NO DATA!";
         return 0;
     }
 

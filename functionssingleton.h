@@ -9,6 +9,7 @@
 #include <QSharedPointer>
 
 class AbstractFunction;
+class TransmissionFunction;
 
 class FunctionsSingleton
 {
@@ -33,9 +34,15 @@ public:
 
     IntegralFunctionPtr isSubFunctionOfIntegral(const AbstractFunctionPtr &f);
 
+    TransmissionFunction* getTransmissionFunction() {
+        return mTransmissionFunction;
+    }
+
 private:
     // Function name, function
     QMap<int , AbstractFunctionPtr> mFunctions;
+
+    TransmissionFunction *mTransmissionFunction;
 };
 
 #endif // FUNCTIONSSINGLETON_H

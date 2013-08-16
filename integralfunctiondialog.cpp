@@ -4,6 +4,7 @@
 #include "variablefactory.h"
 #include "functionselectiondialog.h"
 #include "functionssingleton.h"
+#include "experimentalfunctionsingleton.h"
 
 #include <QStandardItemModel>
 #include <QMessageBox>
@@ -36,6 +37,8 @@ void IntegralFunctionDialog::init()
     ui->integralRange->addItem(tr("0 to V"), IntegralFunction::ZeroToV);
     ui->integralRange->addItem(tr("-V to 0"), IntegralFunction::MinusVToZero);
 
+    initTransmission();
+
     connect(ui->integralAddFunction, SIGNAL(clicked()), this, SLOT(addFunction()));
     connect(ui->integralRemoveFunction, SIGNAL(clicked()), this, SLOT(removeFunction()));
     // TODO: use that one for the other function selection stuff
@@ -44,6 +47,15 @@ void IntegralFunctionDialog::init()
     connect(ui->integralIntegrationVariable, SIGNAL(editingFinished()), this, SLOT(integrationVariableEdited()));
 
     connect(this, SIGNAL(expressionChanged()), this, SLOT(updateExpression()));
+}
+
+void IntegralFunctionDialog::initTransmission()
+{
+    // Load the available DZ function slots (defined at compile time)
+    QMap<int, ExperimentalFunction *> functions = Singleton<ExperimentalFunctionSingleton>::Instance().getAllFunctions();
+    foreach(int id, functions.keys()) {
+        ui->DZFunction->addItem(functions[id]->getName(), QVariant::fromValue(functions[id]));
+    }
 }
 
 void IntegralFunctionDialog::setFunction(const IntegralFunctionPtr &f)
@@ -58,6 +70,13 @@ void IntegralFunctionDialog::setFunction(const IntegralFunctionPtr &f)
     int index = ui->integralRange->findData(f->getRange());
     if(index != -1)
         ui->integralRange->setCurrentIndex(index);
+
+    // Set DZ
+    QString dzName = f->getTransmissionDZName();
+    index = ui->DZFunction->findData(dzName, Qt::DisplayRole);
+    if(index != -1) {
+        ui->DZFunction->setCurrentIndex(index);
+    }
 
     setWindowTitle(tr("Edit IntegralFunction ") + f->getName());
     if(f != 0) {
@@ -173,6 +192,9 @@ void IntegralFunctionDialog::accept()
     if(mayClose) {
         mFunction->setName(ui->integralName->text());
         mFunction->setRange(static_cast<IntegralFunction::Range>(ui->integralRange->itemData(ui->integralRange->currentIndex()).toUInt()));
+        QString transmissionDZ = ui->DZFunction->itemData(ui->DZFunction->currentIndex(), Qt::DisplayRole).toString();
+        mFunction->setTransmissionDZ(transmissionDZ);
+        qDebug() << "transmissionDZ " << transmissionDZ;
 
         // Save current function parameters
         QStandardItemModel *model = dynamic_cast<QStandardItemModel *>(ui->integralView->model());
@@ -195,7 +217,7 @@ void IntegralFunctionDialog::accept()
 
         Singleton<FunctionsSingleton>::Instance().addFunction(mFunction);
 
-        mFunction->updateLinkedCurve();
+        mFunction->updateLinkedCurve(true);
 
         QDialog::accept();
     }

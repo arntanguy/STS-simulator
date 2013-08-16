@@ -46,6 +46,7 @@ mu::Parser* HelperFunctions::createParser()
 {
     mu::Parser* parser = new mu::Parser();
     parser->DefineConst("_pi", (double)3.14159);
+    parser->DefineConst("_alpha", (double)1.0246);
     Singleton<ExperimentalFunctionSingleton>::Instance().defineParserFunctions(parser);
     return parser;
 }

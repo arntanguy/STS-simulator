@@ -50,6 +50,10 @@ public:
         return mData;
     }
 
+    void setTransmissionDZ(const QString &dzName);
+    QString getTransmissionDZName() const {
+        return mTransmissionDZ;
+    }
 Q_SIGNALS:
     void integralDataComputed();
 
@@ -63,6 +67,7 @@ private:
     Range mRange;
 
     QString mIntegrationVariable;
+    QString mTransmissionDZ;
 
     //FunctionId, Parameter
     QMap<int, QString> mParameters;
