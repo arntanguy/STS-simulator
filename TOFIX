@@ -1,0 +1,7 @@
+1.  I need the Differential Functions to be available for building Hierarchical Functions.
+2. It is not possible to load new data in a project. Even starting a new project does not delete the experimental data for the DZs.
+3. The shift of the positive integral values appears only at low X resolution (<100). Could stay like this.
+4. When loading a project it loads the axis names but then when one changes or refreshes a plot it forgets the names and puts "X Axis" everywhere. It displays the loaded axis names but they are not loaded in the Plot settings of the configuration plot.
+5. The program crashes when the file is saved in different directory than the program directory (Windows problem maybe)
+
+Point 1 is the most important!
