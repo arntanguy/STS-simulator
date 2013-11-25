@@ -147,7 +147,7 @@ double IntegralFunction::integrateZeroToV(double h, double V)
 
     TransmissionFunction *transmissionF = Singleton<FunctionsSingleton>::Instance().getTransmissionFunction();
 
-    double result = 0;
+    double result = (double)0.0;
     while(e <= V) {
         double area=1;
         foreach(FunctionPtr f, mFunctions) {
@@ -155,6 +155,27 @@ double IntegralFunction::integrateZeroToV(double h, double V)
             double param = f->computeParameters(mParameters[f->getId()], V, e);
 //            qDebug() << "e=" << e << ", V= "<< V << ", param e-V " << e-V << ", param computed "<<param;
             //qDebug() << "param: " << param<< "\t" << e-V;
+            area *= f->compute("V", param);
+        }
+        area *= transmissionF->compute(mTransmissionDZ, V, e);
+        result += h* area;
+        e += h;
+    }
+    return result;
+}
+
+double IntegralFunction::integrateMinusVTo0(double h, double V)
+{
+    // Integration variable
+    double e = V;
+
+    TransmissionFunction *transmissionF = Singleton<FunctionsSingleton>::Instance().getTransmissionFunction();
+
+    double result = 0;
+    while(e <= 0) {
+        double area=1;
+        foreach(FunctionPtr f, mFunctions) {
+            double param = f->computeParameters(mParameters[f->getId()], V, e);
             area *= f->compute("V", param);
         }
         area *= transmissionF->compute(mTransmissionDZ, V, e);
@@ -179,19 +200,30 @@ PlotData IntegralFunction::integrate(double min, double max, double resolution, 
 
     // Integration step
     double h = std::abs(max-min)/resolution;
-    /**
-     * Compute integral from 0 to max (V)
-     * it will compute I(0.00), I(0.001), I(0.O02)....,I(100),...I(max)
-     **/
-    int i = 0;
-    double V = 0;
-    while(V <= max) {
-        mData.x.append(V);
-        mData.y.append(integrateZeroToV(h, V));
-        i++;
-        V += h;
-        i++;
+    if(mRange == ZeroToV) {
+        /**
+         * Compute integral from 0 to max (V)
+         * it will compute I(0.00), I(0.001), I(0.O02)....,I(100),...I(max)
+         **/
+        double V = -1e-10;
+        while(V <= max) {
+            mData.x.append(V);
+            mData.y.append(integrateZeroToV(h, V));
+            V += h;
+        }
+    } else if(mRange == MinusVToZero) {
+        double V = min;
+        qDebug() << "V: "<<V;
+        while(V <= 1e-12) {
+            mData.x.append(V);
+            mData.y.append(integrateMinusVTo0(h, V));
+            V += h;
+        }
+        qDebug() << "LASST POINT " << V;
+    qDebug() << mData.y;
     }
+    qDebug() << "FIIIIIRST x"<<mData.x[0];
+    qDebug() << "FIIIIIRST y"<<mData.y[0];
     return mData;
 }
 

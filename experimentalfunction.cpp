@@ -38,7 +38,7 @@ double ExperimentalFunction::interpolate(double x)
             i++;
         }
         //qDebug() << "Match  i="<<i<<", xdata="<<mData.x[i] << " for real x="<<x;
-        return mData.y[i];
+        //return mData.y[i];
 
         // It's an exact match
         if(x == mData.x[i]) {
@@ -51,10 +51,15 @@ double ExperimentalFunction::interpolate(double x)
                 x2 = mData.x[i+1];
                 y1 = mData.y[i];
                 y2 = mData.y[i+1];
-                return (y2+y1)/std::abs(x2-y1);
+                return (y2+y1)/2;
             } else {
-                // Not enough point to interpolate, return closest point
-                return mData.y[i];
+                // Not enough point to interpolate, return previous interpolation
+                i--;
+                x1 = mData.x[i];
+                x2 = mData.x[i+1];
+                y1 = mData.y[i];
+                y2 = mData.y[i+1];
+                return (y2+y1)/std::abs(x2-y1);
             }
         }
     }

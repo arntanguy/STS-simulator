@@ -61,6 +61,7 @@ private:
     void init();
     void setFunctionsIntegrationVariable();
     double integrateZeroToV(double h, double V);
+    double integrateMinusVTo0(double h, double V);
 
 private:
     double mStepNumber;

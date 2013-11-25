@@ -104,7 +104,7 @@ void ExperimentalFunctionSingleton::loadFromSettings()
     QSettings *settings = Singleton<ProjectSingleton>::Instance().getSettings();
     settings->beginGroup("DZ");
     for(int i=0; i<NUMBER_OF_DZ; i++) {
-        settings->beginGroup(QString::number(i));
+        settings->beginGroup(QString::number(i+1));
         mFunctions[i]->loadFromSettings(settings);
         settings->endGroup();
     }
@@ -117,7 +117,7 @@ void ExperimentalFunctionSingleton::save()
     settings->beginGroup("DZ");
     settings->remove("");
     for(int i=0; i<NUMBER_OF_DZ; i++) {
-        settings->beginGroup(QString::number(i));
+        settings->beginGroup(QString::number(i+1));
         mFunctions[i]->save(settings);
         settings->endGroup();
     }

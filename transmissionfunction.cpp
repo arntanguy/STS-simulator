@@ -16,8 +16,8 @@ TransmissionFunction::TransmissionFunction(QObject *parent) : Function(parent)
 double TransmissionFunction::compute(const QString& dzName, double V, double e)
 {
     QString expression = "exp(-_alpha * (Z0+"+dzName+"(V)) * sqrt(phi + V/2 - e) )";
-    qDebug() << "TransmissionFunction::compute -- " << expression;
-    qDebug() << "phi="<<phi<<", "<<"Z0="<<Z0<<", V="<<V<<", e="<<e;
+    //qDebug() << "TransmissionFunction::compute -- " << expression;
+    //qDebug() << "phi="<<phi<<", "<<"Z0="<<Z0<<", V="<<V<<", e="<<e;
     Function::setExpression(expression);
     mParser->Eval();
 
